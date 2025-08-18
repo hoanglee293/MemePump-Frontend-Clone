@@ -651,11 +651,8 @@ export default function WalletPage() {
             if (error?.response?.data?.message.includes("Failed to create or get wallet_auth record")) {
                 toast.error(t('wallet.failedToCreateOrGetWalletAuthRecord'));
             }
-          
-            if (error?.response?.data?.message && error.status === 409) {
-                toast.error(t('wallet.walletAlreadyExists'));
-            } else {
-                toast.error(t('wallet.failedToAddWallet'));
+            if (error?.response?.data?.message.includes("Wallet nickname is required for new wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
             }
         } finally {
             setIsLoading(false);
