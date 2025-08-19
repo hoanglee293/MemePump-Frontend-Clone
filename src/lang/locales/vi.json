@@ -420,6 +420,7 @@
     "quantityWallet": "Số lượng ví",
     "enterQuantityWallet": "Nhập số lượng ví mà bạn muốn thêm",
     "resultTitleImport": "Kết quả nhập ví",
+    "importedFailed": "Nhập ví thất bại",
     "importedSuccessfully": "Đã nhập thành công",
     "walletPerixNameNote": "Nhập tiền tố ví (ví dụ: A) → hệ thống tự động tạo danh sách: A1, A2, A3,...",
     "connectMaster": "Kết nối Master",

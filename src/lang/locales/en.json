@@ -380,6 +380,7 @@
     "walletNicknameMustBeAtLeast3CharactersLong": "Nickname must be at least 3 characters long",
     "privateKeyRequired": "Private key is required",
     "resultTitleImport": "Import Wallet Result",
+    "importedFailed": "Imported failed",
     "importedSuccessfully": "Imported successfully",
     "walletNameAlreadyExists": "Wallet name already exists",
     "invalidWalletType": "Invalid wallet type",
