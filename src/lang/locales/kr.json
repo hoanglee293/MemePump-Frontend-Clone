@@ -480,6 +480,11 @@
     },
     "walletAddedSuccess": "지갑이 성공적으로 추가되었습니다",
     "walletImportedSuccessfully": "지갑이 성공적으로 가져와졌습니다",
+    "walletsImportedSuccessfully": "지갑이 성공적으로 가져와졌습니다",
+    "resultTitle": "결과",
+    "createdCount": "생성됨",
+    "failedCount": "실패",
+    "privateKeyFormatHint": "점(.) 또는 줄바꿈으로 구분된 여러 개인 키를 입력하세요. 각 키는 별도의 지갑으로 가져와집니다.",
     "walletAddFailed": "지갑 추가에 실패했습니다. 다시 시도해 주세요.",
     "passwordCreatedSuccess": "비밀번호가 성공적으로 생성되었습니다",
     "passwordCreateFailed": "비밀번호 생성에 실패했습니다. 다시 시도해 주세요.",
@@ -493,7 +498,11 @@
     "resendCode": "인증 코드 재전송",
     "verify": "인증",
     "invalidCode": "인증 코드가 유효하지 않거나 만료되었습니다",
-    "walletNameNote": "주의: 지갑 이름과 닉네임은 이미 존재하는 지갑의 이름이나 닉네임과 중복될 수 없습니다."
+    "walletNameNote": "주의: 지갑 이름과 닉네임은 이미 존재하는 지갑의 이름이나 닉네임과 중복될 수 없습니다.",
+    "confirmCreateWallets": "지갑 생성 확인",
+    "confirmCreateWalletsMessage": "접두사 '{prefix}'를 포함하는 {quantity}개의 새 지갑을 생성하는 것을 확인하시겠습니까?",
+    "confirm": "확인",
+    "creating": "생성 중..."
   },
   "searchPlaceholder": "토큰 이름/주소",
   "languages": {

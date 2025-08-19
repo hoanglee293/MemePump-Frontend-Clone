@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import bs58 from 'bs58';
 import ModalSignin from "../components/ModalSignin";
 import { toast } from 'react-hot-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
+import { getMasters } from "@/services/api/MasterTradingService";
 
 interface Token {
     token_address: string;
@@ -49,6 +51,16 @@ interface WalletInfoResponse {
     wallet_id: number;
     wallet_name: string;
     wallet_nick_name: string;
+}
+
+interface MasterTrader {
+    id: number;
+    solana_address: string;
+    nickname: string;
+    type: string | null;
+    country: string;
+    code_ref: string;
+    connect_status: string | null;
 }
 
 const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative xl:w-full w-[95%] rounded-xl"
@@ -276,15 +288,14 @@ const CustomSelect = ({ value, onChange, options, placeholder }: {
         <div ref={selectRef} className="relative">
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full px-3 py-2 bg-white dark:bg-theme-black-200 border-none rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 cursor-pointer flex items-center justify-between transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 ${
-                    isOpen ? 'ring-2 ring-purple-500 ring-opacity-50 shadow-lg' : ''
-                }`}
+                className={`w-full px-3 py-2 bg-white dark:bg-theme-black-200 border-none rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 cursor-pointer flex items-center justify-between transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 ${isOpen ? 'ring-2 ring-purple-500 ring-opacity-50 shadow-lg' : ''
+                    }`}
             >
                 <div className="flex items-center gap-2">
                     {selectedOption && (
-                        <img 
-                            src={selectedOption.flag} 
-                            alt={t(selectedOption.translationKey)} 
+                        <img
+                            src={selectedOption.flag}
+                            alt={t(selectedOption.translationKey)}
                             className="w-4 h-3 rounded object-cover"
                         />
                     )}
@@ -292,13 +303,12 @@ const CustomSelect = ({ value, onChange, options, placeholder }: {
                         {selectedOption ? t(selectedOption.translationKey) : placeholder}
                     </span>
                 </div>
-                <ChevronDown 
-                    className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180' : ''
-                    }`} 
+                <ChevronDown
+                    className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                        }`}
                 />
             </div>
-            
+
             {isOpen && (
                 <div className="absolute z-50 w-full mt-1 bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl max-h-60 overflow-auto backdrop-blur-sm">
                     {options.map((option, index) => (
@@ -308,19 +318,16 @@ const CustomSelect = ({ value, onChange, options, placeholder }: {
                                 onChange(option.code);
                                 setIsOpen(false);
                             }}
-                            className={`px-3 py-2.5 cursor-pointer transition-all duration-150 hover:bg-purple-50 dark:hover:bg-purple-900/20 flex items-center gap-2 ${
-                                value === option.code 
-                                    ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium' 
-                                    : 'text-black dark:text-theme-neutral-100'
-                            } ${
-                                index === 0 ? 'rounded-t-xl' : ''
-                            } ${
-                                index === options.length - 1 ? 'rounded-b-xl' : ''
-                            }`}
+                            className={`px-3 py-2.5 cursor-pointer transition-all duration-150 hover:bg-purple-50 dark:hover:bg-purple-900/20 flex items-center gap-2 ${value === option.code
+                                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium'
+                                : 'text-black dark:text-theme-neutral-100'
+                                } ${index === 0 ? 'rounded-t-xl' : ''
+                                } ${index === options.length - 1 ? 'rounded-b-xl' : ''
+                                }`}
                         >
-                            <img 
-                                src={option.flag} 
-                                alt={t(option.translationKey)} 
+                            <img
+                                src={option.flag}
+                                alt={t(option.translationKey)}
                                 className="w-4 h-3 rounded object-cover"
                             />
                             <span>{t(option.translationKey)}</span>
@@ -337,6 +344,8 @@ export default function WalletPage() {
 
     const [showPrivateKeys, setShowPrivateKeys] = useState(false);
     const [showAddWallet, setShowAddWallet] = useState(false);
+    const [showAddWallets, setShowAddWallets] = useState(false);
+    const [showImportWallets, setShowImportWallets] = useState(false);
     const [showImportWallet, setShowImportWallet] = useState(false);
     const [showCreatePassword, setShowCreatePassword] = useState(false);
     const [newPassword, setNewPassword] = useState("");
@@ -346,15 +355,19 @@ export default function WalletPage() {
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [walletName, setWalletName] = useState("");
+    const [quantityWallet, setQuantityWallet] = useState<number | null>(null);
     const [walletNickname, setWalletNickname] = useState("");
     const [selectedNetwork, setSelectedNetwork] = useState("EN");
+    const [selectedMasterTrader, setSelectedMasterTrader] = useState<string>("");
     const router = useRouter();
     const [privateKey, setPrivateKey] = useState("");
+    const [privateKeyArray, setPrivateKeyArray] = useState<string[]>([]);
     const [privateKeyDefault, setPrivateKeyDefault] = useState<PrivateKeys>({
         sol_private_key: "",
         eth_private_key: "",
         bnb_private_key: ""
     });
+    console.log("privateKeyArray", privateKeyArray)
 
     const [isLoading, setIsLoading] = useState(false);
     const [wallets, setWallets] = useState<any[]>([]);
@@ -378,11 +391,14 @@ export default function WalletPage() {
     const [codeError, setCodeError] = useState("");
     const [isSendingCode, setIsSendingCode] = useState(false);
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const privateKeysRef = useRef<HTMLDivElement>(null);
     const addWalletRef = useRef<HTMLDivElement>(null);
     const importWalletRef = useRef<HTMLDivElement>(null);
     const { isAuthenticated } = useAuth();
+    const [showModalResult, setShowModalResult] = useState(false);
+    const [resultInfo, setResultInfo] = useState<{ created_count: number; failed_count: number; message?: string } | null>(null);
     const [privateKeys, setPrivateKeys] = useState<PrivateKeys>({
         sol_private_key: "",
         eth_private_key: "",
@@ -412,11 +428,34 @@ export default function WalletPage() {
         }
     }, []);
 
+    // Validate private key array
+    const validatePrivateKeyArray = useCallback((keys: string[]) => {
+        if (keys.length === 0) {
+            setPrivateKeyError(t("wallet.privateKeyRequired"));
+            return false;
+        }
+
+        for (let i = 0; i < keys.length; i++) {
+            try {
+                const decodedKey = bs58.decode(keys[i]);
+                if (decodedKey.length !== 64) {
+                    setPrivateKeyError(t("wallet.invalidPrivateKeyLength"));
+                    return false;
+                }
+            } catch (error) {
+                setPrivateKeyError(t("wallet.invalidPrivateKeyFormat"));
+                return false;
+            }
+        }
+
+        setPrivateKeyError("");
+        return true;
+    }, []);
+
     const debouncedFetchWalletInfo = useDebounce(fetchWalletInfo, 500);
 
     useEffect(() => {
         fetchWallets();
-
     }, []);
 
     const { data: myWallets, refetch: refetchInforWallets, isLoading: isLoadingMyWallets } = useQuery({
@@ -431,7 +470,10 @@ export default function WalletPage() {
         enabled: isAuthenticated,
     });
 
-    console.log("tokenList", tokenList)
+    const { data: masterTraders = [], refetch: refetchMasterTraders, isLoading: isLoadingMasters } = useQuery<MasterTrader[]>({
+        queryKey: ["master-trading/masters"],
+        queryFn: getMasters,
+    });
     // Filter tokens with price >= 0.000001
     const filteredTokens = tokenList?.tokens?.filter((token: Token) => token.token_balance_usd >= 0.05) || [];
 
@@ -498,11 +540,27 @@ export default function WalletPage() {
         setShowAddWallet(false);
         setWalletName("");
         setWalletNickname("");
+        setSelectedMasterTrader("");
+        setQuantityWallet(null);
+    };
+
+    const handleCloseAddWallets = () => {
+        setShowAddWallets(false);
+        setWalletName("");
+        setWalletNickname("");
+        setSelectedMasterTrader("");
+        setQuantityWallet(null);
     };
 
 
     const handleCloseImportWallet = () => {
         setShowImportWallet(false);
+        setWalletName("");
+        setWalletNickname("");
+        setPrivateKey("");
+    };
+    const handleCloseImportWallets = () => {
+        setShowImportWallets(false);
         setWalletName("");
         setWalletNickname("");
         setPrivateKey("");
@@ -583,27 +641,50 @@ export default function WalletPage() {
     };
 
     const handleAddWallet = async () => {
+        // Kiểm tra nếu tạo nhiều ví thì hiển thị modal confirm
+        if (quantityWallet && quantityWallet > 1) {
+            setShowConfirmModal(true);
+            return;
+        }
+
+        await executeAddWallet();
+    };
+
+    const handleConfirmAddWallet = async () => {
+        setShowConfirmModal(false);
+        await executeAddWallet();
+    };
+
+    const executeAddWallet = async () => {
         try {
             setIsLoading(true);
             const walletData = {
                 name: walletName,
                 nick_name: walletNickname,
                 country: selectedNetwork,
+                quantity: quantityWallet ?? 1,
+                master: selectedMasterTrader ?? null,
                 type: "other",
             };
 
             const response = await TelegramWalletService.addWallet(walletData);
-
+            console.log("response", response);
             // Reset form and close modal
             setWalletName("");
             setWalletNickname("");
             setSelectedNetwork("EN");
             setShowAddWallet(false);
+            setSelectedMasterTrader("");
+            setQuantityWallet(null);
             refetchInforWallets();
 
-            // Show success message based on response
-            toast.success(t('wallet.walletAddedSuccess'));
-
+            // Show result modal based on API response
+            setResultInfo({
+                created_count: Number(response?.created_count ?? 0),
+                failed_count: Number(response?.failed_count ?? 0),
+                message: response?.message,
+            });
+            setShowModalResult(true);
             // Refresh wallet list
             await fetchWallets();
         } catch (error: any) {
@@ -654,6 +735,7 @@ export default function WalletPage() {
             if (error?.response?.data?.message.includes("Wallet nickname is required for new wallet")) {
                 toast.error(t('wallet.walletNicknameRequired'));
             }
+            await fetchWallets();
         } finally {
             setIsLoading(false);
         }
@@ -670,7 +752,7 @@ export default function WalletPage() {
                 type: "import",
             };
 
-            await TelegramWalletService.addWallet(walletData);
+            const response = await TelegramWalletService.addWallet(walletData);
 
             // Reset form and close modal
             setWalletName("");
@@ -678,19 +760,148 @@ export default function WalletPage() {
             setSelectedNetwork("EN");
             setShowImportWallet(false);
 
-            // Show success message
-            toast.success(t('wallet.walletImportedSuccessfully'));
+            // Show result modal based on API response
+            setResultInfo({
+                created_count: Number(response?.created_count ?? 0),
+                failed_count: Number(response?.failed_count ?? 0),
+                message: response?.message,
+            });
+            setShowModalResult(true);
 
             // Refresh wallet list
             await fetchWallets();
-        } catch (error) {
-            console.error("Error adding wallet:", error);
-            await fetchWallets();
-            toast.error(t('wallet.failedToAddWallet'));
+        } catch (error: any) {
+            // Log error but continue with other keys
+            console.error(`Failed to import wallet with key: ${privateKey}`, error);
+            
+            // Show specific error messages
+            if (error?.response?.data?.message.includes("Nickname is required for new wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            } else if (error?.response?.data?.message.includes("Nickname must be at least 3 characters long")) {
+                toast.error(t('wallet.walletNicknameMustBeAtLeast3CharactersLong'));
+            } else if (error?.response?.data?.message.includes("Wallet name already exists for this user")) {
+                toast.error(t('wallet.walletNameAlreadyExists'));
+            } else if (error?.response?.data?.message.includes("Private key is required for import")) {
+                toast.error(t('wallet.privateKeyRequired'));
+            } else if (error?.response?.data?.message.includes("Invalid Solana private key")) {
+                toast.error(t('wallet.invalidPrivateKey'));
+            } else if (error?.response?.data?.message.includes("Nickname is required for new imported wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            } else if (error?.response?.data?.message.includes("Invalid wallet type")) {
+                toast.error(t('wallet.invalidWalletType'));
+            } else if (error?.response?.data?.message.includes("This wallet is already linked to your account")) {
+                toast.error(t('wallet.walletAlreadyExists'));
+            } else if (error?.response?.data?.message.includes("User not found")) {
+                toast.error(t('wallet.userNotFound'));
+            } else if (error?.response?.data?.message.includes("Wallet nickname already exists")) {
+                toast.error(t('wallet.walletNicknameDuplicate'));
+            } else if (error?.response?.data?.message.includes("Failed to create wallet after")) {
+                toast.error(t('wallet.failedToCreateWallet'));
+            } else if (error?.response?.data?.message.includes("Error creating wallet")) {
+                toast.error(t('wallet.failedToCreateWallet'));
+            } else if (error?.response?.data?.message.includes("Error adding wallet")) {
+                toast.error(t('wallet.failedToAddWallet'));
+            } else if (error?.response?.data?.message.includes("Failed to create or get wallet_auth record")) {
+                toast.error(t('wallet.failedToCreateOrGetWalletAuthRecord'));
+            } else if (error?.response?.data?.message.includes("Wallet nickname is required for new wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            }
         } finally {
             setIsLoading(false);
         }
     };
+    console.log("privateKeyArray", privateKeyArray.length)
+
+    const handleImportWallets = async () => {
+        try {
+            setIsLoading(true);
+            // Process each private key
+            for (const privateKey of privateKeyArray) {
+                try {
+                    const walletData = {
+                        name: walletName,
+                        nick_name: walletNickname,
+                        country: selectedNetwork,
+                        private_key: privateKeyArray,
+                        quantity: privateKeyArray.length,
+                        type: "import",
+                    };
+
+                    const res = await TelegramWalletService.addWallet(walletData);
+                    if (res) {
+                        setResultInfo({
+                            created_count: Number(res?.created_count ?? 0),
+                            failed_count: Number(res?.failed_count ?? 0),
+                            message: res?.message,
+                        });
+                        setShowModalResult(true);
+                    }
+
+                } catch (error: any) {
+                    console.error(`Failed to import wallet with key: ${privateKey}`, error);
+                }
+            }
+
+            // Reset form and close modal
+            setWalletName("");
+            setWalletNickname("");
+            setSelectedNetwork("EN");
+            setPrivateKeyArray([]);
+            setPrivateKeyError("");
+            setShowImportWallets(false);
+
+            // Refresh wallet list
+            await fetchWallets();
+        } catch (error: any) {
+            if (error?.response?.data?.message.includes("Nickname is required for new wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            }
+            if (error?.response?.data?.message.includes("Nickname must be at least 3 characters long")) {
+                toast.error(t('wallet.walletNicknameMustBeAtLeast3CharactersLong'));
+            }
+            if (error?.response?.data?.message.includes("Wallet name already exists for this user")) {
+                toast.error(t('wallet.walletNameAlreadyExists'));
+            }
+            if (error?.response?.data?.message.includes("Private key is required for import")) {
+                toast.error(t('wallet.privateKeyRequired'));
+            }
+            if (error?.response?.data?.message.includes("Invalid Solana private key")) {
+                toast.error(t('wallet.invalidPrivateKey'));
+            }
+            if (error?.response?.data?.message.includes("Nickname is required for new imported wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            }
+            if (error?.response?.data?.message.includes("Invalid wallet type")) {
+                toast.error(t('wallet.invalidWalletType'));
+            }
+            if (error?.response?.data?.message.includes("This wallet is already linked to your account")) {
+                toast.error(t('wallet.walletAlreadyExists'));
+            }
+            if (error?.response?.data?.message.includes("User not found")) {
+                toast.error(t('wallet.userNotFound'));
+            }
+            if (error?.response?.data?.message.includes("Wallet nickname already exists")) {
+                toast.error(t('wallet.walletNicknameDuplicate'));
+            }
+            if (error?.response?.data?.message.includes("Failed to create wallet after")) {
+                toast.error(t('wallet.failedToCreateWallet'));
+            }
+            if (error?.response?.data?.message.includes("Error creating wallet")) {
+                toast.error(t('wallet.failedToCreateWallet'));
+            }
+            if (error?.response?.data?.message.includes("Error adding wallet")) {
+                toast.error(t('wallet.failedToAddWallet'));
+            }
+            if (error?.response?.data?.message.includes("Failed to create or get wallet_auth record")) {
+                toast.error(t('wallet.failedToCreateOrGetWalletAuthRecord'));
+            }
+            if (error?.response?.data?.message.includes("Wallet nickname is required for new wallet")) {
+                toast.error(t('wallet.walletNicknameRequired'));
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const handleCopyAddress = (address: string, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -995,7 +1206,7 @@ export default function WalletPage() {
                         )}
                     </div>
 
-                    
+
                     {walletInfor && <div className="flex justify-center items-center mt-1">
                         <button
                             onClick={handleGetPrivateKeys}
@@ -1008,7 +1219,7 @@ export default function WalletPage() {
                                 {t('wallet.getPrivateKey')}
                             </div>
                         </button>
-                    </div> }
+                    </div>}
 
                     <div className="w-full flex flex-col xl:gap-4 gap-2">
                         {/* Wallet Management Section */}
@@ -1020,8 +1231,30 @@ export default function WalletPage() {
                             </div>
                             <div className="flex md:flex-wrap w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10">
                                 <button
+                                    onClick={() => setShowAddWallets(true)}
+                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                >
+                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
+                                        <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                    </div>
+                                    <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                        {t('wallet.addWallets')}
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={() => setShowImportWallets(true)}
+                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                >
+                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
+                                        <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                    </div>
+                                    <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                        {t('wallet.importWallets')}
+                                    </div>
+                                </button>
+                                <button
                                     onClick={() => setShowAddWallet(true)}
-                                    className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                    className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
                                 >
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -1032,7 +1265,7 @@ export default function WalletPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowImportWallet(true)}
-                                    className="lg:max-w-auto  group relative bg-transparent border py-1.5  px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
+                                    className="lg:max-w-auto  group relative bg-transparent border py-1.5  px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
                                 >
                                     <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                     <div className="text-xs sm:text-sm font-medium leading-tight text-indigo-500 dark:text-white">
@@ -1298,6 +1531,7 @@ export default function WalletPage() {
                                         />
                                     </div>
                                 </div>
+
                                 <div className="text-[10px] italic text-gray-900 dark:text-yellow-500 leading-5">
                                     {t('wallet.walletNameNote')}
                                 </div>
@@ -1314,6 +1548,232 @@ export default function WalletPage() {
                                         className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isLoading ? t('wallet.adding') : t('wallet.addWallet')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showAddWallets && (
+                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
+                        <div ref={addWalletRef} className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-4 sm:p-6 rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">{t('wallet.addWallets')}</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.quantityWallet')}</label>
+                                    <div className={wrapGradientStyle}>
+                                        <input
+                                            type="number"
+                                            value={quantityWallet || ""}
+                                            onChange={(e) => setQuantityWallet(Number(e.target.value))}
+                                            className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500"
+                                            placeholder={t('wallet.enterQuantityWallet')}
+                                        />
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.walletPerixName')}</label>
+                                    <div className={wrapGradientStyle}>
+                                        <input
+                                            type="text"
+                                            value={walletName}
+                                            onChange={(e) => setWalletName(e.target.value)}
+                                            className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500"
+                                            placeholder={t('wallet.enterWalletName')}
+                                        />
+                                    </div>
+                                    <span className="text-[10px] text-yellow-500 italic">
+                                        {t('wallet.walletPerixNameNote')}
+                                    </span>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.nickname')}</label>
+                                    <div className={wrapGradientStyle}>
+                                        <input
+                                            type="text"
+                                            value={walletNickname}
+                                            onChange={(e) => setWalletNickname(e.target.value)}
+                                            className="w-full px-3 py-1.5 bg-white dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500"
+                                            placeholder={t('wallet.enterNickname')}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
+                                    <div className={wrapGradientStyle}>
+                                        <Select
+                                            value={selectedMasterTrader}
+                                            onValueChange={(value) => {
+                                                setSelectedMasterTrader(value);
+                                            }}
+                                        >
+                                            <SelectTrigger className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500">
+                                                <SelectValue placeholder={t('wallet.connectMaster')} />
+                                            </SelectTrigger>
+                                            <SelectContent
+                                                className="bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 shadow-lg"
+                                                style={{ zIndex: 9999 }}
+                                            >
+                                                {masterTraders && masterTraders.length > 0 ? (
+                                                    masterTraders.map((trader: MasterTrader) => (
+                                                        <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
+                                                            {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                        </SelectItem>
+                                                    ))
+                                                ) : (
+                                                    <SelectItem value="" disabled>
+                                                        {isLoadingMasters ? 'Loading...' : 'No master traders available'}
+                                                    </SelectItem>
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="text-[10px] italic text-gray-900 dark:text-yellow-500 leading-5">
+                                    {t('wallet.walletNameNote')}
+                                </div>
+                                <div className="flex justify-end gap-3 mt-6">
+                                    <button
+                                        onClick={handleCloseAddWallets}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm font-medium dark:text-gray-200 text-black hover:text-neutral-100"
+                                    >
+                                        {t('common.cancel')}
+                                    </button>
+                                    <button
+                                        onClick={handleAddWallet}
+                                        disabled={isLoading || !walletName || !walletNickname}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isLoading ? t('wallet.adding') : t('wallet.addWallet')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showImportWallets && (
+                <div className={modalContainerStyles}>
+                    <div className={modalContentStyles}>
+                        <div ref={importWalletRef} className={modalInnerStyles}>
+                            <div className="w-[40vw] flex flex-col gap-4 sm:gap-6">
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex justify-between items-center">
+                                        <div className={modalTitleStyles}>{t('wallet.importWallet')}</div>
+                                    </div>
+
+                                    {/* Private Key */}
+                                    <div className="flex flex-col">
+                                        <div className={modalLabelStyles}>{t('wallet.solanaPrivateKey')}</div>
+                                        <div>
+                                            <div className="relative w-full">
+                                                <textarea
+                                                    value={privateKeyArray.join('\n')}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        // Parse private keys from textarea - split by newlines and dots, filter out empty strings
+                                                        const keys = value
+                                                            .split(/[\n.]+/)
+                                                            .map(key => key.trim())
+                                                            .filter(key => key.length > 0);
+                                                        setPrivateKeyArray(keys);
+                                                        // Validate the keys
+                                                        validatePrivateKeyArray(keys);
+                                                    }}
+                                                    onPaste={(e) => {
+                                                        e.preventDefault();
+                                                        const pastedText = e.clipboardData.getData('text');
+                                                        // Split pasted text by common separators and add newlines
+                                                        const keys = pastedText
+                                                            .split(/[\s,;.]+/)
+                                                            .map(key => key.trim())
+                                                            .filter(key => key.length > 0);
+                                                        
+                                                        if (keys.length > 1) {
+                                                            // If multiple keys are pasted, add them with newlines
+                                                            const currentKeys = [...privateKeyArray];
+                                                            const newKeys = [...currentKeys, ...keys];
+                                                            setPrivateKeyArray(newKeys);
+                                                            validatePrivateKeyArray(newKeys);
+                                                        } else {
+                                                            // If single key, just add it normally
+                                                            const currentKeys = [...privateKeyArray];
+                                                            if (pastedText.trim()) {
+                                                                currentKeys.push(pastedText.trim());
+                                                                setPrivateKeyArray(currentKeys);
+                                                                validatePrivateKeyArray(currentKeys);
+                                                            }
+                                                        }
+                                                    }}
+                                                    placeholder={t('wallet.enterSolanaPrivateKey')}
+                                                    className={`${modalInputStyles} border-l-[#03bdff] border-r-[#555aff] !text-xs border-b-[#03bdff] border-t-[#555aff] border-2 rounded-md ${privateKeyError ? 'border-red-500' : ''}`}
+                                                    rows={5}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className={`${modalHelperTextStyles} italic mb-1`}>
+                                           Mỗi private key được import vào sẽ được phân biệt bởi dấu ngăn cách xuống dòng.
+                                        </div>
+                                        {/* Wallet Name */}
+                                        <div className="flex flex-col gap-1">
+                                            <div className={modalLabelStyles}>{t('wallet.walletName')}</div>
+                                            <div className={wrapGradientStyle}>
+                                                <input
+                                                    type="text"
+                                                    value={walletName}
+                                                    onChange={(e) => setWalletName(e.target.value)}
+                                                    placeholder={t('wallet.enterWalletName')}
+                                                    className={modalInputStyles}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className={`${modalHelperTextStyles} italic`}>
+                                            {t('wallet.privateKeySecurity')}
+                                        </div>
+                                    </div>
+
+                                    {/* Wallet Nickname */}
+                                    <div className="flex flex-col gap-1">
+                                        <div className={modalLabelStyles}>{t('wallet.walletNickname')}</div>
+                                        <div className={wrapGradientStyle}>
+                                            <input
+                                                type="text"
+                                                value={walletNickname}
+                                                onChange={(e) => setWalletNickname(e.target.value)}
+                                                placeholder={t('wallet.enterWalletNickname')}
+                                                className={modalInputStyles}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Network Selection */}
+                                    <div className="flex flex-col gap-1">
+                                        <div className={modalLabelStyles}>{t('wallet.network')}</div>
+                                        <div className={wrapGradientStyle}>
+                                            <CustomSelect
+                                                value={selectedNetwork}
+                                                onChange={(value) => setSelectedNetwork(value)}
+                                                options={langConfig.listLangs}
+                                                placeholder={t('selectNetwork')}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-5">
+                                    <button onClick={handleCloseImportWallets} className={modalCancelButtonStyles}>
+                                        <div className={modalButtonTextStyles}>{t('common.cancel')}</div>
+                                    </button>
+                                    <button
+                                        onClick={handleImportWallets}
+                                        disabled={isLoading || !walletName || !walletNickname || privateKeyArray?.length === 0}
+                                        className={modalButtonStyles}
+                                    >
+                                        <div className={modalButtonTextStyles}>{t('wallet.importWallet')}</div>
                                     </button>
                                 </div>
                             </div>
@@ -1567,7 +2027,7 @@ export default function WalletPage() {
                                     </button>
                                     <button
                                         onClick={handleImportWallet}
-                                        disabled={isLoading || !walletName || !walletNickname || !privateKey}
+                                        disabled={isLoading || !walletName || !walletNickname || privateKeyArray.length === 0}
                                         className={modalButtonStyles}
                                     >
                                         <div className={modalButtonTextStyles}>{t('wallet.importWallet')}</div>
@@ -1990,6 +2450,72 @@ export default function WalletPage() {
                 </div>
             )}
             <ModalSignin isOpen={!isAuthenticated} onClose={() => { }} />
+            {showConfirmModal && (
+                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
+                        <div className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-4 sm:p-6 rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">
+                                {t('wallet.confirmCreateWallets')}
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="text-center">
+                                    <p className="text-sm dark:text-gray-200 text-black mb-4">
+                                        {t('wallet.confirmCreateWalletsMessage', {
+                                            quantity: quantityWallet,
+                                            prefix: walletName
+                                        })}
+                                    </p>
+                                </div>
+                                <div className="flex justify-end gap-3 mt-6">
+                                    <button
+                                        onClick={() => setShowConfirmModal(false)}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm font-medium dark:text-gray-200 text-black hover:text-neutral-100"
+                                    >
+                                        {t('common.cancel')}
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmAddWallet}
+                                        disabled={isLoading}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isLoading ? t('wallet.creating') : t('wallet.confirm')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalResult && (
+                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
+                        <div className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-5 rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">
+                                {t('wallet.resultTitleImport')}
+                            </h2>
+                            <div className="space-y-3 text-sm dark:text-gray-200 text-black">
+                            
+                                <div className="flex items-center justify-between">
+                                    <span>{t('wallet.importedSuccessfully')}</span>
+                                    <span className="font-semibold text-green-500">{resultInfo?.created_count ?? 0}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span>{t('wallet.failedCount')}</span>
+                                    <span className="font-semibold text-red-500">{resultInfo?.failed_count ?? 0}</span>
+                                </div>
+                            </div>
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    onClick={() => setShowModalResult(false)}
+                                    className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium"
+                                >
+                                    {t('common.close')}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
