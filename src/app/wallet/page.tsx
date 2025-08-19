@@ -1232,7 +1232,7 @@ export default function WalletPage() {
                             <div className="flex md:flex-wrap w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10">
                                 <button
                                     onClick={() => setShowAddWallets(true)}
-                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
                                 >
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -1243,7 +1243,7 @@ export default function WalletPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowImportWallets(true)}
-                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
                                 >
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -1254,7 +1254,7 @@ export default function WalletPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowAddWallet(true)}
-                                    className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                    className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
                                 >
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -1265,7 +1265,7 @@ export default function WalletPage() {
                                 </button>
                                 <button
                                     onClick={() => setShowImportWallet(true)}
-                                    className="lg:max-w-auto  group relative bg-transparent border py-1.5  px-3 md:pl-3 pr-4 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
+                                    className="lg:max-w-auto  group relative bg-transparent border py-1.5  px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
                                 >
                                     <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                     <div className="text-xs sm:text-sm font-medium leading-tight text-indigo-500 dark:text-white">
