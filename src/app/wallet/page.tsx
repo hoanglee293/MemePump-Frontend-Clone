@@ -564,6 +564,8 @@ export default function WalletPage() {
         setWalletName("");
         setWalletNickname("");
         setPrivateKey("");
+        setSelectedNetwork("EN");
+        setPrivateKeyArray([]);
     };
 
     const handleCloseCreatePassword = () => {
@@ -816,30 +818,28 @@ export default function WalletPage() {
         try {
             setIsLoading(true);
             // Process each private key
-            for (const privateKey of privateKeyArray) {
-                try {
-                    const walletData = {
-                        name: walletName,
-                        nick_name: walletNickname,
-                        country: selectedNetwork,
-                        private_key: privateKeyArray,
-                        quantity: privateKeyArray.length,
-                        type: "import",
-                    };
+            try {
+                const walletData = {
+                    name: walletName,
+                    nick_name: walletNickname,
+                    country: selectedNetwork,
+                    private_key: privateKeyArray,
+                    quantity: privateKeyArray.length,
+                    type: "import",
+                };
 
-                    const res = await TelegramWalletService.addWallet(walletData);
-                    if (res) {
-                        setResultInfo({
-                            created_count: Number(res?.created_count ?? 0),
-                            failed_count: Number(res?.failed_count ?? 0),
-                            message: res?.message,
-                        });
-                        setShowModalResult(true);
-                    }
-
-                } catch (error: any) {
-                    console.error(`Failed to import wallet with key: ${privateKey}`, error);
+                const res = await TelegramWalletService.addWallet(walletData);
+                if (res) {
+                    setResultInfo({
+                        created_count: Number(res?.created_count ?? 0),
+                        failed_count: Number(res?.failed_count ?? 0),
+                        message: res?.message,
+                    });
+                    setShowModalResult(true);
                 }
+
+            } catch (error: any) {
+                console.error(`Failed to import wallet with key: ${privateKey}`, error);
             }
 
             // Reset form and close modal
@@ -1663,7 +1663,7 @@ export default function WalletPage() {
                             <div className="w-[40vw] flex flex-col gap-4 sm:gap-6">
                                 <div className="flex flex-col gap-4">
                                     <div className="flex justify-between items-center">
-                                        <div className={modalTitleStyles}>{t('wallet.importWallet')}</div>
+                                        <div className={modalTitleStyles}>{t('wallet.importWallets')}</div>
                                     </div>
 
                                     {/* Private Key */}
@@ -1716,11 +1716,11 @@ export default function WalletPage() {
                                             </div>
                                         </div>
                                         <div className={`${modalHelperTextStyles} italic mb-1`}>
-                                           Mỗi private key được import vào sẽ được phân biệt bởi dấu ngăn cách xuống dòng.
+                                            {t('wallet.privateKeyFormatHint')}
                                         </div>
                                         {/* Wallet Name */}
                                         <div className="flex flex-col gap-1">
-                                            <div className={modalLabelStyles}>{t('wallet.walletName')}</div>
+                                            <div className={modalLabelStyles}>{t('wallet.walletPerixName')}</div>
                                             <div className={wrapGradientStyle}>
                                                 <input
                                                     type="text"
@@ -1770,7 +1770,7 @@ export default function WalletPage() {
                                     </button>
                                     <button
                                         onClick={handleImportWallets}
-                                        disabled={isLoading || !walletName || !walletNickname || privateKeyArray?.length === 0}
+                                        disabled={isLoading || !walletName || !walletNickname || !selectedNetwork || privateKeyArray?.length === 0}
                                         className={modalButtonStyles}
                                     >
                                         <div className={modalButtonTextStyles}>{t('wallet.importWallet')}</div>

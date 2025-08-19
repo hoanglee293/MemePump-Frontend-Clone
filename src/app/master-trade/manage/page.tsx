@@ -10,7 +10,7 @@ import { getGroupHistories } from "@/services/api/ChatService"
 import { useLang } from "@/lang/useLang"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faUsersGear, faArrowsRotate, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faUsersGear, faArrowsRotate, faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/navigation"
 import ChatMessage from "@/app/components/chat/ChatMessage"
 import { getMyConnects, getMyGroups } from "@/services/api/MasterTradingService"
@@ -377,6 +377,49 @@ export default function MasterTradeInterface() {
     }
   };
 
+  const handleBulkAction = async (action: "connect" | "block") => {
+    if (selectedItems.length === 0) return;
+
+    try {
+      let status = "";
+      let successMessage = "";
+
+      switch (action) {
+        case "connect":
+          status = "connect";
+          successMessage = t("masterTrade.manage.connectionManagement.bulkConnectSuccess");
+          break;
+        case "block":
+          status = "block";
+          successMessage = t("masterTrade.manage.connectionManagement.bulkBlockSuccess");
+          break;
+        default:
+          throw new Error("Invalid action");
+      }
+
+      // Thực hiện bulk action cho tất cả các items đã chọn
+      const promises = selectedItems.map(connectionId => 
+        MasterTradingService.masterSetConnect({
+          mc_id: parseInt(connectionId),
+          status: status
+        })
+      );
+
+      await Promise.all(promises);
+
+      // Hiển thị thông báo thành công
+      toast.success(successMessage);
+
+      // Reset selected items và refresh dữ liệu
+      setSelectedItems([]);
+      await refetchMyConnects();
+    } catch (error) {
+      console.error("Error performing bulk action:", error);
+      // Hiển thị thông báo lỗi
+      toast.error(t("masterTrade.manage.connectionManagement.bulkActionError"));
+    }
+  };
+
   // Xóa phần tạo dữ liệu mẫu cho trade items
   useEffect(() => {
     setTradeItems([]) // Không cần dữ liệu mẫu nữa
@@ -506,7 +549,24 @@ export default function MasterTradeInterface() {
     <div className={styles.container}>
       {/* Group Management Section */}
       <div className={styles.groupSection}>
-        <div className={`${styles.groupCard} mt-4 xl:mt-[3.375rem]`}>
+        <div className="flex justify-between">
+          <button
+            onClick={() => setIsGuideDialogOpen(true)}
+            className="whitespace-nowrap lg:max-w-auto group cursor-pointer relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1 px-3 md:px-4 2xl:text-sm text-xs rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
+          >
+            <FontAwesomeIcon icon={faCircleInfo} className="w-4 h-4 text-theme-neutral-100 relative z-10" />&ensp;
+            <span className="relative z-10 text-theme-neutral-100">{t('createCoin.guide.title')}</span>
+          </button>
+          <button
+            className={styles.groupButton}
+            onClick={() => setIsChangeRoleDialogOpen(true)}
+          >
+            <span className="relative z-10 text-theme-neutral-100 capitalize">{t('masterTrade.manage.chat.stream')}&ensp;</span>
+            <FontAwesomeIcon icon={faArrowsRotate} className="w-4 h-4 relative text-theme-secondary-500 z-20 " />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+          </button>
+        </div>
+        <div className={`${styles.groupCard} mt-6`}>
           <h2 className={styles.groupTitle}>
             {ethereumIcon(14, 14)}
             {t('masterTrade.manage.groupManagement.createGroup')}
@@ -697,7 +757,7 @@ export default function MasterTradeInterface() {
 
       {/* Trade Table Section */}
       <div className={styles.tradeSection}>
-        <div className="flex gap-3 2xl:gap-6 ">
+        <div className="flex gap-3 2xl:gap-4">
           <button
             onClick={() => setActiveTab("Connected")}
             className={`${styles.button} ${activeTab === "Connected" ? ' dark:bg-[#0F0F0F] ' : 'border-transparent'}`}
@@ -723,23 +783,36 @@ export default function MasterTradeInterface() {
             <span className={`${activeTab === 'Block' ? 'dark:text-theme-neutral-100 dark:gradient-hover' : ' text-theme-black-100 dark:text-theme-neutral-100'}`}>{t('masterTrade.manage.connectionManagement.block')} ({blockedCount})</span>
           </button>
           <div className="flex-1 flex items-center gap-2 xl:gap-4 justify-end">
-            <button 
-              onClick={() => setIsGuideDialogOpen(true)}
-              className="whitespace-nowrap lg:max-w-auto group cursor-pointer relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1 px-3 md:px-4 2xl:text-sm text-xs rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
-            >
-              <FontAwesomeIcon icon={faCircleInfo} className="w-4 h-4 text-theme-neutral-100 relative z-10" />&ensp;
-              <span className="relative z-10 text-theme-neutral-100">{t('createCoin.guide.title')}</span>
-            </button>
             {selectedItems.length > 0 && (
-              <button
-                onClick={() => setShowGroupDropdown(!showGroupDropdown)}
-                className={`${styles.button} flex items-center gap-2 px-4 py-1 bg-black bg-opacity-60 rounded-full dark:text-theme-neutral-100 text-theme-neutral-1000 border border-blue-500/30`}
-              >
-                <span className="text-xs">{t('masterTrade.manage.connectionManagement.chooseGroup')}</span>
-                <svg className="w-2 h-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-2">
+                {activeTab === "Pending" && (
+                  <>
+                    <button
+                      onClick={() => handleBulkAction("connect")}
+                      className={`${styles.actionButtonConnect} flex items-center gap-2 px-3 py-1`}
+                    >
+                      <span className="text-xs">{t('masterTrade.manage.connectionTable.connect')} ({selectedItems.length})</span>
+                    </button>
+                    <button
+                      onClick={() => handleBulkAction("block")}
+                      className={`${styles.actionButtonBlock} flex items-center gap-2 px-3 py-1`}
+                    >
+                      <span className="text-xs">{t('masterTrade.manage.connectionTable.block')} ({selectedItems.length})</span>
+                    </button>
+                  </>
+                )}
+                {activeTab === "Connected" && (
+                  <button
+                    onClick={() => setShowGroupDropdown(!showGroupDropdown)}
+                    className={`${styles.button} flex items-center gap-2 px-4 py-1 bg-black bg-opacity-60 rounded-full dark:text-theme-neutral-100 text-theme-neutral-1000 border border-blue-500/30`}
+                  >
+                    <span className="text-xs">{t('masterTrade.manage.connectionManagement.chooseGroup')}</span>
+                    <svg className="w-2 h-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             )}
           </div>
           <div className="relative">
@@ -779,18 +852,22 @@ export default function MasterTradeInterface() {
             <thead>
               <tr className="border-b border-blue-500/30 text-gray-400 text-sm">
                 <th className={`px-4 py-3 text-center ${textHeaderTable}`}>
-                  {activeTab === "Connected" && (
+                  {(activeTab === "Connected" || activeTab === "Pending") && (
                     <input
                       type="checkbox"
-                      checked={selectedItems.length === filteredTradeItems.filter(item => item.status === "connect").length}
+                      checked={selectedItems.length === filteredTradeItems.filter(item => 
+                        activeTab === "Connected" ? item.status === "connect" : item.status === "pending"
+                      ).length}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedItems(filteredTradeItems.filter(item => item.status === "connect").map(item => item.connection_id.toString()));
+                          setSelectedItems(filteredTradeItems.filter(item => 
+                            activeTab === "Connected" ? item.status === "connect" : item.status === "pending"
+                          ).map(item => item.connection_id.toString()));
                         } else {
                           setSelectedItems([]);
                         }
                       }}
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                   )}
                 </th>
@@ -804,7 +881,7 @@ export default function MasterTradeInterface() {
               {filteredTradeItems.map((item) => (
                 <tr key={item.connection_id} className="border-b border-blue-500/10 hover:bg-blue-900/10 transition-colors">
                   <td className="px-4 py-3 text-center">
-                    {item.status === "connect" && (
+                    {(item.status === "connect" || item.status === "pending") && (
                       <input
                         type="checkbox"
                         checked={selectedItems.includes(item.connection_id.toString())}
@@ -815,7 +892,7 @@ export default function MasterTradeInterface() {
                             setSelectedItems(selectedItems.filter(id => id !== item.connection_id.toString()));
                           }
                         }}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     )}
                   </td>
@@ -904,15 +981,8 @@ export default function MasterTradeInterface() {
 
       {/* Chat Section */}
       <div className={styles.chatSection}>
-        <div className="flex items-center justify-between w-full gap-1">
-          <button
-            className={styles.groupButton}
-            onClick={() => setIsChangeRoleDialogOpen(true)}
-          >
-            <span className="relative z-10 text-theme-neutral-100 capitalize">{t('masterTrade.manage.chat.stream')}&ensp;</span>
-            <FontAwesomeIcon icon={faArrowsRotate} className="w-4 h-4 relative text-theme-secondary-500 z-20 " />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-          </button>
+        <div className="flex items-center justify-end w-full gap-1">
+
           <button className={styles.groupButton} onClick={() => router.push("/master-trade")}>
             <FontAwesomeIcon icon={faUsersGear} className="w-4 h-4 text-theme-neutral-100 relative z-10" />&ensp;
             <span className="relative z-10 text-theme-neutral-100">{t('masterTrade.manage.chat.connectWithMaster')}</span>
@@ -1112,7 +1182,7 @@ export default function MasterTradeInterface() {
               <p className="text-theme-neutral-1000 dark:text-theme-neutral-100 leading-relaxed">
                 {t('masterTrade.manage.guide.description')}
               </p>
-              
+
               <div className="space-y-3">
                 <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-4 rounded-lg border border-blue-500/20">
                   <h3 className="font-semibold text-theme-primary-300 mb-2">{t('masterTrade.manage.guide.normalFlow.title')}</h3>
@@ -1120,7 +1190,7 @@ export default function MasterTradeInterface() {
                     {t('masterTrade.manage.guide.normalFlow.description')}
                   </p>
                 </div>
-                
+
                 <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 p-4 rounded-lg border border-yellow-500/20">
                   <h3 className="font-semibold text-theme-primary-300 mb-2">{t('masterTrade.manage.guide.vipFlow.title')}</h3>
                   <ul className="space-y-2 text-theme-neutral-1000 dark:text-theme-neutral-100">
@@ -1135,7 +1205,7 @@ export default function MasterTradeInterface() {
                   </ul>
                 </div>
               </div>
-              
+
               <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 p-4 rounded-lg border border-red-500/20">
                 <h3 className="font-semibold text-red-400 mb-2">{t('masterTrade.manage.guide.warning.title')}</h3>
                 <p className="text-theme-neutral-1000 dark:text-theme-neutral-100">

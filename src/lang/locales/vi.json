@@ -274,7 +274,12 @@
       },
       "connectionManagement": {
         "joinSuccess": "Tham gia nhóm thành công",
+        "joinSuccessDescription": "Bạn đã tham gia nhóm thành công",  
+        "joinSuccessDescription2": "Bạn có thể kết nối ví vào nhóm này",
         "joinError": "Không thể tham gia nhóm",
+        "bulkConnectSuccess": "Kết nối thành công",
+        "bulkBlockSuccess": "Chặn thành công",
+        "bulkActionError": "Đã xảy ra lỗi",
         "connectSuccess": "Kết nối thành công",
         "blockSuccess": "Chặn thành công",
         "pauseSuccess": "Tạm dừng thành công",
@@ -352,7 +357,9 @@
         "noGroup": "Không có nhóm",
         "onCount": "Bật ({count})",
         "offCount": "Tắt ({count})",
-        "deleteCount": "Xóa ({count})"
+        "deleteCount": "Xóa ({count})",
+        "createGroupSuccess": "Tạo nhóm thành công",
+        "createGroupError": "Không thể tạo nhóm"
       },
       "connectionTable": {
         "address": "Địa chỉ",
