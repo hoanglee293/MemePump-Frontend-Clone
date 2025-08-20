@@ -13,7 +13,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
     const { t } = useLang();
     return (
-        <div className="px-3 pb-1.5">
+        <div className="px-3 pb-1.5 w-full">
             <div className="relative">
                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                     <Search className="h-3 w-3 text-gray-400" />

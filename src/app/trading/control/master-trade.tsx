@@ -46,6 +46,9 @@ export default function MasterTradeChat() {
         selectedGroups,
         setSelectedGroups,
         refreshTradingData,
+        refreshAllData,
+        forceRefreshBalances,
+        refreshBalance,
         balances
     } = useTradingState(myConnects || [])
 
@@ -144,6 +147,11 @@ export default function MasterTradeChat() {
         console.log("selectedConnections changed:", selectedConnections)
     }, [selectedConnections])
 
+    // Debug: Track balances changes
+    useEffect(() => {
+        console.log("balances changed:", balances)
+    }, [balances])
+
     // Refetch myConnects when component mounts or when there are cache invalidations
     useEffect(() => {
         if (mounted) {
@@ -220,10 +228,18 @@ export default function MasterTradeChat() {
             {activeTab === "trade" ? (
                 <div className="flex-1 min-h-0 flex flex-col">
                     <div className="flex-none">
-                        <SearchBar
-                            searchQuery={searchQuery}
-                            onSearchChange={setSearchQuery}
-                        />
+                        <div className="flex items-center gap-2 mb-2">
+                            <SearchBar
+                                searchQuery={searchQuery}
+                                onSearchChange={setSearchQuery}
+                            />
+                            {/* <button
+                                onClick={forceRefreshBalances}
+                                className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                            >
+                                Refresh Balances
+                            </button> */}
+                        </div>
                     </div>
                     <div className="flex-1 min-h-0 overflow-hidden">
                         <ConnectionList
@@ -234,6 +250,7 @@ export default function MasterTradeChat() {
                             onCopyAddress={handleCopyAddress}
                             isLoading={isLoadingConnects}
                             balances={balances}
+                            onRefreshBalance={refreshBalance}
                         />
                     </div>
                 </div>

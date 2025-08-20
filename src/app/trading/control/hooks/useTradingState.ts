@@ -130,7 +130,7 @@ export const useTradingState = (connections: any[] = []) => {
         fetchAllBalances()
     }, [connections])
 
-    const refreshBalance = async (memberId: string, address: string) => {
+    const refreshBalance = useCallback(async (memberId: string, address: string) => {
         try {
             const balance = await getBalance(address)
             setBalances(prev => ({
@@ -140,22 +140,115 @@ export const useTradingState = (connections: any[] = []) => {
                     sol_balance_usd: balance?.sol_balance_usd || 0
                 }
             }))
+            console.log(`Refreshed balance for ${memberId}:`, balance)
         } catch (error) {
             console.error(`Error refreshing balance for ${address}:`, error)
         }
-    }
+    }, [])
 
-    const refreshTradingData = useCallback(() => {
+    const refreshTradingData = useCallback(async () => {
         try {
+            console.log('refreshTradingData: Starting...')
+            
             // Invalidate and refetch all relevant queries
+            console.log('refreshTradingData: Invalidating queries...')
             queryClient.invalidateQueries({ queryKey: ['groups'] })
             queryClient.invalidateQueries({ queryKey: ['myConnects'] })
             queryClient.invalidateQueries({ queryKey: ['tokenAmount'] })
             queryClient.invalidateQueries({ queryKey: ['tradeAmount'] })
+            queryClient.invalidateQueries({ queryKey: ['wallet-infor'] })
+            queryClient.invalidateQueries({ queryKey: ['sol-price'] })
+            queryClient.invalidateQueries({ queryKey: ['token-infor'] })
+            
+            // Invalidate queries with address parameter (will invalidate all instances)
+            queryClient.invalidateQueries({ 
+                predicate: (query) => 
+                    Array.isArray(query.queryKey) && 
+                    (query.queryKey[0] === 'tokenAmount' || 
+                     query.queryKey[0] === 'tradeAmount' || 
+                     query.queryKey[0] === 'token-infor')
+            })
+            
+            // Force refetch balances for all connections
+            if (connections.length > 0) {
+                const filteredConnections = connections.filter((connection) => connection.status === "connect")
+                console.log(`refreshTradingData: Refreshing balances for ${filteredConnections.length} connections...`)
+                await Promise.all(
+                    filteredConnections.map(async (connection) => {
+                        await refreshBalance(connection.member_id.toString(), connection.member_address)
+                    })
+                )
+                console.log('refreshTradingData: Balances refreshed')
+            }
+            
+            console.log('refreshTradingData: Completed')
         } catch (error) {
             console.error("Error in refreshTradingData:", error)
         }
-    }, [queryClient])
+    }, [queryClient, connections, refreshBalance])
+
+    const forceRefreshBalances = useCallback(async () => {
+        try {
+            if (connections.length > 0) {
+                const filteredConnections = connections.filter((connection) => connection.status === "connect")
+                console.log(`Force refreshing balances for ${filteredConnections.length} connections`)
+                
+                // Clear existing balances first
+                setBalances({})
+                
+                // Fetch all balances in parallel
+                const balancePromises = filteredConnections.map(async (connection) => {
+                    const balance = await getBalance(connection.member_address)
+                    return {
+                        id: connection.member_id.toString(),
+                        balance: {
+                            sol_balance: balance?.sol_balance || 0,
+                            sol_balance_usd: balance?.sol_balance_usd || 0
+                        }
+                    }
+                })
+                
+                const results = await Promise.all(balancePromises)
+                
+                // Update balances state
+                const newBalances: Record<string, BalanceData> = {}
+                results.forEach(({ id, balance }) => {
+                    newBalances[id] = balance
+                })
+                
+                setBalances(newBalances)
+                console.log('Force refresh balances completed:', newBalances)
+            }
+        } catch (error) {
+            console.error("Error in forceRefreshBalances:", error)
+        }
+    }, [connections])
+
+    const refreshAllData = useCallback(async () => {
+        try {
+            console.log('refreshAllData: Starting...')
+            
+            // First refresh trading data
+            console.log('refreshAllData: Calling refreshTradingData...')
+            await refreshTradingData()
+            
+            // Then force refetch specific queries that might need immediate update
+            console.log('refreshAllData: Refetching queries...')
+            await Promise.all([
+                queryClient.refetchQueries({ queryKey: ['myConnects'] }),
+                queryClient.refetchQueries({ queryKey: ['groups'] }),
+                queryClient.refetchQueries({ queryKey: ['wallet-infor'] })
+            ])
+            
+            // Force refresh all balances
+            console.log('refreshAllData: Calling forceRefreshBalances...')
+            await forceRefreshBalances()
+            
+            console.log('refreshAllData: Completed successfully')
+        } catch (error) {
+            console.error("Error in refreshAllData:", error)
+        }
+    }, [refreshTradingData, queryClient, forceRefreshBalances])
 
     const handleTradeSubmit = useCallback(async (submitFn: () => Promise<any>) => {
         try {
@@ -165,7 +258,7 @@ export const useTradingState = (connections: any[] = []) => {
                 setSelectedGroups([])
                 setSelectedConnections([])
                 // Refresh all trading data
-                refreshTradingData()
+                await refreshTradingData()
                 return { success: true }
             }
             return { success: false }
@@ -183,6 +276,8 @@ export const useTradingState = (connections: any[] = []) => {
         isLoadingBalances,
         refreshBalance,
         refreshTradingData,
+        refreshAllData,
+        forceRefreshBalances,
         handleTradeSubmit
     }
 } 

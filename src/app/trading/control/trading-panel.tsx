@@ -39,7 +39,9 @@ export default function TradingPanel({
     })
 
     const {
-        handleTradeSubmit
+        handleTradeSubmit,
+        refreshAllData,
+        forceRefreshBalances
     } = useTradingState(myConnects || [])
 
     const { data: groups } = useQuery({
@@ -291,7 +293,12 @@ export default function TradingPanel({
                 message: t('trading.panel.success'),
                 type: 'success'
             })
-            // Invalidate all queries with "myConnects" key to refresh data in all components
+            // Refresh all trading data using useTradingState hook
+            setTimeout(async () => {
+                console.log('Starting refresh after successful trade...')
+                await forceRefreshBalances()
+                console.log('Refresh completed after successful trade')
+            }, 100)
         } else {
             setAmount("0.00")
             setPercentage(0)
@@ -302,8 +309,7 @@ export default function TradingPanel({
                 type: 'error'
             })
         }
-        await queryClient.invalidateQueries({ queryKey: ["myConnects"] })
-    }, [mode, amount, tokenAmount, solPrice, selectedConnections, handleTradeSubmit, t, validateAmount, amountError, tokenInfor, queryClient, refetchConnections])
+    }, [mode, amount, tokenAmount, solPrice, selectedConnections, handleTradeSubmit, validateAmount, amountError, tokenInfor, queryClient, refetchConnections, refreshAllData])
 
     // Reset amount and percentage when mode changes
     useEffect(() => {
