@@ -52,7 +52,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
             await onRefreshBalance(memberId, address)
         }
     }
-    console.log("connections", connections)
+    console.log("balances", balances)
     return (
         <div className="h-full overflow-y-auto bg-gray-300/50 dark:bg-transparent rounded-xl">
             <div className="">

@@ -346,7 +346,7 @@ export default function TradingPanel({
                 </button>
             </div>
 
-            <div className="rounded-lg flex flex-col 2xl:justify-between 2xl:gap-1.5 gap-1 h-full overflow-y-auto">
+            <div className="rounded-lg flex flex-col 2xl:gap-1.5 gap-1 h-full overflow-y-auto">
                 {/* Amount Input */}
                 <div className="relative mt-2">
                     <div className={`bg-gray-50 dark:bg-neutral-900 rounded-full border ${amountError ? 'border-red-500' : 'border-blue-200 dark:border-blue-500'} px-3  flex justify-between items-center ${height > 700 ? 'py-1.5' : '2xl:h-[30px] h-[25px]'}`}>

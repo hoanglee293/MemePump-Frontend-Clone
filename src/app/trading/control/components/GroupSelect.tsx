@@ -32,7 +32,7 @@ export const GroupSelect: React.FC<GroupSelectProps> = ({
         }))
 
     return (
-        <div className="relative">
+        <div className="relative 2xl:mt-2 mt-1">
             <Select
                 isMulti
                 options={options}

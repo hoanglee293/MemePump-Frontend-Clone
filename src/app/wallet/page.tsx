@@ -643,21 +643,6 @@ export default function WalletPage() {
         }
     };
 
-    const handleAddWallet = async () => {
-        // Kiểm tra nếu tạo nhiều ví thì hiển thị modal confirm
-        if (quantityWallet && quantityWallet > 1) {
-            setShowConfirmModal(true);
-            return;
-        }
-
-        await executeAddWallet();
-    };
-
-    const handleConfirmAddWallet = async () => {
-        setShowConfirmModal(false);
-        await executeAddWallet();
-    };
-
     const executeAddWallet = async () => {
         try {
             setIsLoading(true);
@@ -676,18 +661,24 @@ export default function WalletPage() {
             setWalletName("");
             setWalletNickname("");
             setSelectedNetwork("EN");
-            setShowAddWallet(false);
             setSelectedMasterTrader("");
             setQuantityWallet(null);
             refetchInforWallets();
 
+            if (response?.created_count) {
+                setResultInfo({
+                    created_count: Number(response?.created_count ?? 0),
+                    failed_count: Number(response?.failed_count ?? 0),
+                    message: response?.message,
+                });
+                setShowModalResult(true)
+                setShowAddWallets(false);
+            } else {
+                toast.success(t('wallet.walletAddedSuccess'));
+                setShowAddWallet(false);
+            }
             // Show result modal based on API response
-            setResultInfo({
-                created_count: Number(response?.created_count ?? 0),
-                failed_count: Number(response?.failed_count ?? 0),
-                message: response?.message,
-            });
-            setShowModalResult(true);
+
             // Refresh wallet list
             await fetchWallets();
         } catch (error: any) {
@@ -764,11 +755,16 @@ export default function WalletPage() {
             setShowImportWallet(false);
 
             // Show result modal based on API response
-            setResultInfo({
-                created_count: Number(response?.created_count ?? 0),
-                failed_count: Number(response?.failed_count ?? 0),
-                message: response?.message,
-            });
+            if (response?.created_count) {
+                setResultInfo({
+                    created_count: Number(response?.created_count ?? 0),
+                    failed_count: Number(response?.failed_count ?? 0),
+                    message: response?.message,
+                });
+                setShowModalResult(true);
+            } else {
+                toast.success(t('wallet.walletAddedSuccess'));
+            }
             setShowModalResult(true);
 
             // Refresh wallet list
@@ -776,7 +772,7 @@ export default function WalletPage() {
         } catch (error: any) {
             // Log error but continue with other keys
             console.error(`Failed to import wallet with key: ${privateKey}`, error);
-            
+
             // Show specific error messages
             if (error?.response?.data?.message.includes("Nickname is required for new wallet")) {
                 toast.error(t('wallet.walletNicknameRequired'));
@@ -814,16 +810,6 @@ export default function WalletPage() {
         }
     };
     console.log("privateKeyArray", privateKeyArray.length)
-
-    const handleImportWallets = async () => {
-        // Show confirmation modal first
-        setShowImportConfirmModal(true);
-    };
-
-    const handleConfirmImportWallets = async () => {
-        setShowImportConfirmModal(false);
-        await executeImportWallets();
-    };
 
     const executeImportWallets = async () => {
         try {
@@ -1554,7 +1540,7 @@ export default function WalletPage() {
                                         {t('common.cancel')}
                                     </button>
                                     <button
-                                        onClick={handleAddWallet}
+                                        onClick={executeAddWallet}
                                         disabled={isLoading || !walletName || !walletNickname}
                                         className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
@@ -1654,7 +1640,7 @@ export default function WalletPage() {
                                         {t('common.cancel')}
                                     </button>
                                     <button
-                                        onClick={handleAddWallet}
+                                        onClick={executeAddWallet}
                                         disabled={isLoading || !walletName || !walletNickname}
                                         className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
@@ -1703,7 +1689,7 @@ export default function WalletPage() {
                                                             .split(/[\s,;.]+/)
                                                             .map(key => key.trim())
                                                             .filter(key => key.length > 0);
-                                                        
+
                                                         if (keys.length > 1) {
                                                             // If multiple keys are pasted, add them with newlines
                                                             const currentKeys = [...privateKeyArray];
@@ -1775,36 +1761,36 @@ export default function WalletPage() {
                                     </div>
 
                                     <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
-                                    <div className={wrapGradientStyle}>
-                                        <Select
-                                            value={selectedMasterTrader}
-                                            onValueChange={(value) => {
-                                                setSelectedMasterTrader(value);
-                                            }}
-                                        >
-                                            <SelectTrigger className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500">
-                                                <SelectValue placeholder={t('wallet.connectMaster')} className="placeholder:text-gray-500"/>
-                                            </SelectTrigger>
-                                            <SelectContent
-                                                className="bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 shadow-lg"
-                                                style={{ zIndex: 9999 }}
+                                        <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
+                                        <div className={wrapGradientStyle}>
+                                            <Select
+                                                value={selectedMasterTrader}
+                                                onValueChange={(value) => {
+                                                    setSelectedMasterTrader(value);
+                                                }}
                                             >
-                                                {masterTraders && masterTraders.length > 0 ? (
-                                                    masterTraders.map((trader: MasterTrader) => (
-                                                        <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
-                                                            {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                <SelectTrigger className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500">
+                                                    <SelectValue placeholder={t('wallet.connectMaster')} className="placeholder:text-gray-500" />
+                                                </SelectTrigger>
+                                                <SelectContent
+                                                    className="bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 shadow-lg"
+                                                    style={{ zIndex: 9999 }}
+                                                >
+                                                    {masterTraders && masterTraders.length > 0 ? (
+                                                        masterTraders.map((trader: MasterTrader) => (
+                                                            <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
+                                                                {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                            </SelectItem>
+                                                        ))
+                                                    ) : (
+                                                        <SelectItem value="" disabled>
+                                                            {isLoadingMasters ? 'Loading...' : 'No master traders available'}
                                                         </SelectItem>
-                                                    ))
-                                                ) : (
-                                                    <SelectItem value="" disabled>
-                                                        {isLoadingMasters ? 'Loading...' : 'No master traders available'}
-                                                    </SelectItem>
-                                                )}
-                                            </SelectContent>
-                                        </Select>
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-5">
@@ -1812,7 +1798,7 @@ export default function WalletPage() {
                                         <div className={modalButtonTextStyles}>{t('common.cancel')}</div>
                                     </button>
                                     <button
-                                        onClick={handleImportWallets}
+                                        onClick={executeImportWallets}
                                         disabled={isLoading || !walletName || !walletNickname || !selectedNetwork || privateKeyArray?.length === 0}
                                         className={modalButtonStyles}
                                     >
@@ -2493,78 +2479,6 @@ export default function WalletPage() {
                 </div>
             )}
             <ModalSignin isOpen={!isAuthenticated} onClose={() => { }} />
-            {showConfirmModal && (
-                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
-                        <div className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-4 sm:p-6 rounded-xl">
-                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">
-                                {t('wallet.confirmCreateWallets')}
-                            </h2>
-                            <div className="space-y-4">
-                                <div className="text-center">
-                                    <p className="text-sm dark:text-gray-200 text-black mb-4">
-                                        {t('wallet.confirmCreateWalletsMessage', {
-                                            quantity: quantityWallet,
-                                            prefix: walletName
-                                        })}
-                                    </p>
-                                </div>
-                                <div className="flex justify-end gap-3 mt-6">
-                                    <button
-                                        onClick={() => setShowConfirmModal(false)}
-                                        className="px-4 py-1.5 text-xs 2xl:text-sm font-medium dark:text-gray-200 text-black hover:text-neutral-100"
-                                    >
-                                        {t('common.cancel')}
-                                    </button>
-                                    <button
-                                        onClick={handleConfirmAddWallet}
-                                        disabled={isLoading}
-                                        className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {isLoading ? t('wallet.creating') : t('wallet.confirm')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showImportConfirmModal && (
-                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
-                        <div className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-4 sm:p-6 rounded-xl">
-                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">
-                                {t('wallet.confirmImportWallets')}
-                            </h2>
-                            <div className="space-y-4">
-                                <div className="text-center">
-                                    <p className="text-sm dark:text-gray-200 text-black mb-4">
-                                        {t('wallet.confirmImportWalletsMessage', {
-                                            quantity: privateKeyArray.length,
-                                            prefix: walletName
-                                        })}
-                                    </p>
-                                </div>
-                                <div className="flex justify-end gap-3 mt-6">
-                                    <button
-                                        onClick={() => setShowImportConfirmModal(false)}
-                                        className="px-4 py-1.5 text-xs 2xl:text-sm font-medium dark:text-gray-200 text-black hover:text-neutral-100"
-                                    >
-                                        {t('common.cancel')}
-                                    </button>
-                                    <button
-                                        onClick={handleConfirmImportWallets}
-                                        disabled={isLoading}
-                                        className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {isLoading ? t('wallet.importing') : t('wallet.confirm')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
             {showModalResult && (
                 <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
                     <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
@@ -2573,7 +2487,7 @@ export default function WalletPage() {
                                 {t('wallet.resultTitleImport')}
                             </h2>
                             <div className="space-y-3 text-sm dark:text-gray-200 text-black">
-                            
+
                                 <div className="flex items-center justify-between">
                                     <span>{t('wallet.importedSuccessfully')}</span>
                                     <span className="font-semibold text-green-500">{resultInfo?.created_count ?? 0}</span>

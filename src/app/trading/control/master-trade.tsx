@@ -45,7 +45,8 @@ export default function MasterTradeChat() {
     const {
         selectedGroups,
         setSelectedGroups,
-        refreshTradingData
+        refreshTradingData,
+        balances
     } = useTradingState(myConnects || [])
 
     const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
@@ -232,6 +233,7 @@ export default function MasterTradeChat() {
                             copiedAddress={copiedAddress}
                             onCopyAddress={handleCopyAddress}
                             isLoading={isLoadingConnects}
+                            balances={balances}
                         />
                     </div>
                 </div>
