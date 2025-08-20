@@ -392,6 +392,7 @@ export default function WalletPage() {
     const [isSendingCode, setIsSendingCode] = useState(false);
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
 
     const privateKeysRef = useRef<HTMLDivElement>(null);
     const addWalletRef = useRef<HTMLDivElement>(null);
@@ -815,6 +816,16 @@ export default function WalletPage() {
     console.log("privateKeyArray", privateKeyArray.length)
 
     const handleImportWallets = async () => {
+        // Show confirmation modal first
+        setShowImportConfirmModal(true);
+    };
+
+    const handleConfirmImportWallets = async () => {
+        setShowImportConfirmModal(false);
+        await executeImportWallets();
+    };
+
+    const executeImportWallets = async () => {
         try {
             setIsLoading(true);
             // Process each private key
@@ -2511,6 +2522,42 @@ export default function WalletPage() {
                                         className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isLoading ? t('wallet.creating') : t('wallet.confirm')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showImportConfirmModal && (
+                <div className="fixed inset-0 bg-theme-black-1/3 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                    <div className="p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[440px]">
+                        <div className="bg-white dark:bg-theme-black-200 border border-theme-gradient-linear-start p-4 sm:p-6 rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">
+                                {t('wallet.confirmImportWallets')}
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="text-center">
+                                    <p className="text-sm dark:text-gray-200 text-black mb-4">
+                                        {t('wallet.confirmImportWalletsMessage', {
+                                            quantity: privateKeyArray.length,
+                                            prefix: walletName
+                                        })}
+                                    </p>
+                                </div>
+                                <div className="flex justify-end gap-3 mt-6">
+                                    <button
+                                        onClick={() => setShowImportConfirmModal(false)}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm font-medium dark:text-gray-200 text-black hover:text-neutral-100"
+                                    >
+                                        {t('common.cancel')}
+                                    </button>
+                                    <button
+                                        onClick={handleConfirmImportWallets}
+                                        disabled={isLoading}
+                                        className="px-4 py-1.5 text-xs 2xl:text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-neutral-100 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isLoading ? t('wallet.importing') : t('wallet.confirm')}
                                     </button>
                                 </div>
                             </div>

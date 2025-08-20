@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getInforWallet } from '@/services/api/TelegramWalletService'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useLang } from '@/lang/useLang'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 // Icons
 const BuyIcon = () => (
@@ -31,7 +32,7 @@ const TradeIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
   </svg>
 )
-const classLayout = "dark:bg-theme-neutral-1000 shadow-inset bg-white rounded-2xl flex flex-col"
+const classLayout = "dark:bg-[#0e0e0e] shadow-inset bg-white rounded-2xl flex flex-col"
 type TradingMode = 'buy' | 'sell'
 type TabType = TradingMode | 'chat' | 'trade'
 
@@ -210,21 +211,33 @@ const Control = () => {
   // Desktop view
   return (
     <div className='flex flex-col h-full gap-2 '>
-      <div className={classLayout + "  p-3 flex-none"}>
-        <Suspense fallback={<div className="flex items-center min-h-[500px] justify-center h-full">Loading...</div>}>
-          <TradingPanel 
-            defaultMode={activeTab as TradingMode}
-            currency={currencies} 
-            isConnected={isConnected} 
-            onConnect={() => setIsConnected(!isConnected)}
-          />
-        </Suspense>
-      </div>
-      <div className={classLayout + " flex-1 min-h-0"}>
-        <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
-          <MasterTradeChat />
-        </Suspense>
-      </div>
+      <PanelGroup direction="vertical" className="h-full">
+        {/* Chart Panel */}
+        <Panel defaultSize={50} minSize={20} maxSize={80} className={`${classLayout} lg:overflow-hidden 2xl:p-3 p-1.5 flex-none relative`}>
+          <Suspense fallback={<div className="flex items-center min-h-[500px] justify-center h-full ">Loading...</div>}>
+            <TradingPanel
+              defaultMode={activeTab as TradingMode}
+              currency={currencies}
+              isConnected={isConnected}
+              onConnect={() => setIsConnected(!isConnected)}
+            />
+          </Suspense>
+        </Panel>
+
+        {/* Height Resize Handle */}
+        <PanelResizeHandle className="h-[2px] m-1 bg-theme-neutral-800 hover:bg-neutral-600 transition-colors relative z-400" />
+
+        {/* Transaction History Panel */}
+        <Panel defaultSize={50} minSize={20} maxSize={80} className={`${classLayout} lg:overflow-hidden relative w-full`}>
+          <div className='transition-all duration-100 overflow-hidden rounded-md flex h-full'>
+            <div className='flex flex-1 w-full'>
+              <Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
+                <MasterTradeChat />
+              </Suspense>
+            </div>
+          </div>
+        </Panel>
+      </PanelGroup>
     </div>
   )
 }

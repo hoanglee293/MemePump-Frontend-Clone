@@ -182,7 +182,7 @@ export default function MasterTradeChat() {
     }, [mounted, refetchMyConnects])
     
     return (
-        <div className="h-full flex flex-col relative">
+        <div className="h-full flex flex-col w-full ">
             {/* {isLoading && (
                 <div className="absolute inset-0 bg-neutral-1000/50 backdrop-blur-xl z-10 flex items-center justify-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-theme-primary-400"></div>
@@ -190,10 +190,10 @@ export default function MasterTradeChat() {
                 </div>
             )} */}
             {/* Tabs */}
-            <div className="flex-none flex h-[30px] bg-gray-300 my-2 mx-3 rounded-full relative dark:bg-theme-neutral-800">
+            <div className="flex-none flex h-[25px] bg-gray-300 my-2 mx-3 rounded-full relative dark:bg-theme-neutral-800">
                 {walletInfor?.role === "master" && (
                     <button
-                        className={`flex-1 rounded-xl text-sm cursor-pointer font-medium uppercase text-center ${activeTab === "trade" ? "linear-gradient-connect" : "text-neutral-400"
+                        className={`flex-1 rounded-xl text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "trade" ? "linear-gradient-connect" : "text-neutral-400"
                             }`}
                         onClick={() => handleTabChange("trade")}
                         data-active-tab={activeTab}
@@ -202,7 +202,7 @@ export default function MasterTradeChat() {
                     </button>
                 )}
                 <button
-                    className={`flex-1 rounded-xl cursor-pointer text-sm font-medium uppercase text-center ${activeTab === "chat" ? "linear-gradient-connect" : "text-neutral-400"
+                    className={`flex-1 rounded-xl cursor-pointer text-xs font-medium uppercase text-center ${activeTab === "chat" ? "linear-gradient-connect" : "text-neutral-400"
                         }`}
                     onClick={() => handleTabChange("chat")}
                     data-active-tab={activeTab}

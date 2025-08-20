@@ -50,7 +50,7 @@ export const PercentageButtons: React.FC<PercentageButtonsProps> = ({
                     ) : (
                         <button
                             onClick={() => onSetPercentage(percent)}
-                            className={`w-full 2xl:px-[6px] px-1 py-1 h-[30px] font-semibold text-[10px] rounded-md flex items-center justify-between gap-1 border border-solid transition-colors ${
+                            className={`w-full 2xl:px-[6px] px-1 py-1 h-[30px] font-semibold text-[8px] rounded-md flex items-center justify-between gap-1 border border-solid transition-colors ${
                                 percentage === percent
                                     ? "border-blue-500 text-blue-600 dark:border-linear-start bg-blue-50 dark:bg-theme-primary-400/10"
                                     : "border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
@@ -58,7 +58,7 @@ export const PercentageButtons: React.FC<PercentageButtonsProps> = ({
                         >
                             {percent}%
                             <Pencil
-                                    className="w-4 h-3 cursor-pointer hover:opacity-80 text-theme-neutral-1000 dark:text-neutral-400"
+                                    className="2xl:w-4 2xl:h-3 w-3 h-2 cursor-pointer hover:opacity-80 text-theme-neutral-1000 dark:text-neutral-400"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         onEditClick(index)

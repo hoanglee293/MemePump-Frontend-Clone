@@ -333,7 +333,7 @@ const ListToken = () => {
         setSelectedCategory(categorySlug);
     };
     return (
-        <div className='dark:bg-[#0e0e0e] bg-white shadow-inset rounded-xl pr-0 pb-0 flex-1 overflow-hidden'>
+        <div className='dark:bg-[#0e0e0e] bg-white shadow-inset rounded-xl pr-0 pb-0 flex-1 flex flex-col overflow-hidden'>
             {/* <div className="relative mb-3 pr-3 px-3">
                 <div className="flex relative items-center dark:bg-neutral-800 bg-white rounded-full px-3 py-1 border-1 border-t-theme-primary-300 border-l-theme-primary-300 border-b-theme-secondary-400 border-r-theme-secondary-400">
                     <input
@@ -357,7 +357,7 @@ const ListToken = () => {
                 )}
             </div> */}
 
-            <div className='pr-1 h-full'>
+            <div className='pr-1 flex-1'>
                 <div
                     ref={scrollContainerRef}
                     className={`flex gap-1.5 px-2 pt-1 custom-scroll bg-theme-neutral-200 dark:bg-[#0e0e0e] overflow-x-auto whitespace-nowrap min-w-[280px] pb-1 max-w-full cursor-grab ${isDragging ? 'cursor-grabbing' : ''}`}
@@ -442,7 +442,7 @@ const ListToken = () => {
                     </div>
                 )}
 
-                <div className="flex-grow h-[calc(100%-20px)] custom-scroll overflow-y-scroll">
+                <div className="flex-grow flex-1 max-h-[65vh] custom-scroll overflow-y-scroll">
                     {Array.isArray(tokenList) && tokenList?.filter(e => categoryOption?.length > 0 ? e?.category?.name === categoryOption : true)?.map((item: any, i: number) => {
                         const address = searchQuery.length > 0 ? item.poolAddress : item.address;
                         return (

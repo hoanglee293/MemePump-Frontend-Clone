@@ -377,7 +377,7 @@ const ChatWidget = () => {
           <img
             src={chatLogo}
             alt="Chat Logo"
-            className="w-[40px] h-[40px] lg:w-[60px] lg:h-[60px]"
+            className="w-[40px] h-[40px] lg:w-[50px] lg:h-[50px]"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           />

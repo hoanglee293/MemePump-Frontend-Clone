@@ -499,7 +499,10 @@
     "walletNameNote": "Note: Wallet name and nickname cannot be duplicated with existing wallet names and nicknames",
     "confirmCreateWallets": "Confirm Create Wallets",
     "confirmCreateWalletsMessage": "Confirm creating {quantity} new wallets with wallet name prefix '{prefix}'?",
-    "confirm": "Confirm"
+    "confirmImportWallets": "Confirm Import Wallets",
+    "confirmImportWalletsMessage": "Confirm importing {quantity} wallets with wallet name prefix '{prefix}'?",
+    "confirm": "Confirm",
+    "importing": "Importing..."
   },
   "searchPlaceholder": "Token Name/ Address",
   "languages": {

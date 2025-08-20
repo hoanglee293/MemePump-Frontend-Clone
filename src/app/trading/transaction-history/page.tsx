@@ -321,15 +321,15 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[15%]">{t("transactionHistory.time")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.total")}</th>
-                <th className="xl:block hidden 2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.status")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.address")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.time")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.total")}</th>
+                {/* <th className="xl:block hidden 2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th> */}
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.status")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.address")}</th>
               </tr>
             </thead>
             <tbody>
@@ -338,7 +338,7 @@ function TransactionHistoryContent() {
                   <td className="2xl:px-4 px-1 py-2 truncate 2xl:text-xs text-[10px] text-gray-600 dark:text-neutral-300">
                     {new Date(order.time).toLocaleString()}
                   </td>
-                  <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-600 dark:text-green-500 uppercase" : "text-red-600 dark:text-red-500 uppercase"}`}>
+                  <td className={`2xl:px-4 px-1 2xl:text-[11px] text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-600 dark:text-green-500 uppercase" : "text-red-600 dark:text-red-500 uppercase"}`}>
                     {order.type === "buy" ? t("transactionHistory.buy") : t("transactionHistory.sell")}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
@@ -350,9 +350,9 @@ function TransactionHistoryContent() {
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
                     ${(order.priceUsd * order.amount).toFixed(6)}
                   </td>
-                  <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
-                    {order.program}
-                  </td>
+                    {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
+                      {order.program}
+                    </td> */}
                   <td className="2xl:px-4 px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {truncateString(order.tx, 10)}<button onClick={() => {
                       navigator.clipboard.writeText(order.tx)
@@ -368,7 +368,7 @@ function TransactionHistoryContent() {
                       </svg>
                     </button>
                   </td>
-                  <td className="2xl:px-4 px-1 text-green-500 dark:text-green-400 2xl:text-xs text-[9px] py-2 font-medium truncate">
+                  <td className="2xl:px-4 px-1 text-green-500 dark:text-green-400 2xl:text-[11px] text-[9px] py-2 font-medium truncate">
                     {t("transactionHistory.completed")}
                   </td>
                   <td className="2xl:px-4 px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium flex items-center truncate">
@@ -410,12 +410,12 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[15%]">{t("transactionHistory.time")}</th>
+                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.time")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
+                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.amount")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.total")}</th>
-                <th className="xl:block hidden 2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th>
+                {/* <th className="xl:block hidden 2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th> */}
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.status")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.address")}</th>
@@ -439,9 +439,9 @@ function TransactionHistoryContent() {
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
                     ${(order.priceUsd * order.amount).toFixed(6)}
                   </td>
-                  <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
+                  {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {order.program}
-                  </td>
+                  </td> */}
                   <td className="2xl:px-4 px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {truncateString(order.tx, 10)}<button onClick={() => {
                       navigator.clipboard.writeText(order.tx)
@@ -501,18 +501,18 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.address")}</th>
-                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.amount")}</th>
-                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[14%]">{t("transactionHistory.quoteValue")}</th>
-                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.usdValue")}</th>
-                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[14%]">{t("transactionHistory.ownerPercentage")}</th>
+                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.address")}</th>
+                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.amount")}</th>
+                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.quoteValue")}</th>
+                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.usdValue")}</th>
+                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.ownerPercentage")}</th>
               </tr>
             </thead>
             <tbody>
               {holders?.accounts.map((holder: any, index: number) => {
                 return (
                   <tr key={index} className={`hover:bg-gray-100 dark:hover:bg-neutral-800/30 border-b border-gray-100 dark:border-neutral-800/50 ${index % 2 === 0 ? 'bg-gray-50 dark:bg-[#1A1A1A]' : 'bg-white dark:bg-[#0F0F0F]'}`}>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium flex items-center truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium flex items-center truncate">
                       <span className="text-[#FFB300] dark:text-[#FFB300]">{truncateString(holder.wallet, 9)}</span>
                       <button onClick={() => {
                         navigator.clipboard.writeText(holder.wallet)
@@ -528,16 +528,16 @@ function TransactionHistoryContent() {
                         </svg>
                       </button>
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium truncate">
                       {formatNumberWithSuffix(holder.amount)}
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
+                    <td className="px-4 text-purple-500 text-[10px] py-1 font-medium truncate">
                       {formatNumberWithSuffix(holder.value.quote)} SOL
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
+                    <td className="px-4 text-theme-primary-400 text-[10px] py-1 font-medium truncate">
                       ${formatNumberWithSuffix(holder.value.usd)}
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium truncate">
                       {holder.percentage.toFixed(2)}%
                     </td>
                   </tr>
@@ -590,7 +590,7 @@ function TransactionHistoryContent() {
   };
 
   return (
-    <div className="shadow-inset dark:bg-theme-neutral-1000 rounded-xl p-2 sm:p-2 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col h-full w-full">
+    <div className="shadow-inset dark:bg-[#0e0e0e] rounded-xl p-2 sm:p-2 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col h-full w-full">
       <div className="flex border-gray-200 dark:border-neutral-800 h-[25px] bg-gray-100  rounded-full dark:bg-[#333]">
         <button
           className={`flex-1 rounded-full text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "all" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}

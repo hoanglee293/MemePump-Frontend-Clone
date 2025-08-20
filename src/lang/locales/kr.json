@@ -519,6 +519,9 @@
     "walletNameNote": "주의: 지갑 이름과 닉네임은 이미 존재하는 지갑의 이름이나 닉네임과 중복될 수 없습니다.",
     "confirmCreateWallets": "지갑 생성 확인",
     "confirmCreateWalletsMessage": "접두사 '{prefix}'를 포함하는 {quantity}개의 새 지갑을 생성하는 것을 확인하시겠습니까?",
+    "confirmImportWallets": "지갑 가져오기 확인",
+    "confirmImportWalletsMessage": "접두사 '{prefix}'를 포함하는 {quantity}개의 지갑을 가져오는 것을 확인하시겠습니까?",
+    "importing": "가져오는 중...",
     "confirm": "확인",
     "creating": "생성 중..."
   },

@@ -509,6 +509,9 @@
     "walletNameNote": "注意: ウォレット名とニックネームは既存のウォレット名およびニックネームと重複することはできません",
     "confirmCreateWallets": "ウォレット作成の確認",
     "confirmCreateWalletsMessage": "プレフィックス '{prefix}' を含む {quantity} 個の新しいウォレットを作成することを確認しますか？",
+    "confirmImportWallets": "ウォレットインポートの確認",
+    "confirmImportWalletsMessage": "プレフィックス '{prefix}' を含む {quantity} 個のウォレットをインポートすることを確認しますか？",
+    "importing": "インポート中...",
     "confirm": "確認",
     "creating": "作成中..."
   },

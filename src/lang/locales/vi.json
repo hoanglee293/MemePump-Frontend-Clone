@@ -545,7 +545,10 @@
     "walletNameNote": "Lưu ý: Tên ví và biệt danh không thể trùng với tên ví và biệt danh hiện có",
     "nicknameDuplicate": "Tên/ biệt danh ví đã tồn tại",
     "confirmCreateWallets": "Xác nhận tạo ví",
-    "confirmCreateWalletsMessage": "Xác nhận tạo {quantity} ví mới với tên ví chứa tiền tố là '{prefix}' không?"
+    "confirmCreateWalletsMessage": "Xác nhận tạo {quantity} ví mới với tên ví chứa tiền tố là '{prefix}' không?",
+    "confirmImportWallets": "Xác nhận import ví",
+    "confirmImportWalletsMessage": "Xác nhận import {quantity} ví với tên ví chứa tiền tố là '{prefix}' không?",
+    "importing": "Đang import..."
   },
   "searchPlaceholder": "Tên Token/ Địa chỉ",
   "languages": {

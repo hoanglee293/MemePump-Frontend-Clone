@@ -32,7 +32,7 @@ export const GroupSelect: React.FC<GroupSelectProps> = ({
         }))
 
     return (
-        <div className="relative mt-[2%]">
+        <div className="relative">
             <Select
                 isMulti
                 options={options}
@@ -43,7 +43,7 @@ export const GroupSelect: React.FC<GroupSelectProps> = ({
                         : []
                     setSelectedGroups(selectedValues)
                 }}
-                className="react-select-container max-h-8"
+                className="react-select-container"
                 classNamePrefix="react-select"
                 placeholder={t('trading.panel.selectGroups')}
                 noOptionsMessage={() => t('trading.panel.noGroupsAvailable')}

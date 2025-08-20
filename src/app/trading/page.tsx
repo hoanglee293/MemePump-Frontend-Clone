@@ -55,10 +55,10 @@ const TradingPage = () => {
   if(windowWidth < 905) withDesktop = 'w-[35%]';
   
   return (
-    <div className={`h-[91.5vh] flex flex-col gap-2 container-trading relative z-40  ${
+    <div className={`h-[92.5vh] flex flex-col gap-2 container-trading relative z-40  ${
       isMobile ? 'px-2' : 'px-2'
     }`}>
-      {!isMobile && <Interface />}
+      {/* {!isMobile && <Interface />} */}
       
       {/* Sidebar Toggle Button for Small Screens */}
       {isSmallScreen && (
@@ -114,7 +114,7 @@ const TradingPage = () => {
         {/* Center and Right Columns with Resizable Panels */}
         {!isMobile ? (
           <PanelGroup direction="horizontal" className="flex-1">
-            <Panel defaultSize={17} minSize={12} maxSize={25} className="h-full overflow-hidden">
+            <Panel defaultSize={20} minSize={12} maxSize={25} className="h-full overflow-hidden">
             <div className={`flex ${
               isMobile ? 'flex-row w-full lg:h-[200px]' : 'flex-col '} xl:gap- gap-1 lg:overflow-hidden`}>
               <TokenInfo />
@@ -127,7 +127,7 @@ const TradingPage = () => {
               <PanelGroup direction="vertical" className="h-full">
                 {/* Chart Panel */}
                 <Panel defaultSize={55} minSize={30} maxSize={80} className="lg:overflow-hidden relative">
-                  <div className='dark:bg-theme-neutral-1000 shadow-inset bg-white rounded-xl p-2 overflow-auto transition-all duration-100 relative h-full'>
+                  <div className='dark:bg-[#0e0e0e] shadow-inset bg-white rounded-xl p-2 overflow-auto transition-all duration-100 relative h-full'>
                     <TradingViewChart className='h-full rounded-xl overflow-hidden' />
                   </div>
                 </Panel>
@@ -150,7 +150,7 @@ const TradingPage = () => {
             <PanelResizeHandle className="w-[2px] m-1 bg-theme-neutral-800 hover:bg-neutral-600 transition-colors relative z-400" />
             
             {/* Right Column */}
-            <Panel defaultSize={20} minSize={15} maxSize={30} className="h-full overflow-hidden">
+            <Panel defaultSize={24} minSize={15} maxSize={30} className="h-full overflow-hidden">
               <div className='h-full overflow-auto'>
                 <Control/>
               </div>
