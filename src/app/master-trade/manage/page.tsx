@@ -55,6 +55,7 @@ interface Group {
 type Connection = {
   connection_id: number;
   member_id: number;
+  member_nickname: string;
   member_address: string;
   status: "connect" | "pending" | "pause" | "block";
   option_limit: string;
@@ -871,6 +872,7 @@ export default function MasterTradeInterface() {
                     />
                   )}
                 </th>
+                <th className={`px-4 py-3 text-left ${textHeaderTable}`}>{t('masterTrade.manage.connectionTable.nickname')}</th>
                 <th className={`px-4 py-3 text-left ${textHeaderTable}`}>{t('masterTrade.manage.connectionTable.address')}</th>
                 <th className={`px-4 py-3 text-center ${textHeaderTable}`}>{t('masterTrade.manage.connectionTable.group')}</th>
                 <th className={`px-4 py-3 text-center ${textHeaderTable}`}>{t('masterTrade.manage.connectionTable.status')}</th>
@@ -895,6 +897,11 @@ export default function MasterTradeInterface() {
                         className="w-4 h-4 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center">
+                      <span className={`${textBodyTable}`}>{item.member_nickname}</span>
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center">

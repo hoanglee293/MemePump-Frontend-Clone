@@ -33,8 +33,7 @@ export default function TradingPanel({
         queryKey: ["myConnects"],
         queryFn: () => getMyConnects(),
         refetchOnWindowFocus: false,
-        staleTime: 0,
-        refetchInterval: 30000,
+        staleTime: 0, // Always consider data stale to allow refetching
         refetchOnMount: true,
     })
 
@@ -294,11 +293,7 @@ export default function TradingPanel({
                 type: 'success'
             })
             // Refresh all trading data using useTradingState hook
-            setTimeout(async () => {
-                console.log('Starting refresh after successful trade...')
-                await forceRefreshBalances()
-                console.log('Refresh completed after successful trade')
-            }, 100)
+            forceRefreshBalances()
         } else {
             setAmount("0.00")
             setPercentage(0)

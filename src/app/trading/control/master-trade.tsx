@@ -55,7 +55,6 @@ export default function MasterTradeChat() {
     const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
     const [mounted, setMounted] = useState(false);
-    const [initialized, setInitialized] = useState(false);
 
     // Get translations
     const t = useLang().t;

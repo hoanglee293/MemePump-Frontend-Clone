@@ -362,6 +362,7 @@
         "createGroupError": "Không thể tạo nhóm"
       },
       "connectionTable": {
+        "nickname": "Biệt danh",
         "address": "Địa chỉ",
         "group": "Nhóm",
         "status": "Trạng thái",

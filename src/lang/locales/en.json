@@ -272,6 +272,7 @@
         "joinError": "Failed to join group",
         "connectSuccess": "Successfully connected",
         "blockSuccess": "Successfully blocked",
+        "chooseGroup": "Choose group",
         "pauseSuccess": "Successfully paused",
         "joinSuccessDescription": "You have successfully joined the group",
         "joinSuccessDescription2": "You can connect your wallet to this group",
@@ -315,6 +316,7 @@
         "deleteCount": "Delete ({count})"
       },
       "connectionTable": {
+        "nickname": "Nickname",
         "address": "Address",
         "group": "Group",
         "status": "Status",

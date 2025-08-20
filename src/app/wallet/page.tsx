@@ -1598,6 +1598,18 @@ export default function WalletPage() {
                                         />
                                     </div>
                                 </div>
+                                 {/* Network Selection */}
+                                 <div className="flex flex-col gap-1">
+                                        <div className={modalLabelStyles}>{t('wallet.network')}</div>
+                                        <div className={wrapGradientStyle}>
+                                            <CustomSelect
+                                                value={selectedNetwork}
+                                                onChange={(value) => setSelectedNetwork(value)}
+                                                options={langConfig.listLangs}
+                                                placeholder={t('selectNetwork')}
+                                            />
+                                        </div>
+                                    </div>
                                 <div>
                                     <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
                                     <div className={wrapGradientStyle}>

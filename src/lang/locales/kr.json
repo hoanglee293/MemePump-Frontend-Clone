@@ -333,6 +333,7 @@
         "deleteCount": "삭제 ({count})"
       },
       "connectionTable": {
+        "nickname": "별명",
         "address": "주소",
         "group": "그룹",
         "status": "상태",
