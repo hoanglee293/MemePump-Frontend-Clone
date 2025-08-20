@@ -199,7 +199,7 @@ const Header = () => {
         <>
             {/* NotifyProvider removed - using Toaster from ClientLayout */}
             <header className="sticky top-0 w-full bg-white dark:bg-black border-b dark:border-none border-gray-200 dark:border-gray-800" style={{ zIndex: 50 }}>
-                <div className='flex items-center justify-between px-4 2xl:px-10 2xl:py-3 py-1 '>
+                <div className='flex items-center justify-between px-4 2xl:px-6 2xl:py-2 py-1 '>
                     <div className='flex gap-4'>
                         <div className='flex items-center gap-[3vw]'>
                         <Link href="/"><img src={"/logo.png"} alt="logo" className="h-6 md:h-8" /></Link>

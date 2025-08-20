@@ -60,7 +60,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                     <div
                         key={item.member_id}
                         onClick={() => handleSelectConnection(item.member_id.toString())}
-                        className="flex items-center p-2 px-4 lg:rounded-lg dark:hover:bg-[#1a1a1a] hover:bg-theme-green-300 cursor-pointer relative dark:border-none border-b border-gray-400 dark:border-theme-neutral-700"
+                        className="flex items-center p-1.5 px-4 lg:rounded-lg dark:hover:bg-[#1a1a1a] hover:bg-theme-green-300 cursor-pointer relative dark:border-none border-b border-gray-400 dark:border-theme-neutral-700"
                     >
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center">
@@ -88,7 +88,7 @@ export const ConnectionList: React.FC<ConnectionListProps> = ({
                                 </button>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1 text-xs">
                                     <span>{formatNumberWithSuffix3(balances?.[item.member_id]?.sol_balance || 0)} SOL</span>
                                     <span>${formatNumberWithSuffix3(balances?.[item.member_id]?.sol_balance_usd || 0)}</span>
                                     <button

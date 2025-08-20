@@ -333,7 +333,7 @@ const ListToken = () => {
         setSelectedCategory(categorySlug);
     };
     return (
-        <div className='dark:bg-theme-neutral-1000 bg-white shadow-inset rounded-xl pr-0 pb-0 flex-1 pt-1 overflow-hidden'>
+        <div className='dark:bg-[#0e0e0e] bg-white shadow-inset rounded-xl pr-0 pb-0 flex-1 overflow-hidden'>
             {/* <div className="relative mb-3 pr-3 px-3">
                 <div className="flex relative items-center dark:bg-neutral-800 bg-white rounded-full px-3 py-1 border-1 border-t-theme-primary-300 border-l-theme-primary-300 border-b-theme-secondary-400 border-r-theme-secondary-400">
                     <input
@@ -360,33 +360,33 @@ const ListToken = () => {
             <div className='pr-1 h-full'>
                 <div
                     ref={scrollContainerRef}
-                    className={`flex gap-2 px-2 pt-1 custom-scroll bg-theme-neutral-200 dark:bg-theme-neutral-1000 overflow-x-auto whitespace-nowrap min-w-[280px] pb-1 max-w-full cursor-grab ${isDragging ? 'cursor-grabbing' : ''}`}
+                    className={`flex gap-1.5 px-2 pt-1 custom-scroll bg-theme-neutral-200 dark:bg-[#0e0e0e] overflow-x-auto whitespace-nowrap min-w-[280px] pb-1 max-w-full cursor-grab ${isDragging ? 'cursor-grabbing' : ''}`}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5">
                         <button
-                            className={`text-xs cursor-pointer p-1 px-3 rounded-xl font-normal shrink-0 ${activeTab === "trending" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
+                            className={`text-[11px] cursor-pointer p-1 px-2 rounded-xl font-normal shrink-0 ${activeTab === "trending" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
                             onClick={() => handleTabChange("trending")}
                         >
                             {t('trading.listToken.trending')}
                         </button>
                         <button
-                            className={`flex items-center gap-1 text-xs cursor-pointer p-1 px-3 rounded-xl font-normal shrink-0 ${activeTab === "new" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
+                            className={`flex items-center gap-1 text-[11px] cursor-pointer p-1 px-2 rounded-xl font-normal shrink-0 ${activeTab === "new" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
                             onClick={() => handleTabChange("new")}
                         >
                             {t('trading.listToken.new')} <PumpFun />
                         </button>
                         <button
-                            className={`text-xs cursor-pointer p-1 px-3 rounded-xl font-normal shrink-0 ${activeTab === "favorite" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
+                            className={`text-[11px] cursor-pointer p-1 px-2 rounded-xl font-normal shrink-0 ${activeTab === "favorite" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
                             onClick={() => handleTabChange("favorite")}
                         >
                             {t('trading.listToken.favorite')}
                         </button>
                         <button
-                            className={`text-xs cursor-pointer p-1 px-3 rounded-xl font-normal shrink-0 ${activeTab === "category" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
+                            className={`text-[11px] cursor-pointer p-1 px-2 rounded-xl font-normal shrink-0 ${activeTab === "category" ? "text-theme-neutral-100 dark:linear-gradient-connect bg-linear-200" : "dark:text-theme-neutral-100"}`}
                             onClick={() => handleTabChange("category")}
                         >
                             {activeTab === 'category' ? (
@@ -442,13 +442,13 @@ const ListToken = () => {
                     </div>
                 )}
 
-                <div className="flex-grow h-[calc(100%-20px)] custom-scroll overflow-y-scroll mt-2">
+                <div className="flex-grow h-[calc(100%-20px)] custom-scroll overflow-y-scroll">
                     {Array.isArray(tokenList) && tokenList?.filter(e => categoryOption?.length > 0 ? e?.category?.name === categoryOption : true)?.map((item: any, i: number) => {
                         const address = searchQuery.length > 0 ? item.poolAddress : item.address;
                         return (
                             <div
                                 key={i}
-                                className="flex items-center gap-2 justify-between border-b h-[45px] border-neutral-800 group dark:hover:bg-neutral-800/50 hover:bg-theme-green-300 rounded "
+                                className="flex items-center gap-1 justify-between border-b h-[45px] border-neutral-800 group dark:hover:bg-neutral-800/50 hover:bg-theme-green-300 rounded "
                             >
                                 <div className='flex items-center'>
                                     <button
@@ -464,7 +464,7 @@ const ListToken = () => {
 
                                 </div>
                                 <div className='flex-1 flex items-center justify-between cursor-pointer' onClick={() => handleChangeToken(address)}>
-                                    <div className="flex items-center gap-2 ">
+                                    <div className="flex items-center gap-1.5 ">
                                         <img
                                             src={item?.logo_uri || item?.logoUrl || "/logo.png"}
                                             alt=""
@@ -508,18 +508,18 @@ const ListToken = () => {
                                         )}
                                         <div className='flex gap-1 items-center'>
 
-                                            <span className='text-xs font-light dark:text-neutral-300 text-neutral-800'>{item.symbol}</span>
+                                            <span className='text-[11px] font-light dark:text-neutral-300 text-neutral-800'>{item.symbol}</span>
                                         </div>
                                     </div>
                                     <div className="text-right pr-3 flex flex-col gap-1 cursor-pointer" onClick={() => handleChangeToken(address)}>
-                                        <span className='dark:text-theme-neutral-100 text-theme-neutral-800 text-xs font-medium'>${formatNumberWithSuffix(item.volume_usd)}</span>
+                                        <span className='dark:text-theme-neutral-100 text-theme-neutral-800 text-[11px] font-medium'>${formatNumberWithSuffix(item.volume_usd)}</span>
                                         {activeTab === "new" ? (
-                                            <span className="text-xs font-medium dark:text-theme-neutral-100 text-theme-neutral-800">
+                                            <span className="text-[11px] font-medium dark:text-theme-neutral-100 text-theme-neutral-800">
                                                 {getRelativeTime(item.createdAt)}
                                             </span>
                                         ) : (
                                             item.volume_change_percent !== undefined && (
-                                                <span className={`text-xs font-medium ${item.volume_change_percent > 0
+                                                <span className={`text-[11px] font-medium ${item.volume_change_percent > 0
                                                     ? 'text-theme-green-200'
                                                     : item.volume_change_percent < 0
                                                         ? 'text-theme-red-100'

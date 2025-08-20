@@ -1657,7 +1657,7 @@ export default function WalletPage() {
             )}
 
             {showImportWallets && (
-                <div className={modalContainerStyles}>
+                <div className={`${modalContainerStyles} bg-theme-black-1/3 backdrop-blur-sm`}>
                     <div className={modalContentStyles}>
                         <div ref={importWalletRef} className={modalInnerStyles}>
                             <div className="w-[40vw] flex flex-col gap-4 sm:gap-6">
@@ -1762,6 +1762,38 @@ export default function WalletPage() {
                                             />
                                         </div>
                                     </div>
+
+                                    <div>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
+                                    <div className={wrapGradientStyle}>
+                                        <Select
+                                            value={selectedMasterTrader}
+                                            onValueChange={(value) => {
+                                                setSelectedMasterTrader(value);
+                                            }}
+                                        >
+                                            <SelectTrigger className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500">
+                                                <SelectValue placeholder={t('wallet.connectMaster')} className="placeholder:text-gray-500"/>
+                                            </SelectTrigger>
+                                            <SelectContent
+                                                className="bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 shadow-lg"
+                                                style={{ zIndex: 9999 }}
+                                            >
+                                                {masterTraders && masterTraders.length > 0 ? (
+                                                    masterTraders.map((trader: MasterTrader) => (
+                                                        <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
+                                                            {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                        </SelectItem>
+                                                    ))
+                                                ) : (
+                                                    <SelectItem value="" disabled>
+                                                        {isLoadingMasters ? 'Loading...' : 'No master traders available'}
+                                                    </SelectItem>
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-5">

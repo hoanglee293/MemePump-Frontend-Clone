@@ -209,7 +209,7 @@ const Control = () => {
 
   // Desktop view
   return (
-    <div className='flex flex-col h-full gap-4 '>
+    <div className='flex flex-col h-full gap-2 '>
       <div className={classLayout + "  p-3 flex-none"}>
         <Suspense fallback={<div className="flex items-center min-h-[500px] justify-center h-full">Loading...</div>}>
           <TradingPanel 

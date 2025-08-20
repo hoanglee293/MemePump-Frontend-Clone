@@ -229,8 +229,8 @@ export default function TokenInfo() {
   // Desktop version
   return (
     <>
-      <div className="flex flex-col xl:gap-2 gap-1 w-full">
-        <div className="dark:bg-theme-neutral-1000 bg-white shadow-inset shadow-md rounded-xl p-3 h-full flex flex-col ">
+      <div className="flex flex-col xl:gap-1.5 gap-1 w-full">
+        <div className="dark:bg-[#0e0e0e] bg-white shadow-inset shadow-md dark:shadow-none rounded-xl p-3 h-full flex flex-col ">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-transparent rounded-full flex items-center justify-center">
@@ -371,7 +371,7 @@ export default function TokenInfo() {
 
         </div >
         <>
-          <div className="dark:bg-theme-neutral-1000 bg-white shadow-inset shadow-md rounded-xl xl:p-3 p-1 h-full flex gap-3 flex-col ">
+          <div className="dark:bg-[#0e0e0e] bg-white shadow-inset shadow-md rounded-xl xl:p-3 p-1 h-full flex gap-3 flex-col ">
             <div className="flex flex-wrap gap-2 justify-around">
               <button onClick={() => setTimeFrame("5m")} className={`flex bg-theme-neutral-200 flex-1 dark:bg-transparent dark:border-1 flex-col gap-1 cursor-pointer rounded-lg 2xl:p-2 p-1 text-center  ${timeFrame === "5m" ? "border-green-400 border-1" : "dark:shadow-custom border-none "}`}>
                 <div className="text-xs">{t('trading.tokenInfo.timeFrames.5m')}</div>

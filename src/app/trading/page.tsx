@@ -55,7 +55,7 @@ const TradingPage = () => {
   if(windowWidth < 905) withDesktop = 'w-[35%]';
   
   return (
-    <div className={`h-[91.5vh] flex flex-col gap-2 xl:gap-4 container-trading relative z-40  ${
+    <div className={`h-[91.5vh] flex flex-col gap-2 container-trading relative z-40  ${
       isMobile ? 'px-2' : 'px-2'
     }`}>
       {!isMobile && <Interface />}
@@ -116,7 +116,7 @@ const TradingPage = () => {
           <PanelGroup direction="horizontal" className="flex-1">
             <Panel defaultSize={17} minSize={12} maxSize={25} className="h-full overflow-hidden">
             <div className={`flex ${
-              isMobile ? 'flex-row w-full lg:h-[200px]' : 'flex-col '} xl:gap-2 gap-1 lg:overflow-hidden`}>
+              isMobile ? 'flex-row w-full lg:h-[200px]' : 'flex-col '} xl:gap- gap-1 lg:overflow-hidden`}>
               <TokenInfo />
               {!isMobile && <ListToken />}
             </div>
@@ -126,9 +126,9 @@ const TradingPage = () => {
             <Panel defaultSize={65} minSize={50} maxSize={85} className="lg:overflow-hidden relative">
               <PanelGroup direction="vertical" className="h-full">
                 {/* Chart Panel */}
-                <Panel defaultSize={60} minSize={30} maxSize={80} className="lg:overflow-hidden relative">
-                  <div className='dark:bg-theme-neutral-1000 shadow-inset bg-white rounded-xl p-2 md:p-4 overflow-auto transition-all duration-100 relative h-full'>
-                    <TradingViewChart className='h-full' />
+                <Panel defaultSize={55} minSize={30} maxSize={80} className="lg:overflow-hidden relative">
+                  <div className='dark:bg-theme-neutral-1000 shadow-inset bg-white rounded-xl p-2 overflow-auto transition-all duration-100 relative h-full'>
+                    <TradingViewChart className='h-full rounded-xl overflow-hidden' />
                   </div>
                 </Panel>
                 
@@ -136,7 +136,7 @@ const TradingPage = () => {
                 <PanelResizeHandle className="h-[2px] m-1 bg-theme-neutral-800 hover:bg-neutral-600 transition-colors relative z-400" />
                 
                 {/* Transaction History Panel */}
-                <Panel defaultSize={40} minSize={20} maxSize={60} className="lg:overflow-hidden relative">
+                <Panel  minSize={20} maxSize={60} className="lg:overflow-hidden relative">
                   <div className='transition-all duration-100 overflow-hidden rounded-xl flex h-full'>
                     <div className='flex flex-1 w-full'>
                       <TransactionHistory />

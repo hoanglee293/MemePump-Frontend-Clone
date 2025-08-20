@@ -590,22 +590,22 @@ function TransactionHistoryContent() {
   };
 
   return (
-    <div className="shadow-inset dark:bg-theme-neutral-1000 rounded-xl p-2 sm:p-3 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col h-full w-full">
-      <div className="flex border-gray-200 dark:border-neutral-800 h-[30px] bg-gray-100  rounded-full dark:bg-[#333]">
+    <div className="shadow-inset dark:bg-theme-neutral-1000 rounded-xl p-2 sm:p-2 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col h-full w-full">
+      <div className="flex border-gray-200 dark:border-neutral-800 h-[25px] bg-gray-100  rounded-full dark:bg-[#333]">
         <button
-          className={`flex-1 rounded-full text-xs xl:text-sm cursor-pointer font-medium uppercase text-center ${activeTab === "all" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`flex-1 rounded-full text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "all" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("all")}
         >
           {t("transactionHistory.allTransactions")}
         </button>
         <button
-          className={`flex-1 rounded-full cursor-pointer text-xs xl:text-sm font-medium uppercase text-center ${activeTab === "my" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`flex-1 rounded-full cursor-pointer text-xs font-medium uppercase text-center ${activeTab === "my" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("my")}
         >
           {t("transactionHistory.myTransactions")}
         </button>
         <button
-          className={`flex-1 rounded-full cursor-pointer text-xs xl:text-sm font-medium uppercase text-center ${activeTab === "holder" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`flex-1 rounded-full cursor-pointer text-xs font-medium uppercase text-center ${activeTab === "holder" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("holder")}
         >
           {t("transactionHistory.holders")}

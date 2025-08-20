@@ -346,10 +346,10 @@ export default function TradingPanel({
                 </button>
             </div>
 
-            <div className="rounded-lg flex flex-col 2xl:justify-between gap-2 lg:gap-3 h-full overflow-y-auto">
+            <div className="rounded-lg flex flex-col 2xl:justify-between gap-1.5 h-full overflow-y-auto">
                 {/* Amount Input */}
                 <div className="relative mt-2">
-                    <div className={`bg-gray-50 dark:bg-neutral-900 rounded-full border ${amountError ? 'border-red-500' : 'border-blue-200 dark:border-blue-500'} px-3 py-2 flex justify-between items-center ${height > 700 ? 'py-2' : 'h-[30px]'}`}>
+                    <div className={`bg-gray-50 dark:bg-neutral-900 rounded-full border ${amountError ? 'border-red-500' : 'border-blue-200 dark:border-blue-500'} px-3  flex justify-between items-center ${height > 700 ? 'py-1.5' : 'h-[30px]'}`}>
                         <input
                             type="number"
                             value={amount}
@@ -443,7 +443,7 @@ export default function TradingPanel({
                     <button
                         onClick={handleSubmit}
                         disabled={isButtonDisabled || isLoading}
-                        className={`w-full py-2 rounded-full text-white font-semibold text-sm transition-colors relative ${isButtonDisabled || isLoading
+                        className={`w-full py-1.5 rounded-full text-white font-semibold text-sm transition-colors relative ${isButtonDisabled || isLoading
                             ? "bg-gray-400 cursor-not-allowed dark:bg-gray-600"
                             : mode === "buy"
                                 ? "bg-green-500 hover:bg-green-600 dark:bg-theme-green-200 dark:hover:bg-theme-green-200/90"
