@@ -140,6 +140,7 @@ export default function MasterTradeInterface() {
   const [selectedChatGroup, setSelectedChatGroup] = useState<string>("");
   const [roleChangePassword, setRoleChangePassword] = useState("");
   const [roleChangeError, setRoleChangeError] = useState("");
+  const [loadingJoin, setLoadingJoin] = useState(false);
 
   const { data: myConnects = [], refetch: refetchMyConnects } = useQuery<Connection[]>({
     queryKey: ["my-connects-manage"],
@@ -301,7 +302,7 @@ export default function MasterTradeInterface() {
 
   const handleJoin = async () => {
     if (!selectedGroup || selectedItems.length === 0) return;
-
+    setLoadingJoin(true);
     try {
       // Lấy tất cả member_ids từ các kết nối đã chọn
       const memberIds = selectedItems.map(connId => {
@@ -332,6 +333,8 @@ export default function MasterTradeInterface() {
     } catch (error) {
       console.error("Error joining group:", error);
       toast.error(t("masterTrade.manage.connectionManagement.joinError"));
+    } finally {
+      setLoadingJoin(false);
     }
   };
 
@@ -836,7 +839,7 @@ export default function MasterTradeInterface() {
                       <button
                         key={group.mg_id}
                         onClick={() => handleGroupSelect(group)}
-                        className={`${styles.selectItem} w-full p-1 text-left rounded-xl`}
+                        className={`${styles.selectItem} w-full p-1 pl-3 text-left rounded-xl`}
                       >
                         {group.mg_name}
                       </button>
@@ -1104,6 +1107,7 @@ export default function MasterTradeInterface() {
               </Button>
               <Button
                 onClick={handleJoin}
+                disabled={loadingJoin}
                 className={`${styles.dialogButton} bg-blue-500 hover:bg-blue-600`}
               >
                 {t('masterTrade.manage.connectionManagement.confirm')}

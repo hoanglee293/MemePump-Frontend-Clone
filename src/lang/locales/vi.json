@@ -225,7 +225,8 @@
         "noData": "Không có dữ liệu",
         "copyAddress": "Sao chép địa chỉ",
         "copySuccess": "Đã sao chép địa chỉ: {address}",
-        "details": "Chi tiết"
+        "details": "Chi tiết",
+        "nickname": "Biệt danh"
       },
       "traderType": {
         "vip": "VIP",

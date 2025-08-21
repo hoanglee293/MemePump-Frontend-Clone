@@ -220,7 +220,8 @@
         "noData": "No data available",
         "copyAddress": "Copy address",
         "copySuccess": "Copied address: {address}",
-        "details": "Details"
+        "details": "Details",
+        "nickname": "Nickname"
       },
       "traderType": {
         "vip": "VIP",
@@ -259,6 +260,22 @@
       }
     },
     "manage": {
+      "loading": "Loading...",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "join": "Join",
+      "joinSuccess": "Successfully joined group",
+      "joinError": "Failed to join group",
+      "connectSuccess": "Successfully connected",
+      "blockSuccess": "Successfully blocked",
+      "chooseGroup": "Choose group",
+      "connect": "Connect",
+      "block": "Block",
+      "pause": "Pause",
+      "disconnect": "Disconnect",
+      "unblock": "Unblock",
+      "bulkConnect": "Bulk Connect",
+      "bulkBlock": "Bulk Block",
       "createNewGroup": {
         "success": "Group created successfully",
         "error": "Failed to create group",
@@ -269,6 +286,7 @@
       },
       "connectionManagement": {
         "joinSuccess": "Successfully joined group",
+        "searchGroup": "Search group...",
         "joinError": "Failed to join group",
         "connectSuccess": "Successfully connected",
         "blockSuccess": "Successfully blocked",

@@ -224,7 +224,8 @@
         "noData": "データなし",
         "copyAddress": "アドレスをコピー",
         "copySuccess": "アドレスをコピーしました: {address}",
-        "details": "詳細"
+        "details": "詳細",
+        "nickname": "ニックネーム"
       },
       "traderType": {
         "vip": "VIP",

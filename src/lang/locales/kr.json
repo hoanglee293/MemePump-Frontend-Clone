@@ -230,7 +230,8 @@
         "noData": "데이터 없음",
         "copyAddress": "주소 복사",
         "copySuccess": "주소 복사됨: {address}",
-        "details": "상세"
+        "details": "상세",
+        "nickname": "별명"
       },
       "traderType": {
         "vip": "VIP",

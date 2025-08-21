@@ -37,6 +37,7 @@ interface TradeData {
 }
 
 interface Trader {
+    nickname?: string;
     id?: string;
     solana_address?: string;
     eth_address?: string;
@@ -265,6 +266,7 @@ export default function MasterTradeTable() {
             return {
                 id: trader.id,
                 address: trader.address,
+                nickname: trader.nickname,
                 pnl7d: roundToTwoDecimals(sevenDayData.totalChange),
                 pnlPercent7d: roundToTwoDecimals(sevenDayData.percentageChange),
                 pnl30d: roundToTwoDecimals(thirtyDayData.totalChange),
@@ -534,7 +536,7 @@ export default function MasterTradeTable() {
                     <table className="w-full dark:text-theme-neutral-100 text-theme-neutral-900">
                         <thead>
                             <tr className="border-b border-blue-500/30 text-gray-400 text-sm">
-                                <th className={`${styleTextRow} text-left ${textHeaderTable} w-[15%]`}>{t('masterTrade.page.table.address')}</th>
+                                <th className={`${styleTextRow} text-left ${textHeaderTable} w-[15%]`}>{t('masterTrade.page.table.nickname')}</th>
                                 <th className={`${styleTextRow} text-center ${textHeaderTable} w-[12%]`}>
                                     <div className={`flex items-center justify-center ${textHeaderTable}`}>
                                         {t('masterTrade.page.table.pnl7d')}
@@ -592,8 +594,8 @@ export default function MasterTradeTable() {
                                     <tr key={item.id} className="border-b border-blue-500/10 hover:bg-blue-900/10 transition-colors">
                                         <td className={`${styleTextRow}`}>
                                             <div className="flex items-center text-xs font-normal text-neutral-200">
-                                                <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-xs font-medium">{truncateString(item.address, 12)}</span>
-                                                <button
+                                                <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-xs font-medium">{item.nickname}</span>
+                                                {/* <button
                                                     onClick={() => copyAddress(item.address)}
                                                     className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900 transition-colors group relative"
                                                 >
@@ -601,7 +603,7 @@ export default function MasterTradeTable() {
                                                     <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:text-theme-neutral-100 text-theme-neutral-900 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                                                         {t('masterTrade.page.actions.copy')}
                                                     </span>
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </td>
                                         <td className={`${styleTextRow} text-center`}>
