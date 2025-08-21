@@ -767,12 +767,12 @@ export default function MasterTradeTable() {
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center">
                                     <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-sm font-medium">{item.nickname}</span>
-                                    <button
+                                    {/* <button
                                         onClick={() => copyAddress(item.address)}
                                         className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900"
                                     >
                                         <Copy className="h-4 w-4" />
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {item.type === "vip" ? (
