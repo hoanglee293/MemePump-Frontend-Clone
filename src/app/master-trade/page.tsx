@@ -766,7 +766,7 @@ export default function MasterTradeTable() {
                             {/* Card Header */}
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center">
-                                    <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-sm font-medium">{truncateString(item.address, 12)}</span>
+                                    <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-sm font-medium">{item.nickname}</span>
                                     <button
                                         onClick={() => copyAddress(item.address)}
                                         className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900"
