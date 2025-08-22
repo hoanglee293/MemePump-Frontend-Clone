@@ -391,8 +391,6 @@ export default function WalletPage() {
     const [codeError, setCodeError] = useState("");
     const [isSendingCode, setIsSendingCode] = useState(false);
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
 
     const privateKeysRef = useRef<HTMLDivElement>(null);
     const addWalletRef = useRef<HTMLDivElement>(null);
@@ -1513,13 +1511,13 @@ export default function WalletPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.network')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.country')}</label>
                                     <div className={wrapGradientStyle}>
                                         <CustomSelect
                                             value={selectedNetwork}
                                             onChange={(value) => setSelectedNetwork(value)}
                                             options={langConfig.listLangs}
-                                            placeholder={t('selectNetwork')}
+                                            placeholder={t('wallet.country')}
                                         />
                                     </div>
                                 </div>
@@ -1595,13 +1593,13 @@ export default function WalletPage() {
                                 </div>
                                  {/* Network Selection */}
                                  <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.network')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.country')}</div>
                                         <div className={wrapGradientStyle}>
                                             <CustomSelect
                                                 value={selectedNetwork}
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
-                                                placeholder={t('selectNetwork')}
+                                                placeholder={t('wallet.country')}
                                             />
                                         </div>
                                     </div>
@@ -1756,13 +1754,13 @@ export default function WalletPage() {
 
                                     {/* Network Selection */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.network')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.country')}</div>
                                         <div className={wrapGradientStyle}>
                                             <CustomSelect
                                                 value={selectedNetwork}
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
-                                                placeholder={t('selectNetwork')}
+                                                placeholder={t('wallet.country')}
                                             />
                                         </div>
                                     </div>
@@ -2045,13 +2043,13 @@ export default function WalletPage() {
 
                                     {/* Network Selection */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.network')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.country')}</div>
                                         <div className={wrapGradientStyle}>
                                             <CustomSelect
                                                 value={selectedNetwork}
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
-                                                placeholder={t('selectNetwork')}
+                                                placeholder={t('wallet.country')}
                                             />
                                         </div>
                                     </div>

@@ -500,6 +500,7 @@
     "enterVerificationCodeSent": "Enter the verification code sent to your email",
     "invalidPrivateKey": "Invalid private key format",
     "invalidPrivateKeyLength": "Invalid private key length",
+    "invalidPrivateKeyFormat": "Invalid private key format",
     "addressCopied": "Wallet address has been copied to clipboard",
     "passwordRequired": "Please enter your password",
     "invalidPassword": "Invalid password. Please try again.",

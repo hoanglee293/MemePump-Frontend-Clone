@@ -489,6 +489,7 @@
     "walletAlreadyExists": "ウォレットがすでに存在します",
     "invalidPrivateKey": "無効な秘密鍵形式です",
     "invalidPrivateKeyLength": "無効な秘密鍵の長さです",
+    "invalidPrivateKeyFormat": "無効な秘密鍵形式です",
     "addressCopied": "ウォレットアドレスがクリップボードにコピーされました",
     "enterPasswordToView": "(i) 秘密鍵を表示するにはパスワードを入力してください",
     "passwordRequired": "パスワードを入力してください",
