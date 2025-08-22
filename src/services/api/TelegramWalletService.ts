@@ -252,3 +252,15 @@ export const verifyGmail = async (telegram_code: string)=>{
         throw error;
     }
 }
+
+export const deleteMultipleWallets = async (walletIds: number[]) => {
+    try {
+        const temp = await axiosClient.post("/telegram-wallets/delete-multiple-wallets", {
+            wallet_ids: walletIds
+        });
+        return temp;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

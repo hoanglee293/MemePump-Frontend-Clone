@@ -49,7 +49,7 @@ export default function ClientLayout({
             {children}
           </main>
           {isAuthenticated && shouldShowComponents && <Chat />}
-          <WelcomeModal />
+          {/* <WelcomeModal /> */}
           <Toaster 
             position="top-right"
             toastOptions={{

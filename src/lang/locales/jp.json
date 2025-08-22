@@ -510,12 +510,17 @@
     "delete": "削除",
     "walletNameNote": "注意: ウォレット名とニックネームは既存のウォレット名およびニックネームと重複することはできません",
     "confirmCreateWallets": "ウォレット作成の確認",
+    "selectedWallets": "{{count}}個のウォレットが選択されました",
+    "clearSelection": "選択をクリア",
+    "deleteSelected": "選択したものを削除",
+    "confirmBulkDelete": "一括削除の確認",
+    "confirmBulkDeleteMessage": "選択した{{count}}個のウォレットを削除してもよろしいですか？この操作は元に戻せません。",
+    "selectWalletToDelete": "削除するウォレットを少なくとも1つ選択してください",
     "confirmCreateWalletsMessage": "プレフィックス '{prefix}' を含む {quantity} 個の新しいウォレットを作成することを確認しますか？",
     "confirmImportWallets": "ウォレットインポートの確認",
     "confirmImportWalletsMessage": "プレフィックス '{prefix}' を含む {quantity} 個のウォレットをインポートすることを確認しますか？",
     "importing": "インポート中...",
-    "confirm": "確認",
-    "creating": "作成中..."
+    "confirm": "確認"
   },
   "searchPlaceholder": "トークン名/アドレス",
   "languages": {

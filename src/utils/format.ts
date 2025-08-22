@@ -158,3 +158,23 @@ export const formatNumberWithSuffix3Hidden = (input: number | string): string =>
   }
   return formatNumber(num);
 };
+
+export const maskNickname = (nickname: string | null | undefined): string => {
+  // Kiểm tra nếu nickname là null, undefined hoặc chuỗi rỗng
+  if (!nickname || nickname.length === 0) {
+    return '';
+  }
+
+  // Nếu nickname chỉ có 1 ký tự, trả về nguyên vẹn
+  if (nickname.length === 1) {
+    return nickname;
+  }
+
+  // Nếu nickname có 2 ký tự, trả về ký tự đầu + *
+  if (nickname.length === 2) {
+    return nickname[0] + '*';
+  }
+
+  // Nếu nickname có 3 ký tự trở lên, trả về ký tự đầu + * + ký tự cuối
+  return nickname[0] + '*'.repeat(4) + nickname[nickname.length - 1];
+};

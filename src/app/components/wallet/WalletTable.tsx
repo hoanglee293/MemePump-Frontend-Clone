@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { TelegramWalletService } from '@/services/api';
 import notify from "../notify";
-import { getInforWallet, useWallet } from "@/services/api/TelegramWalletService";
+import { getInforWallet, useWallet, deleteMultipleWallets } from "@/services/api/TelegramWalletService";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -33,6 +33,7 @@ import {
 } from "@/ui/dialog";
 import { useLang } from "@/lang";
 import { WalletLanguageSelect } from "./WalletLanguageSelect";
+import { Checkbox } from "@/ui/checkbox";
 
 interface WalletData extends Wallet {
     wallet_nick_name: string;
@@ -78,6 +79,35 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
     const [walletToDelete, setWalletToDelete] = useState<WalletData | null>(null);
     const [loadingWalletId, setLoadingWalletId] = useState<string | null>(null);
     const [loadingField, setLoadingField] = useState<'name' | 'nickname' | 'country' | null>(null);
+    const [selectedWallets, setSelectedWallets] = useState<string[]>([]);
+    const [isBulkDelete, setIsBulkDelete] = useState(false);
+
+    const handleSelectWallet = (walletId: string, checked: boolean) => {
+        if (checked) {
+            setSelectedWallets(prev => [...prev, walletId]);
+        } else {
+            setSelectedWallets(prev => prev.filter(id => id !== walletId));
+        }
+    };
+
+    const handleSelectAll = (checked: boolean) => {
+        if (checked) {
+            const deletableWallets = wallets.filter(wallet => wallet.wallet_type !== 'main');
+            setSelectedWallets(deletableWallets.map(wallet => wallet.wallet_id));
+        } else {
+            setSelectedWallets([]);
+        }
+    };
+
+    const isAllSelected = () => {
+        const deletableWallets = wallets.filter(wallet => wallet.wallet_type !== 'main');
+        return deletableWallets.length > 0 && selectedWallets.length === deletableWallets.length;
+    };
+
+    const isIndeterminate = () => {
+        const deletableWallets = wallets.filter(wallet => wallet.wallet_type !== 'main');
+        return selectedWallets.length > 0 && selectedWallets.length < deletableWallets.length;
+    };
 
     const { data: walletInfor, refetch } = useQuery({
         queryKey: ["wallet-infor"],
@@ -215,10 +245,49 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         }
     };
 
+    const handleBulkDelete = async () => {
+        if (selectedWallets.length === 0) {
+            notify({
+                message: t("wallet.selectWalletToDelete"),
+                type: 'error'
+            });
+            return;
+        }
+
+        try {
+            const walletIds = selectedWallets.map(id => parseInt(id));
+            const res = await deleteMultipleWallets(walletIds);
+            console.log(res);
+            if (res) {
+                notify({
+                    message: t("wallet.deleteSuccess"),
+                    type: 'success'
+                });
+                onUpdateWallet?.();
+                setSelectedWallets([]);
+                setIsBulkDelete(false);
+                refetchWallets?.();
+            }
+        } catch (error) {
+            console.error('Error bulk deleting wallets:', error);
+            notify({
+                message: t("wallet.deleteFailed"),
+                type: 'error'
+            });
+        }
+    };
+
     const renderMobileWalletCard = (wallet: WalletData) => (
         <div key={wallet.wallet_id} className={mobileStyles.card}>
             {/* Header with Name and Type */}
             <div className={mobileStyles.header}>
+                {wallet.wallet_type !== 'main' && (
+                    <Checkbox
+                        checked={selectedWallets.includes(wallet.wallet_id)}
+                        onCheckedChange={(checked) => handleSelectWallet(wallet.wallet_id, checked as boolean)}
+                        className="mt-0.5"
+                    />
+                )}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                         <div className={mobileStyles.nameContainer}>
@@ -284,26 +353,6 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                             onClick={(e) => handleCopyAddress(wallet.solana_address, e)}
                         >
                             {copiedAddress === wallet.solana_address ? (
-                                <Check className={`${mobileStyles.icon} text-green-500`} />
-                            ) : (
-                                <Copy className={mobileStyles.icon} />
-                            )}
-                        </Button>
-                    </div>
-                </div>
-                <div>
-                    <div className={mobileStyles.label}>{t('wallet.ethAddress')}</div>
-                    <div className="flex items-center gap-2">
-                        <span className={`${mobileStyles.value} truncate flex-1`}>
-                            {truncateString(wallet.eth_address, 12)}
-                        </span>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className={mobileStyles.copyButton}
-                            onClick={(e) => handleCopyAddress(wallet.eth_address, e)}
-                        >
-                            {copiedAddress === wallet.eth_address ? (
                                 <Check className={`${mobileStyles.icon} text-green-500`} />
                             ) : (
                                 <Copy className={mobileStyles.icon} />
@@ -498,16 +547,50 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         <>
             <Card className="border-none dark:shadow-blue-900/5">
                 <CardContent className="p-0 relative">
+                    {/* Bulk Delete Actions */}
+                    {selectedWallets.length > 0 && (
+                        <div className="flex items-center justify-between px-4 py-2 mb-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                                    {t('wallet.selectedWallets', { count: selectedWallets.length })}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSelectedWallets([])}
+                                    className="text-xs h-8 rounded-full hover:bg-gray-700"
+                                >
+                                    {t('wallet.clearSelection')}
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => setIsBulkDelete(true)}
+                                    className="text-xs h-8 bg-red-500 hover:bg-red-600 rounded-full"
+                                >
+                                    {t('wallet.deleteSelected')}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Desktop Table View */}
                     <div className="hidden sm:block overflow-hidden rounded-xl border-1 z-10 border-solid border-y-theme-primary-100 border-x-theme-purple-200">
                         <Table>
                             <TableHeader className="border-b-1 border-b-solid border-b-neutral-400">
                                 <TableRow className="bg-muted/50">
+                                    <TableHead className={`${textTitle} w-[5%] px-4`}>
+                                        <Checkbox
+                                            checked={isAllSelected()}
+                                            onCheckedChange={handleSelectAll}
+                                        />
+                                    </TableHead>
                                     <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
                                     <TableHead className={`${textTitle} w-[12%] px-4`}>{t('wallet.nickname')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[20%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[20%] px-4`}>{t('wallet.ethAddress')}</TableHead>
+                                    <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
                                     <TableHead className={`${textTitle} w-[9%] px-4`}>{t('common.actions')}</TableHead>
@@ -519,6 +602,13 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                         key={wallet.wallet_id}
                                         className="dark:hover:bg-neutral-800/30 hover:bg-theme-green-300 transition-colors"
                                     >
+                                        <TableCell className={`px-4 ${textContent} `} onClick={() => handleSelectWallet(wallet.wallet_id, !selectedWallets.includes(wallet.wallet_id))}>
+                                            {wallet.wallet_type !== 'main' && (
+                                                <Checkbox
+                                                    checked={selectedWallets.includes(wallet.wallet_id)}
+                                                />
+                                            )}
+                                        </TableCell>
                                         <TableCell className={`px-4 ${textContent}`}>
                                             {renderEditableCell(wallet, 'name')}
                                         </TableCell>
@@ -540,28 +630,9 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                                     onClick={(e) => handleCopyAddress(wallet.solana_address, e)}
                                                 >
                                                     {copiedAddress === wallet.solana_address ? (
-                                                        <Check className="h-4 w-4 text-green-500" />
+                                                        <Check className="h-3 w-3 text-green-500" />
                                                     ) : (
-                                                        <Copy className="h-4 w-4" />
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <div className="flex items-center gap-2">
-                                                <span className="truncate max-w-[180px]">
-                                                    {truncateString(wallet.eth_address, 12)}
-                                                </span>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-6 w-6 p-0 hover:bg-neutral-700/50 flex-shrink-0"
-                                                    onClick={(e) => handleCopyAddress(wallet.eth_address, e)}
-                                                >
-                                                    {copiedAddress === wallet.eth_address ? (
-                                                        <Check className="h-4 w-4 text-green-500" />
-                                                    ) : (
-                                                        <Copy className="h-4 w-4" />
+                                                        <Copy className="h-3 w-3" />
                                                     )}
                                                 </Button>
                                             </div>
@@ -617,6 +688,32 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
 
                     {/* Mobile Card View */}
                     <div className="sm:hidden space-y-3 p-2">
+                        {/* Mobile Bulk Delete Actions */}
+                        {selectedWallets.length > 0 && (
+                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                                <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                                    {t('wallet.selectedWallets', { count: selectedWallets.length })}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedWallets([])}
+                                        className="text-xs h-8"
+                                    >
+                                        {t('wallet.clearSelection')}
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => setIsBulkDelete(true)}
+                                        className="text-xs h-8"
+                                    >
+                                        {t('wallet.deleteSelected')}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                         {wallets?.map((wallet) => renderMobileWalletCard(wallet))}
                     </div>
                 </CardContent>
@@ -647,6 +744,40 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                 <button
                                     className="linear-gradient-light dark:linear-gradient-connect hover:border h-[32px] border px-5 border-transparent rounded-full text-sm"
                                     onClick={() => handleDeleteWallet(walletToDelete?.wallet_id || '')}
+                                >
+                                    {t('wallet.delete')}
+                                </button>
+                            </DialogFooter>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Bulk Delete Confirmation Dialog */}
+            <Dialog open={isBulkDelete} onOpenChange={setIsBulkDelete}>
+                <DialogContent className="sm:max-w-[425px] p-0 border-none border-transparent">
+                    <div className="bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative w-full rounded-xl">
+                        <div className="w-full px-3 py-2 bg-theme-black-200 rounded-xl text-neutral-100">
+                            <DialogHeader className="p-2">
+                                <DialogTitle className="text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-2 text-fill-transparent bg-clip-text">
+                                    {t('wallet.confirmBulkDelete')}
+                                </DialogTitle>
+                                <DialogDescription className="text-neutral-100 text-sm">
+                                    {t('wallet.confirmBulkDeleteMessage', { count: selectedWallets.length })}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="flex justify-end gap-2 p-2">
+                                <div className="bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative rounded-full">
+                                    <button
+                                        className="bg-theme-black-200 h-[30px] text-neutral-100 px-5 rounded-full"
+                                        onClick={() => setIsBulkDelete(false)}
+                                    >
+                                        {t('wallet.cancel')}
+                                    </button>
+                                </div>
+                                <button
+                                    className="linear-gradient-light dark:linear-gradient-connect hover:border h-[32px] border px-5 border-transparent rounded-full text-sm"
+                                    onClick={handleBulkDelete}
                                 >
                                     {t('wallet.delete')}
                                 </button>

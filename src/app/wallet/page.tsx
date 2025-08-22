@@ -2068,7 +2068,7 @@ export default function WalletPage() {
                                     </button>
                                     <button
                                         onClick={handleImportWallet}
-                                        disabled={isLoading || !walletName || !walletNickname || privateKeyArray.length === 0}
+                                        disabled={isLoading || !walletName || !walletNickname }
                                         className={modalButtonStyles}
                                     >
                                         <div className={modalButtonTextStyles}>{t('wallet.importWallet')}</div>

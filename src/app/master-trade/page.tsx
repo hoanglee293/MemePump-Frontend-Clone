@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { MasterTradingService } from "@/services/api"
 import ConnectToMasterModal from "../components/connect-master-trade-modal"
-import { truncateString } from "@/utils/format"
+import { truncateString, maskNickname } from "@/utils/format"
 import DetailMasterModal from "./modal-detail-wallet"
 import { getInforWallet } from "@/services/api/TelegramWalletService"
 import { useLang } from '@/lang/useLang'
@@ -332,9 +332,9 @@ export default function MasterTradeTable() {
             });
 
             // Update combinedMasterData directly
-            setCombinedMasterData(prevData => 
-                prevData.map(trader => 
-                    trader.address === inforWallet.address 
+            setCombinedMasterData(prevData =>
+                prevData.map(trader =>
+                    trader.address === inforWallet.address
                         ? { ...trader, connect_status: status as TradeStatus }
                         : trader
                 )
@@ -353,9 +353,9 @@ export default function MasterTradeTable() {
         } else {
             await handleMemberConnect(inforWallet)
             // Update combinedMasterData directly after connect
-            setCombinedMasterData(prevData => 
-                prevData.map(trader => 
-                    trader.address === inforWallet.address 
+            setCombinedMasterData(prevData =>
+                prevData.map(trader =>
+                    trader.address === inforWallet.address
                         ? { ...trader, connect_status: "connect" as TradeStatus }
                         : trader
                 )
@@ -536,14 +536,15 @@ export default function MasterTradeTable() {
                     <table className="w-full dark:text-theme-neutral-100 text-theme-neutral-900">
                         <thead>
                             <tr className="border-b border-blue-500/30 text-gray-400 text-sm">
-                                <th className={`${styleTextRow} text-left ${textHeaderTable} w-[15%]`}>{t('masterTrade.page.table.nickname')}</th>
-                                <th className={`${styleTextRow} text-center ${textHeaderTable} w-[12%]`}>
+                                <th className={`${styleTextRow} text-left ${textHeaderTable} w-[7%]`}>{t('masterTrade.page.table.nickname')}</th>
+                                <th className={`${styleTextRow} text-left ${textHeaderTable} w-[7%]`}>{t('masterTrade.page.table.address')}</th>
+                                <th className={`${styleTextRow} text-center ${textHeaderTable} w-[10%]`}>
                                     <div className={`flex items-center justify-center ${textHeaderTable}`}>
                                         {t('masterTrade.page.table.pnl7d')}
                                         <ChevronDown className="ml-1 h-4 w-4" />
                                     </div>
                                 </th>
-                                <th className={`${styleTextRow} text-center w-[12%]`}>
+                                <th className={`${styleTextRow} text-center w-[8%]`}>
                                     <div className={`flex items-center justify-center ${textHeaderTable}`}>
                                         {t('masterTrade.page.table.pnl30d')}
                                         <ChevronDown className="ml-1 h-4 w-4" />
@@ -555,7 +556,7 @@ export default function MasterTradeTable() {
                                         <ChevronDown className="ml-1 h-4 w-4" />
                                     </div>
                                 </th>
-                                <th className={`${styleTextRow} text-left w-[8%]`}>
+                                <th className={`${styleTextRow} text-left w-[9%]`}>
                                     <div className={`flex items-center ${textHeaderTable}`}>
                                         {t('masterTrade.page.table.transactions7d')}
                                         <ChevronDown className="ml-1 h-4 w-4" />
@@ -567,13 +568,13 @@ export default function MasterTradeTable() {
                                         <ChevronDown className="ml-1 h-4 w-4" />
                                     </div>
                                 </th>
-                                <th className={`${styleTextRow} text-left w-[8%]`}>
+                                <th className={`${styleTextRow} text-left w-[7%]`}>
                                     <div className={`flex items-center ${textHeaderTable}`}>
                                         {t('masterTrade.page.table.type')}
                                         <ChevronDown className="ml-1 h-4 w-4" />
                                     </div>
                                 </th>
-                                <th className={`${styleTextRow} text-start ${textHeaderTable} w-[8%]`}>{t('masterTrade.page.table.status')}</th>
+                                <th className={`${styleTextRow} text-start ${textHeaderTable} w-[9%]`}>{t('masterTrade.page.table.status')}</th>
                                 <th className={`${styleTextRow} text-start ${textHeaderTable} whitespace-nowrap`}>{t('masterTrade.page.table.action')}</th>
                             </tr>
                         </thead>
@@ -594,7 +595,21 @@ export default function MasterTradeTable() {
                                     <tr key={item.id} className="border-b border-blue-500/10 hover:bg-blue-900/10 transition-colors">
                                         <td className={`${styleTextRow}`}>
                                             <div className="flex items-center text-xs font-normal text-neutral-200">
-                                                <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-xs font-medium">{item.nickname}</span>
+                                                <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-xs font-medium">{maskNickname(item.nickname)}</span>
+                                                {/* <button
+                                                    onClick={() => copyAddress(item.address)}
+                                                    className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900 transition-colors group relative"
+                                                >
+                                                    <Copy className="h-4 w-4" />
+                                                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:text-theme-neutral-100 text-theme-neutral-900 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                                                        {t('masterTrade.page.actions.copy')}
+                                                    </span>
+                                                </button> */}
+                                            </div>
+                                        </td>
+                                        <td className={`${styleTextRow}`}>
+                                            <div className="flex items-center text-xs font-normal text-neutral-200">
+                                                <span className="text-yellow-500 italic text-xs font-medium">{truncateString(item.address, 10)}</span>
                                                 {/* <button
                                                     onClick={() => copyAddress(item.address)}
                                                     className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900 transition-colors group relative"
@@ -766,7 +781,10 @@ export default function MasterTradeTable() {
                             {/* Card Header */}
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center">
-                                    <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-sm font-medium">{item.nickname}</span>
+                                    <div className="flex gap-3 items-center">
+                                        <span className="dark:text-theme-neutral-100 text-theme-neutral-900 text-sm font-medium">{maskNickname(item.nickname)}</span>
+                                        <span className="text-yellow-500 text-xs">{t('masterTrade.page.table.address')}: {truncateString(item.address, 10)}</span>
+                                    </div>
                                     {/* <button
                                         onClick={() => copyAddress(item.address)}
                                         className="ml-2 dark:text-theme-neutral-100 text-theme-neutral-900"
@@ -898,7 +916,7 @@ export default function MasterTradeTable() {
                 onClose={() => setShowDetailModal(false)}
                 info={infoWallet}
             />
-            <ModalSignin isOpen={!isAuthenticated } onClose={() => {}} />
+            <ModalSignin isOpen={!isAuthenticated} onClose={() => { }} />
             <PhantomWarningModal
                 isOpen={showPhantomWarning}
                 onClose={() => setShowPhantomWarning(false)}
