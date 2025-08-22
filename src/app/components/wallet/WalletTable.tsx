@@ -68,7 +68,7 @@ const mobileStyles = {
 
 export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWallets }: WalletTableProps) {
     const { toast } = useToast();
-    const {t} = useLang();
+    const { t } = useLang();
     const { isAuthenticated, logout, updateToken } = useAuth();
     const [editingWalletId, setEditingWalletId] = useState<string | null>(null);
     const [editingField, setEditingField] = useState<'name' | 'nickname' | 'country' | null>(null);
@@ -171,7 +171,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         try {
             const walletData = { wallet_id: id };
             const res = await TelegramWalletService.deleteWallet(walletData);
-            
+
             if (res) {
                 notify({
                     message: t("wallet.deleteSuccess"),
@@ -228,12 +228,12 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                 onUpdateWallet?.();
             }
         } catch (error: any) {
-            if(error?.response?.data?.message === "Invalid data or duplicate name/nickname"){
+            if (error?.response?.data?.message === "Invalid data or duplicate name/nickname") {
                 notify({
                     message: t("wallet.nicknameDuplicate"),
                     type: 'error'
                 });
-            }else{
+            } else {
                 notify({
                     message: t("wallet.updateFailed"),
                     type: 'error'
@@ -685,8 +685,37 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                             </TableBody>
                         </Table>
                     </div>
+                    {/* Mobile Card View */}
+                    <div className="sm:hidden space-y-3 p-2">
+                        {/* Mobile Bulk Delete Actions */}
+                        {selectedWallets.length > 0 && (
+                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                                <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                                    {t('wallet.selectedWallets', { count: selectedWallets.length })}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedWallets([])}
+                                        className="text-xs h-8"
+                                    >
+                                        {t('wallet.clearSelection')}
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => setIsBulkDelete(true)}
+                                        className="text-xs h-8"
+                                    >
+                                        {t('wallet.deleteSelected')}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                        {wallets?.map((wallet) => renderMobileWalletCard(wallet))}
+                    </div>
 
-                   
                 </CardContent>
             </Card>
 
@@ -703,7 +732,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     {t('wallet.confirmDeleteWalletAction')}
                                 </DialogDescription>
                             </DialogHeader>
-                            <DialogFooter className="flex justify-end gap-2 p-2">
+                            <DialogFooter className="flex justify-end gap-2 p-2 flex-row">
                                 <div className="bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative rounded-full">
                                     <button
                                         className="bg-theme-black-200 h-[30px] text-neutral-100 px-5 rounded-full"
