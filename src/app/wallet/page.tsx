@@ -1221,7 +1221,7 @@ export default function WalletPage() {
                                 <div className={sectionTitleStyles}>{t('wallet.solanaWallet')}</div>
                                 <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
                             </div>
-                            <div className="flex md:flex-wrap w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10">
+                            <div className="grid grid-cols-2 md:grid-cols-4 w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10">
                                 <button
                                     onClick={() => setShowAddWallets(true)}
                                     className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"

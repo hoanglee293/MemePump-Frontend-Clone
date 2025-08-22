@@ -549,9 +549,9 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                 <CardContent className="p-0 relative">
                     {/* Bulk Delete Actions */}
                     {selectedWallets.length > 0 && (
-                        <div className="flex items-center justify-between px-4 py-2 mb-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl">
+                        <div className="flex items-center justify-between md:px-4 px-2 py-2 mb-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl">
                             <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                                <span className="md:text-sm text-xs font-medium text-red-700 dark:text-red-300">
                                     {t('wallet.selectedWallets', { count: selectedWallets.length })}
                                 </span>
                             </div>
@@ -560,7 +560,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setSelectedWallets([])}
-                                    className="text-xs h-8 rounded-full hover:bg-gray-700"
+                                    className="md:text-xs text-[10px] h-8 rounded-full hover:bg-gray-700"
                                 >
                                     {t('wallet.clearSelection')}
                                 </Button>
@@ -568,7 +568,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     variant="destructive"
                                     size="sm"
                                     onClick={() => setIsBulkDelete(true)}
-                                    className="text-xs h-8 bg-red-500 hover:bg-red-600 rounded-full"
+                                    className="md:text-xs text-[10px] h-8 bg-red-500 hover:bg-red-600 rounded-full"
                                 >
                                     {t('wallet.deleteSelected')}
                                 </Button>
