@@ -760,17 +760,7 @@ export default function WalletPage() {
             setShowImportWallet(false);
 
             // Show result modal based on API response
-            if (response?.created_count) {
-                setResultInfo({
-                    created_count: Number(response?.created_count ?? 0),
-                    failed_count: Number(response?.failed_count ?? 0),
-                    message: response?.message,
-                });
-                setShowModalResult(true);
-            } else {
-                toast.success(t('wallet.walletAddedSuccess'));
-            }
-            setShowModalResult(true);
+            toast.success(t('wallet.walletAddedSuccess'));
 
             // Refresh wallet list
             await fetchWallets();
@@ -831,7 +821,7 @@ export default function WalletPage() {
                 };
 
                 const res = await TelegramWalletService.addWallet(walletData);
-                if (res) {
+                if (res.created_count) {
                     setResultInfo({
                         created_count: Number(res?.created_count ?? 0),
                         failed_count: Number(res?.failed_count ?? 0),
