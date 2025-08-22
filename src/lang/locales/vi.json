@@ -548,7 +548,7 @@
     "nicknameDuplicate": "Tên/ biệt danh ví đã tồn tại",
     "confirmCreateWallets": "Xác nhận tạo ví",
     "selectedWallets": "{{count}} ví đã được chọn",
-    "clearSelection": "Xóa lựa chọn",
+    "clearSelection": "Bỏ lựa chọn",
     "deleteSelected": "Xóa đã chọn",
     "confirmBulkDelete": "Xác nhận xóa hàng loạt",
     "confirmBulkDeleteMessage": "Bạn có chắc chắn muốn xóa {{count}} ví đã chọn? Hành động này không thể hoàn tác.",
