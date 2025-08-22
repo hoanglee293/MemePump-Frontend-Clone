@@ -459,13 +459,13 @@ export default function WalletPage() {
         fetchWallets();
     }, []);
 
-    const { data: myWallets, refetch: refetchInforWallets, isLoading: isLoadingMyWallets } = useQuery({
+    const { data: myWallets = [], refetch: refetchInforWallets, isLoading: isLoadingMyWallets } = useQuery({
         queryKey: ["my-wallets"],
         queryFn: getMyWallets,
         enabled: isAuthenticated,
     });
 
-    const { data: tokenList, refetch: refetchTokenList, isLoading: isLoadingTokenList } = useQuery({
+    const { data: tokenList = { tokens: [] }, refetch: refetchTokenList, isLoading: isLoadingTokenList } = useQuery({
         queryKey: ["token-buy-list"],
         queryFn: getListBuyToken,
         enabled: isAuthenticated,
@@ -476,13 +476,18 @@ export default function WalletPage() {
         queryFn: getMasters,
     });
     // Filter tokens with price >= 0.000001
-    const filteredTokens = tokenList?.tokens?.filter((token: Token) => token.token_balance_usd >= 0.05) || [];
+    const filteredTokens = React.useMemo(() => {
+        if (!tokenList || !tokenList.tokens || !Array.isArray(tokenList.tokens)) {
+            return [];
+        }
+        return tokenList.tokens.filter((token: Token) => token && typeof token.token_balance_usd === 'number' && token.token_balance_usd >= 0.05);
+    }, [tokenList]);
 
-    const { data: walletInfor, refetch, isLoading: isLoadingWalletInfor } = useQuery({
+    const { data: walletInfor = null, refetch, isLoading: isLoadingWalletInfor } = useQuery({
         queryKey: ["wallet-infor"],
         queryFn: getInforWallet,
     });
-    const { data: listWallets, error, isLoading: isLoadingListWallets } = useQuery({
+    const { data: listWallets = [], error, isLoading: isLoadingListWallets } = useQuery({
         queryKey: ['my-wallets'],
         queryFn: getMyWallets,
     });
