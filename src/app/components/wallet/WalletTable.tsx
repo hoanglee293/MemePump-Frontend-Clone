@@ -688,31 +688,6 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                     {/* Mobile Card View */}
                     <div className="sm:hidden space-y-3 p-2">
                         {/* Mobile Bulk Delete Actions */}
-                        {selectedWallets.length > 0 && (
-                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                                <span className="text-sm font-medium text-red-700 dark:text-red-300">
-                                    {t('wallet.selectedWallets', { count: selectedWallets.length })}
-                                </span>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => setSelectedWallets([])}
-                                        className="text-xs h-8"
-                                    >
-                                        {t('wallet.clearSelection')}
-                                    </Button>
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() => setIsBulkDelete(true)}
-                                        className="text-xs h-8"
-                                    >
-                                        {t('wallet.deleteSelected')}
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
                         {wallets?.map((wallet) => renderMobileWalletCard(wallet))}
                     </div>
 
