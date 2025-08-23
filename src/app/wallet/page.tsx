@@ -562,6 +562,7 @@ export default function WalletPage() {
         setWalletName("");
         setWalletNickname("");
         setPrivateKey("");
+        setPrivateKeyError("");
     };
     const handleCloseImportWallets = () => {
         setShowImportWallets(false);
@@ -570,6 +571,7 @@ export default function WalletPage() {
         setPrivateKey("");
         setSelectedNetwork("EN");
         setPrivateKeyArray([]);
+        setPrivateKeyError("");
     };
 
     const handleCloseCreatePassword = () => {

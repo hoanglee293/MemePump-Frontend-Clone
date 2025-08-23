@@ -511,7 +511,7 @@
     "resultTitle": "Kết quả",
     "createdCount": "Tạo thành công",
     "failedCount": "Tạo thất bại",
-    "privateKeyFormatHint": "Nhập nhiều khóa riêng tư được ngăn cách bởi dấu chấm (.) hoặc xuống dòng. Mỗi khóa sẽ được nhập như một ví riêng biệt.",
+    "privateKeyFormatHint": "Nhập nhiều khóa riêng tư được ngăn cách bởi xuống dòng. Mỗi khóa sẽ được nhập như một ví riêng biệt. Sử dụng thao tác copy paste để nhập nhiều khóa riêng tư.",
     "walletAddFailed": "Thêm ví thất bại. Vui lòng thử lại.",
     "failedToAddWallet": "Thêm ví thất bại. Vui lòng thử lại.",
     "failedToFetchWallets": "Không thể tải danh sách ví. Vui lòng thử lại.",

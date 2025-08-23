@@ -480,7 +480,7 @@
     "resultTitle": "Result",
     "createdCount": "Created",
     "failedCount": "Failed To Import",
-    "privateKeyFormatHint": "Enter multiple private keys separated by dots (.) or new lines. Each key will be imported as a separate wallet.",
+    "privateKeyFormatHint": "Enter multiple private keys separated by new lines. Each key will be imported as a separate wallet. Use copy and paste to enter multiple private keys.",
     "walletAddFailed": "Failed to add wallet. Please try again.",
     "failedToAddWallet": "Failed to add wallet. Please try again.",
     "failedToFetchWallets": "Failed to fetch wallets. Please try again.",

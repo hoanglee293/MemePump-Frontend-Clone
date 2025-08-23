@@ -504,7 +504,7 @@
     "resultTitle": "결과",
     "createdCount": "생성됨",
     "failedCount": "실패",
-    "privateKeyFormatHint": "점(.) 또는 줄바꿈으로 구분된 여러 개인 키를 입력하세요. 각 키는 별도의 지갑으로 가져와집니다.",
+    "privateKeyFormatHint": "줄바꿈으로 구분된 여러 개인 키를 입력하세요. 각 키는 별도의 지갑으로 가져와집니다. 복사 붙여넣기를 사용하여 여러 개인 키를 입력하세요.",
     "walletAddFailed": "지갑 추가에 실패했습니다. 다시 시도해 주세요.",
     "passwordCreatedSuccess": "비밀번호가 성공적으로 생성되었습니다",
     "passwordCreateFailed": "비밀번호 생성에 실패했습니다. 다시 시도해 주세요.",
