@@ -259,14 +259,14 @@ const AssetsMobileSkeleton = () => (
 );
 
 // Add custom select component
-const CustomSelect = ({ value, onChange, options, placeholder }: {
+const CustomSelect = ({ value, onChange, options, placeholder, t }: {
     value: string;
     onChange: (value: string) => void;
     options: { id: number; name: string; code: string; translationKey: string; flag: string }[];
     placeholder?: string;
+    t: (key: string) => string;
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { t } = useLang();
     const selectRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -425,7 +425,7 @@ export default function WalletPage() {
         } finally {
             setIsLoadingWalletInfo(false);
         }
-    }, []);
+    }, [t]);
 
     // Validate private key array
     const validatePrivateKeyArray = useCallback((keys: string[]) => {
@@ -449,7 +449,7 @@ export default function WalletPage() {
 
         setPrivateKeyError("");
         return true;
-    }, []);
+    }, [t]);
 
     const debouncedFetchWalletInfo = useDebounce(fetchWalletInfo, 500);
 
@@ -489,7 +489,7 @@ export default function WalletPage() {
         queryKey: ['my-wallets'],
         queryFn: getMyWallets,
     });
-    const fetchWallets = async () => {
+    const fetchWallets = useCallback(async () => {
         try {
             const walletList = await TelegramWalletService.getMyWallets();
             setWallets(walletList);
@@ -497,7 +497,7 @@ export default function WalletPage() {
             console.error("Error fetching wallets:", error);
             toast.error(t('wallet.failedToFetchWallets'));
         }
-    };
+    }, [t]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -1518,6 +1518,7 @@ export default function WalletPage() {
                                             onChange={(value) => setSelectedNetwork(value)}
                                             options={langConfig.listLangs}
                                             placeholder={t('wallet.country')}
+                                            t={t}
                                         />
                                     </div>
                                 </div>
@@ -1600,6 +1601,7 @@ export default function WalletPage() {
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
                                                 placeholder={t('wallet.country')}
+                                                t={t}
                                             />
                                         </div>
                                     </div>
@@ -1761,6 +1763,7 @@ export default function WalletPage() {
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
                                                 placeholder={t('wallet.country')}
+                                                t={t}
                                             />
                                         </div>
                                     </div>
@@ -2050,6 +2053,7 @@ export default function WalletPage() {
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
                                                 placeholder={t('wallet.country')}
+                                                t={t}
                                             />
                                         </div>
                                     </div>
