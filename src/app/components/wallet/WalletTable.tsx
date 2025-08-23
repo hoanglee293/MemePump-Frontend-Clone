@@ -582,7 +582,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                             <TableHeader className="border-b-1 border-b-solid border-b-neutral-400">
                                 <TableRow className="bg-muted/50">
                                     <TableHead className={`${textTitle} w-[5%] px-4`}>
-                                        {wallets?.length < 1 && (
+                                        {wallets?.length > 1 && (
                                             <Checkbox
                                                 checked={isAllSelected()}
                                                 onCheckedChange={handleSelectAll}
