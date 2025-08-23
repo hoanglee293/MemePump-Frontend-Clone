@@ -442,7 +442,7 @@
     "getPrivateKey": "Lấy Khóa Riêng Tư",
     "solanaWallet": "VÍ SOLANA",
     "addWallet": "Thêm Ví",
-    "importWallet": "Nhập ví",
+    "importWallet": "Nhập Ví",
     "assets": "TÀI SẢN",
     "token": "Token",
     "balance": "Số dư",
@@ -541,7 +541,7 @@
     "resendCode": "Gửi lại mã",
     "verify": "Xác minh",
     "invalidCode": "Mã xác thực không hợp lệ hoặc đã hết hạn ",
-    "confirmDeleteWallet": "Bạn có chắc chắn muốn xóa ví này không?",
+    "confirmDeleteWallet": "Bạn có chắc chắn muốn xóa ví {nameWallet} không?",
     "confirmDeleteWalletAction": "Xóa ví",
     "cancel": "Hủy",
     "delete": "Xóa",
@@ -973,7 +973,7 @@
       "copyAddress": "Sao chép địa chỉ",
       "copied": "Đã sao chép!"
     },
-    "actions": "Thao tác",
+    "actions": "Thao Tác",
     "close": "Đóng"
   },
   "universal_account": {

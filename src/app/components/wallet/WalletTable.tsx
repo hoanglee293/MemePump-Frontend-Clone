@@ -582,10 +582,12 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                             <TableHeader className="border-b-1 border-b-solid border-b-neutral-400">
                                 <TableRow className="bg-muted/50">
                                     <TableHead className={`${textTitle} w-[5%] px-4`}>
-                                        <Checkbox
-                                            checked={isAllSelected()}
-                                            onCheckedChange={handleSelectAll}
-                                        />
+                                        {wallets?.length < 1 && (
+                                            <Checkbox
+                                                checked={isAllSelected()}
+                                                onCheckedChange={handleSelectAll}
+                                            />
+                                        )}
                                     </TableHead>
                                     <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
                                     <TableHead className={`${textTitle} w-[12%] px-4`}>{t('wallet.nickname')}</TableHead>
@@ -602,10 +604,10 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                         key={wallet.wallet_id}
                                         className="dark:hover:bg-neutral-800/30 hover:bg-theme-green-300 transition-colors"
                                     >
-                                        <TableCell className={`px-4 ${textContent} `} onClick={() => handleSelectWallet(wallet.wallet_id, !selectedWallets.includes(wallet.wallet_id))}>
+                                        <TableCell className={`px-4 ${textContent} `}>
                                             {wallet.wallet_type !== 'main' && (
                                                 <Checkbox
-                                                    checked={selectedWallets.includes(wallet.wallet_id)}
+                                                    checked={selectedWallets.includes(wallet.wallet_id)} onClick={() => handleSelectWallet(wallet.wallet_id, !selectedWallets.includes(wallet.wallet_id))}
                                                 />
                                             )}
                                         </TableCell>
@@ -695,17 +697,13 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
             </Card>
 
             <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-                <DialogContent className="sm:max-w-[425px] p-0 border-none border-transparent">
+                <DialogContent hiddenCloseButton className="sm:max-w-[425px] p-0 border-none border-transparent">
                     <div className="bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative w-full rounded-xl">
                         <div className="w-full px-3 py-2 bg-theme-black-200 rounded-xl text-neutral-100">
                             <DialogHeader className="p-2">
                                 <DialogTitle className="text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-2 text-fill-transparent bg-clip-text">
-                                    {t('wallet.confirmDeleteWallet')}
+                                    {t('wallet.confirmDeleteWallet', { nameWallet: walletToDelete?.wallet_nick_name || walletToDelete?.wallet_name })}
                                 </DialogTitle>
-                                <DialogDescription className="text-neutral-100 text-sm">
-                                    {t('wallet.confirmDeleteWallet')} {walletToDelete?.wallet_nick_name || walletToDelete?.wallet_name}?
-                                    {t('wallet.confirmDeleteWalletAction')}
-                                </DialogDescription>
                             </DialogHeader>
                             <DialogFooter className="flex justify-end gap-2 p-2 flex-row">
                                 <div className="bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative rounded-full">
