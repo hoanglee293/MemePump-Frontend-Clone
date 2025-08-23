@@ -1777,8 +1777,8 @@ export default function WalletPage() {
                                                     setSelectedMasterTrader(value);
                                                 }}
                                             >
-                                                <SelectTrigger className="w-full px-3 py-1.5 dark:bg-theme-black-200 placeholder:text-sm rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500">
-                                                    <SelectValue placeholder={t('wallet.connectMaster')} className="placeholder:text-gray-500" />
+                                                <SelectTrigger className="border-none w-full px-3 py-1.5 dark:bg-theme-black-200 bg-white placeholder:!text-xs rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 [&>span]:text-xs dark:[&>span]:text-gray-400">
+                                                    <SelectValue placeholder={t('wallet.connectMaster')} className="text-yellow-500" />
                                                 </SelectTrigger>
                                                 <SelectContent
                                                     className="bg-white dark:bg-theme-black-200 border border-gray-200 dark:border-gray-700 shadow-lg"
