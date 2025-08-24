@@ -160,3 +160,17 @@ export const changeStreamWallet = async ()=>{
     }
 }
 
+export const getMasterTrading = async (item: any)=>{
+    try {
+        const temp = await axiosClient.post("/phantom-trade/create-transaction", item, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return temp;
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+

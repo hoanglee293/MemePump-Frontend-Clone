@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { getMyConnects, getMyGroups } from "@/services/api/MasterTradingService"
+import { getMasterTrading, getMyConnects, getMyGroups } from "@/services/api/MasterTradingService"
 import { createTrading, getTokenAmount, getTradeAmount } from "@/services/api/TradingService"
 import { useSearchParams } from "next/navigation"
 import { useLang } from "@/lang/useLang"
@@ -389,18 +389,14 @@ export default function TradingPanel({
 
             console.log('Creating Phantom transaction:', createTransactionData)
             
-            const createRes = await fetch('https://memempumpclone-be-production.up.railway.app/api/v1/phantom-trade/create-transaction', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(createTransactionData)
-            })
+            const createRes = await getMasterTrading(createTransactionData)
 
-            if (!createRes.ok) {
-                const errorData = await createRes.json()
-                throw new Error(`Failed to create transaction: ${errorData.message || 'Unknown error'}`)
+            if (createRes.status !== 201 || !createRes.data) {
+                const errorData = createRes.data
+                throw new Error(`Failed to create transaction: ${errorData?.message || 'Unknown error'}`)
             }
 
-            const createData = await createRes.json()
+            const createData = createRes.data
             console.log('Transaction created:', createData)
 
             if (!createData.data?.serialized_transaction || !createData.data?.order_id) {
