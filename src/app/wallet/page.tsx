@@ -1837,7 +1837,7 @@ export default function WalletPage() {
                                             <div className="relative w-full">
                                                 <input
                                                     type={showPassword.sol ? "text" : "password"}
-                                                    value={privateKeyDefault.sol_private_key}
+                                                    value={privateKeyPublics.sol_private_key}
                                                     readOnly
                                                     placeholder={t('wallet.enterSolanaPrivateKey')}
                                                     className={`${modalInputStyles} pr-16 cursor-default`}
@@ -1845,7 +1845,7 @@ export default function WalletPage() {
                                                 <div className="absolute right-3 top-1/3 flex items-center gap-2">
                                                     <Copy
                                                         onClick={() => {
-                                                            navigator.clipboard.writeText(privateKeyDefault.sol_private_key);
+                                                            navigator.clipboard.writeText(privateKeyPublics.sol_private_key);
                                                             toast.success(t('connectMasterModal.copyAddress.copied'));
                                                         }}
                                                         className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-200"
@@ -1876,7 +1876,7 @@ export default function WalletPage() {
                                             <div className="relative w-full">
                                                 <input
                                                     type={showPassword.eth ? "text" : "password"}
-                                                    value={privateKeyDefault.eth_private_key}
+                                                    value={privateKeyPublics.eth_private_key}
                                                     readOnly
                                                     placeholder="Enter Ethereum private key"
                                                     className={`${modalInputStyles} pr-16 cursor-default`}
@@ -1884,7 +1884,7 @@ export default function WalletPage() {
                                                 <div className="absolute right-3 top-1/3 flex items-center gap-2">
                                                     <Copy
                                                         onClick={() => {
-                                                            navigator.clipboard.writeText(privateKeyDefault.eth_private_key);
+                                                            navigator.clipboard.writeText(privateKeyPublics.eth_private_key);
                                                             toast.success(t('connectMasterModal.copyAddress.copied'));
                                                         }}
                                                         className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-200"
@@ -1913,7 +1913,7 @@ export default function WalletPage() {
                                             <div className="relative w-full">
                                                 <input
                                                     type={showPassword.bnb ? "text" : "password"}
-                                                    value={privateKeyDefault.bnb_private_key}
+                                                    value={privateKeyPublics.bnb_private_key}
                                                     readOnly
                                                     placeholder="Enter BNB private key"
                                                     className={`${modalInputStyles} pr-16 cursor-default`}
@@ -1921,7 +1921,7 @@ export default function WalletPage() {
                                                 <div className="absolute right-3 top-1/3 flex items-center gap-2">
                                                     <Copy
                                                         onClick={() => {
-                                                            navigator.clipboard.writeText(privateKeyDefault.bnb_private_key);
+                                                            navigator.clipboard.writeText(privateKeyPublics.bnb_private_key);
                                                             toast.success(t('connectMasterModal.copyAddress.copied'));
                                                         }}
                                                         className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-200"

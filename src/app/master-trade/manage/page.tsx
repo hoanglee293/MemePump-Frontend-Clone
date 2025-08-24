@@ -538,6 +538,15 @@ export default function MasterTradeInterface() {
       await MasterTradingService.changeStreamWallet()
       toast.success(t("masterTrade.manage.connectionManagement.changeRoleSuccess"));
       setIsChangeRoleDialogOpen(false);
+      
+      // Refetch all APIs when request is successful
+      await Promise.all([
+        refetchMyConnects(),
+        refetchInforWallet(),
+        refetchMyGroups(),
+        refetchChatGroupHistories()
+      ]);
+      
       router.refresh();
     } catch (error: any) {
       console.error("Error changing role:", error);
