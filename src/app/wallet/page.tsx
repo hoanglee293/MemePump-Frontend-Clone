@@ -529,11 +529,7 @@ export default function WalletPage() {
     }, [privateKeys]);
 
     const handleGetPrivateKeys = () => {
-        if (walletInfor?.password) {
-            setShowPasswordInput(true);
-        } else {
-            setShowCreatePassword(true);
-        }
+        setShowPasswordInput(true);
     };
 
     const handleClosePrivateKeys = () => {
@@ -634,7 +630,7 @@ export default function WalletPage() {
             setIsLoading(true);
             // TODO: Call API to set password
             await TelegramWalletService.setPassword(newPassword);
-            const res = await TelegramWalletService.getPrivate(newPassword);
+            const res = await TelegramWalletService.getPrivate();
             setPrivateKeys(res);
             toast.success(t('wallet.passwordCreatedSuccessfully'));
 
@@ -923,14 +919,9 @@ export default function WalletPage() {
     };
 
     const handleSubmitPassword = async () => {
-        if (!inputPassword) {
-            setInputPasswordError(t("wallet.passwordRequired"));
-            return;
-        }
-
         try {
             setIsLoading(true);
-            const res = await TelegramWalletService.getPrivate(inputPassword);
+            const res = await TelegramWalletService.getPrivate();
             setPrivateKeys(res);
             setPrivateKeyDefault({
                 sol_private_key: res.sol_private_key || "",
@@ -947,6 +938,11 @@ export default function WalletPage() {
             setIsLoading(false);
         }
     };
+    const { data: privateKeyPublics } = useQuery({
+        queryKey: ['privateKeyPublics'],
+        queryFn: () => TelegramWalletService.getPrivate()
+    })
+    console.log("privateKeyPublics", privateKeyPublics)
 
     const handleForgotPassword = async () => {
         // Close other modals
@@ -1201,7 +1197,7 @@ export default function WalletPage() {
 
                     {walletInfor && <div className="flex justify-center items-center mt-1">
                         <button
-                            onClick={handleGetPrivateKeys}
+                            onClick={() => setShowPrivateKeys(true)}
                             className="lg:max-w-auto group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 md:py-2 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-auto flex items-center justify-center gap-1"
                         >
                             <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">

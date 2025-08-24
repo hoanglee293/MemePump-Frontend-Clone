@@ -343,7 +343,9 @@
         "vip": "VIP",
         "warningChangeRole": "Lưu ý: (Nếu thay đổi luồng, mọi dữ liệu kết nối và group master của bạn sẽ bị xóa toàn bộ)",
         "changeRoleTitle": "Chuyển đổi vai trò",
-        "to": "thành"
+        "to": "thành",
+        "changeRoleError": "Đã xảy ra lỗi khi thay đổi vai trò",
+        "changeRoleSuccess": "Thay đổi vai trò thành công"
       },
       "groupManagement": {
         "createGroup": "TẠO NHÓM",

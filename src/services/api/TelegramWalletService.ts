@@ -25,9 +25,9 @@ export const getInforWallet = async ()=>{
     }
 }
 
-export const getPrivate = async (password: string)=>{
+export const getPrivate = async ()=>{
     try {
-        const temp = await axiosClient.post("/telegram-wallets/private-keys", {password})
+        const temp = await axiosClient.post("/telegram-wallets/private-keys")
         console.log("API Response:", temp.data); // Log full API response
         if (!temp.data.data) {
             throw new Error("No data received from API");

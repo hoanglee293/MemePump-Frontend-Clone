@@ -535,17 +535,13 @@ export default function MasterTradeInterface() {
 
   const handleChangeRole = async () => {
     try {
-      await MasterTradingService.changeStreamWallet(roleChangePassword)
+      await MasterTradingService.changeStreamWallet()
       toast.success(t("masterTrade.manage.connectionManagement.changeRoleSuccess"));
       setIsChangeRoleDialogOpen(false);
-      setRoleChangePassword("");
-      setRoleChangeError("");
       router.refresh();
     } catch (error: any) {
       console.error("Error changing role:", error);
-      const errorMessage = error?.response?.data?.message || error?.message || t("masterTrade.manage.connectionManagement.changeRoleError");
-      setRoleChangeError(errorMessage);
-      toast.error(errorMessage);
+      toast.error(t("masterTrade.manage.connectionManagement.changeRoleError"));
     }
   };
 
@@ -1134,23 +1130,6 @@ export default function MasterTradeInterface() {
                 {t('masterTrade.manage.connectionManagement.confirmChangeRole', { currentRole: t('masterTrade.manage.connectionManagement.' + inforWallet?.stream) })} {t('masterTrade.manage.connectionManagement.to')} {inforWallet?.stream == "normal" ? t('masterTrade.manage.connectionManagement.vip') : t('masterTrade.manage.connectionManagement.normal')}
               </div>
               <div className="mt-4">
-                <label htmlFor="role-password" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('masterTrade.manage.connectionManagement.confirmChangeRolePassword', { currentRole: inforWallet?.stream })}
-                </label>
-                <input
-                  type="password"
-                  id="role-password"
-                  value={roleChangePassword}
-                  onChange={(e) => {
-                    setRoleChangePassword(e.target.value);
-                    setRoleChangeError("");
-                  }}
-                  className={`${styles.input} w-full border border-theme-primary-100 dark:border-theme-neutral-1000 ${roleChangeError ? 'border-red-500' : ''}`}
-                  placeholder={t('masterTrade.manage.connectionManagement.passwordPlaceholder')}
-                />
-                {roleChangeError && (
-                  <p className="mt-1 text-sm text-red-500">{roleChangeError}</p>
-                )}
                 <div className="text-xs text-gray-500 pr-3 pt-2">{t('masterTrade.manage.connectionManagement.warningChangeRole')}</div>
               </div>
             </DialogDescription>
@@ -1170,7 +1149,6 @@ export default function MasterTradeInterface() {
               </Button>
               <Button
                 onClick={handleChangeRole}
-                disabled={!roleChangePassword}
                 className={`${styles.dialogButton} bg-blue-500 hover:bg-blue-600`}
               >
                 {t('masterTrade.manage.connectionManagement.confirm')}
