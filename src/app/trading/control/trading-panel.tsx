@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { getMasterTrading, getMyConnects, getMyGroups } from "@/services/api/MasterTradingService"
+import { getMasterTrading, getMyConnects, getMyGroups, submitSignedPhantomTransaction } from "@/services/api/MasterTradingService"
 import { createTrading, getTokenAmount, getTradeAmount } from "@/services/api/TradingService"
 import { useSearchParams } from "next/navigation"
 import { useLang } from "@/lang/useLang"
@@ -485,18 +485,14 @@ export default function TradingPanel({
 
             console.log('Submitting signed transaction...')
             
-            const submitRes = await fetch('https://memempumpclone-be-production.up.railway.app/api/v1/phantom-trade/submit-signed-transaction', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(submitData)
-            })
+            const submitRes = await submitSignedPhantomTransaction(submitData)
 
-            if (!submitRes.ok) {
-                const errorData = await submitRes.json()
-                throw new Error(`Failed to submit transaction: ${errorData.message || 'Unknown error'}`)
+            if (submitRes.status !== 201 || !submitRes.data) {
+                const errorData = submitRes.data
+                throw new Error(`Failed to submit transaction: ${errorData?.message || 'Unknown error'}`)
             }
 
-            const submitDataResponse = await submitRes.json()
+            const submitDataResponse = submitRes.data
             console.log('Transaction submitted successfully:', submitDataResponse)
 
             return true

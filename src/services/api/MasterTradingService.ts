@@ -174,3 +174,13 @@ export const getMasterTrading = async (item: any)=>{
     }
 }
 
+export const submitSignedPhantomTransaction = async (item: any)=>{
+    try {
+        const temp = await axiosClient.post("/phantom-trade/submit-signed-transaction", item)
+        return temp;
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
