@@ -275,7 +275,7 @@ function TransactionHistoryContent() {
           </div>
           <div>
             <span className="text-gray-500 dark:text-neutral-400">{t("transactionHistory.total")}:</span>
-            <span className={`ml-1 ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>${(order.priceUsd * order.amount).toFixed(6)}</span>
+            <span className={`ml-1 ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>${(order.priceUsd * order.amount).toFixed(2)}</span>
           </div>
           <div>
             <span className="text-gray-500 dark:text-neutral-400">{t("transactionHistory.source")}:</span>
@@ -348,7 +348,7 @@ function TransactionHistoryContent() {
                     {formatNumberWithSuffix(order.amount)}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
-                    ${(order.priceUsd * order.amount).toFixed(6)}
+                    ${(order.priceUsd * order.amount).toFixed(2)}
                   </td>
                     {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                       {order.program}
@@ -437,7 +437,7 @@ function TransactionHistoryContent() {
                     {formatNumberWithSuffix(order.amount)}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
-                    ${(order.priceUsd * order.amount).toFixed(6)}
+                    ${(order.priceUsd * order.amount).toFixed(2)}
                   </td>
                   {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {order.program}

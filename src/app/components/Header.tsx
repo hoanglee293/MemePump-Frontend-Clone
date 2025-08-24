@@ -161,7 +161,7 @@ const Header = () => {
             href: '/dashboard',
             icon: LayoutDashboard,
             logoPump: false,
-            isPhantomConnected: phantomConnected || true,
+            isPhantomConnected: false,
         },
         {
             name: t('create coin'),
@@ -178,21 +178,21 @@ const Header = () => {
                     href: '/create-coin/memepump',
                 },
             ],
-            isPhantomConnected: !phantomConnected || true,
+            isPhantomConnected: phantomConnected,
         },
         {
             name: t('overview.masterTrade.title'),
             href: '/master-trade',
             icon: LineChart,
             logoPump: false,
-            isPhantomConnected: !phantomConnected || true,
+            isPhantomConnected: phantomConnected,
         },
         {
             name: t("wallet manager"),
             href: '/wallet',
             icon: WalletIcon,
             logoPump: false,
-            isPhantomConnected: !phantomConnected,
+            isPhantomConnected: phantomConnected,
         }
     ]
     return (
@@ -205,7 +205,7 @@ const Header = () => {
                         <Link href="/"><img src={"/logo.png"} alt="logo" className="h-6 md:h-8" /></Link>
                             {/* Desktop Navigation */}
                             <nav className='hidden md:flex items-center 2xl:gap-[3vw] md:gap-[1vw]'>
-                                {listSidebar.filter(item => item.isPhantomConnected === true).map((item, index) => (
+                                {listSidebar.filter(item => item.isPhantomConnected !== true).map((item, index) => (
                                     item.dropdown ? (
                                         <div key={index} className="relative group">
                                             <button className={`hover:gradient-hover text-theme-neutral-800 text-xs 2xl:text-sm dark:text-theme-neutral-300 capitalize transition-colors flex items-center gap-2 ${pathname.startsWith(item.href) ? 'gradient-hover font-semibold' : ''}`}>
