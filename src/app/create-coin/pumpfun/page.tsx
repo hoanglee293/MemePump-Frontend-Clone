@@ -177,13 +177,32 @@ export default function CreateCoinForm() {
     const isPhantomConnected = localStorage.getItem('phantomConnected') === 'true';
     const phantomKey = localStorage.getItem('phantomPublicKey');
     setPhantomConnected(isPhantomConnected);
-}, []);
+  }, []);
+
+  const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-adjust textarea height when description changes
+  useEffect(() => {
+    if (descriptionTextareaRef.current) {
+      adjustTextareaHeight(descriptionTextareaRef.current);
+    }
+  }, [formData.description]);
+
+  const adjustTextareaHeight = (element: HTMLTextAreaElement) => {
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
+  };
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Auto-adjust textarea height for description
+    if (name === 'description' && e.target instanceof HTMLTextAreaElement) {
+      adjustTextareaHeight(e.target);
+    }
 
     // Clear error when user types
     if (errors[name as keyof FormErrors]) {
@@ -237,20 +256,20 @@ export default function CreateCoinForm() {
       // Ensure categoryId is always a string and normalize existing values
       const normalizedCategoryId = String(categoryId);
       const normalizedCategoryList = prev.category_list.map(id => String(id));
-      
+
       const isSelected = normalizedCategoryList.includes(normalizedCategoryId);
       const newCategoryList = isSelected
         ? normalizedCategoryList.filter(id => id !== normalizedCategoryId)
         : [...normalizedCategoryList, normalizedCategoryId];
-      
+
       // Remove duplicates and ensure all values are strings
       const uniqueCategoryList = [...new Set(newCategoryList)];
-      
+
       const newData = {
         ...prev,
         category_list: uniqueCategoryList
       };
-      
+
       return newData;
     });
 
@@ -383,7 +402,7 @@ export default function CreateCoinForm() {
       formDataToSend.append("symbol", formData.symbol);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("amount", String(formData.amount || 0));
-      
+
       // Add category_list as array - append each category separately
       formData.category_list.forEach((category) => {
         formDataToSend.append("category_list", category);
@@ -443,7 +462,7 @@ export default function CreateCoinForm() {
   };
   return (
     <>
-                      {/* NotifyProvider removed - using Toaster from ClientLayout */}
+      {/* NotifyProvider removed - using Toaster from ClientLayout */}
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -462,7 +481,7 @@ export default function CreateCoinForm() {
               </span>
               {t('createCoin.confirmation.description3')}
             </span>
-            <span className="text-xs text-theme-primary-300 italic">({t('createCoin.form.amount.label')}: {Number(formData.amount) })</span>
+            <span className="text-xs text-theme-primary-300 italic">({t('createCoin.form.amount.label')}: {Number(formData.amount)})</span>
             <div className="flex w-full gap-4 justify-center px-2 mt-4">
               <button
                 onClick={() => setShowConfirmModal(false)}
@@ -657,9 +676,8 @@ export default function CreateCoinForm() {
                                 return (
                                   <SelectItem
                                     key={category.id}
-                                    className={`text-gray-700 dark:text-neutral-400 cursor-pointer dark:hover:bg-neutral-800 dark:hover:text-theme-neutral-100 ${
-                                      isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''
-                                    }`}
+                                    className={`text-gray-700 dark:text-neutral-400 cursor-pointer dark:hover:bg-neutral-800 dark:hover:text-theme-neutral-100 ${isSelected ? 'bg-blue-100 dark:bg-blue-900' : ''
+                                      }`}
                                     value={category.id}
                                   >
                                     <div className="flex items-center gap-2">
@@ -684,123 +702,127 @@ export default function CreateCoinForm() {
                   </div>
                 </div>
 
-                {/* Description */}
-                <div>
-                  <label htmlFor="description" className={classLabel}>
-                    {t('createCoin.form.description.label')}
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder={t('createCoin.form.description.placeholder')}
-                    rows={3}
-                    className={`${classInput} min-h-[80px] md:min-h-[100px] lg:min-h-[120px]`}
-                  />
-                  {errors.description && (
-                    <p className="mt-1 text-xs text-theme-red-100">
-                      {errors.description}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-3 md:gap-4 lg:gap-6 w-full">
-                  <div className="w-full md:w-1/2">
-                    <label className={classLabel}>
-                      {t('createCoin.form.logo.label')} <span className="text-theme-red-200">*</span>
-                    </label>
-                    <div
-                      className={`border-2 border-dashed ${errors.logo ? "border-red-500" : "border-blue-500/50"
-                        } rounded-lg p-2 md:p-3 lg:p-4 h-[140px] md:h-[180px] lg:h-[200px] flex items-center justify-center cursor-pointer relative overflow-hidden`}
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        className="hidden"
-                        accept="image/*"
-                        onChange={handleLogoUpload}
+                <div className="flex justify-between gap-3 md:gap-4 lg:gap-6 mt-3 md:mt-0">
+                  <div className="flex flex-col w-full justify-between gap-3 md:gap-4 lg:gap-6">
+                    {/* Description */}
+                    <div className="w-full flex-1">
+                      <label htmlFor="description" className={classLabel}>
+                        {t('createCoin.form.description.label')}
+                      </label>
+                      <textarea
+                        ref={descriptionTextareaRef}
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        placeholder={t('createCoin.form.description.placeholder')}
+                        rows={3}
+                        className={`${classInput} min-h-[80px] md:min-h-[100px] lg:min-h-[120px] resize-none overflow-hidden`}
                       />
-
-                      {formData.logoPreview ? (
-                        <div className="relative w-full h-full flex items-center justify-center">
-                          <img
-                            src={formData.logoPreview || "/placeholder.svg"}
-                            alt="Logo preview"
-                            width={150}
-                            className="object-contain"
-                          />
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRemoveLogo();
-                            }}
-                            className="absolute top-0 right-0 bg-red-500 rounded-full p-1 m-1"
-                          >
-                            <X className="h-4 w-4 dark:text-theme-neutral-100 text-theme-neutral-900" />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          <Upload className="h-8 w-8 dark:text-theme-neutral-100 text-theme-neutral-900 mx-auto mb-2" />
-                          <p className="text-xs dark:text-theme-neutral-100 text-theme-neutral-900 font-normal">
-                            {t('createCoin.form.logo.upload')}
-                          </p>
-                        </div>
+                      {errors.description && (
+                        <p className="mt-1 text-xs text-theme-red-100">
+                          {errors.description}
+                        </p>
                       )}
                     </div>
-                    {errors.logo && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.logo === "Please upload an image file"
-                          ? t('createCoin.form.logo.invalidType')
-                          : errors.logo === "Image size should be less than 2MB"
-                            ? t('createCoin.form.logo.maxSize')
-                            : t('createCoin.form.logo.required')}
-                      </p>
-                    )}
-                  </div>
-                  {/* Preview */}
-                  <div className="w-full md:w-1/2 mt-3 md:mt-0">
-                    <label className={classLabel}>{t('createCoin.form.preview.label')}</label>
-                    <div className="dark:bg-black bg-opacity-60 border border-blue-500/50 rounded-lg p-3 md:p-4 lg:p-6 relative h-[160px] md:h-[180px] lg:h-[200px] flex flex-col justify-center items-center">
-                      <div className="flex flex-col items-center gap-1.5 md:gap-2">
-                        <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 dark:bg-white bg-theme-green-300 rounded-full overflow-hidden mb-1.5 md:mb-2 flex items-center justify-center">
-                          {formData.logoPreview ? (
-                            <img
-                              src={formData.logoPreview}
-                              alt="Logo preview"
-                              width={64}
-                              height={64}
-                              className="object-cover"
-                            />
-                          ) : (
-                            <img
-                              src={"/user-icon.png"}
-                              alt="user-icon"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </div>
-                        <h3 className="dark:text-theme-neutral-100 text-theme-neutral-900 font-semibold text-xs md:text-sm lg:text-base">
-                          {formData.name || t('createCoin.form.preview.name')}
-                        </h3>
-                        <p className="dark:text-theme-neutral-100 text-theme-neutral-900 text-[10px] md:text-xs lg:text-sm font-normal my-1 md:my-1.5 lg:my-2">
-                          {formData.symbol || t('createCoin.form.preview.symbol')}
-                        </p>
-                        <p className="dark:text-theme-neutral-100 text-theme-neutral-900 text-[10px] md:text-xs lg:text-sm font-normal text-center">
-                          {formData.description || t('createCoin.form.preview.description')}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleUndo}
-                        className="absolute top-2 right-2 dark:text-theme-neutral-100 text-theme-neutral-900 hover:text-theme-primary-300 flex items-center gap-2"
+                    <div className="w-full md:w-1/2">
+                      <label className={classLabel}>
+                        {t('createCoin.form.logo.label')} <span className="text-theme-red-200">*</span>
+                      </label>
+                      <div
+                        className={`border-2 border-dashed ${errors.logo ? "border-red-500" : "border-blue-500/50"
+                          } rounded-lg p-2 md:p-3 lg:p-4 h-[140px] md:h-[180px] flex items-center justify-center cursor-pointer relative overflow-hidden`}
+                        onClick={() => fileInputRef.current?.click()}
                       >
-                        <Undo2 className="h-4 w-4" /> {t('createCoin.form.preview.undo')}
-                      </button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleLogoUpload}
+                        />
+
+                        {formData.logoPreview ? (
+                          <div className="relative w-full h-full flex items-center justify-center">
+                            <img
+                              src={formData.logoPreview || "/placeholder.svg"}
+                              alt="Logo preview"
+                              width={120}
+                              className="object-contain"
+                            />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveLogo();
+                              }}
+                              className="absolute top-0 right-0 bg-red-500 rounded-full p-1 m-1"
+                            >
+                              <X className="h-3 w-3 md:h-4 md:w-4 dark:text-theme-neutral-100 text-theme-neutral-900" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="text-center">
+                            <Upload className="h-8 w-8 dark:text-theme-neutral-100 text-theme-neutral-900 mx-auto mb-2" />
+                            <p className="text-xs dark:text-theme-neutral-100 text-theme-neutral-900 font-normal">
+                              {t('createCoin.form.logo.upload')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      {errors.logo && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {errors.logo === "Please upload an image file"
+                            ? t('createCoin.form.logo.invalidType')
+                            : errors.logo === "Image size should be less than 2MB"
+                              ? t('createCoin.form.logo.maxSize')
+                              : t('createCoin.form.logo.required')}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col h-full md:flex-row gap-3 md:gap-4 lg:gap-6 w-full">
+                    {/* Preview */}
+                    <div className="w-full h-full">
+                      <label className={classLabel}>{t('createCoin.form.preview.label')}</label>
+                      <div className="dark:bg-black bg-opacity-60 border border-blue-500/50 rounded-lg px-3 py-10 md:p-4 lg:p-6 relative h-full flex flex-col justify-center items-center overflow-y-auto">
+                        <div className="flex flex-col items-center gap-1.5 md:gap-2">
+                          <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 dark:bg-white bg-theme-green-300 rounded-full overflow-hidden mb-1.5 md:mb-2 flex items-center justify-center">
+                            {formData.logoPreview ? (
+                              <img
+                                src={formData.logoPreview}
+                                alt="Logo preview"
+                                width={64}
+                                height={64}
+                                className="object-cover"
+                              />
+                            ) : (
+                              <img
+                                src={"/user-icon.png"}
+                                alt="user-icon"
+                                width={40}
+                                height={40}
+                              />
+                            )}
+                          </div>
+                          <h3 className="dark:text-theme-neutral-100 text-theme-neutral-900 font-semibold text-xs md:text-sm lg:text-base">
+                            {formData.name || t('createCoin.form.preview.name')}
+                          </h3>
+                          <p className="dark:text-theme-neutral-100 text-theme-neutral-900 text-[10px] md:text-xs lg:text-sm font-normal my-1 md:my-1.5 lg:my-2">
+                            {formData.symbol || t('createCoin.form.preview.symbol')}
+                          </p>
+                          <p className="dark:text-theme-neutral-100 text-theme-neutral-900 text-[10px] md:text-xs lg:text-sm font-normal text-center">
+                            {formData.description || t('createCoin.form.preview.description')}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleUndo}
+                          className="absolute top-2 right-2 dark:text-theme-neutral-100 text-theme-neutral-900 hover:text-theme-primary-300 flex items-center gap-2 text-xs lg:text-sm "
+                        >
+                          <Undo2 className="h-4 w-4" /> {t('createCoin.form.preview.undo')}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -871,25 +893,25 @@ export default function CreateCoinForm() {
 
               {/* Submit Button */}
               <div className="mt-4 md:mt-6 lg:mt-8 pt-3 md:pt-4 lg:pt-0 text-center">
-              {isAuthenticated ? (
+                {isAuthenticated ? (
                   <button
-                  type="submit"
-                  disabled={isSubmitting || !isAuthenticated}
-                  className="lg:max-w-auto max-w-[250px] group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:px-4 lg:px-6 rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
-                >
-                  <span className="relative z-10 text-theme-neutral-100">{isSubmitting ? t('createCoin.form.submit.creating') : t('createCoin.form.submit.create')}</span>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsSigninModalOpen(true)}
-                  className="lg:max-w-auto max-w-[250px] group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:px-4 lg:px-6 rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
-                >
-                  <span className="relative z-10 text-theme-neutral-100">{t('connect')}</span>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-                </button>
-              )}
+                    type="submit"
+                    disabled={isSubmitting || !isAuthenticated}
+                    className="lg:max-w-auto max-w-[250px] group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:px-4 lg:px-6 rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
+                  >
+                    <span className="relative z-10 text-theme-neutral-100">{isSubmitting ? t('createCoin.form.submit.creating') : t('createCoin.form.submit.create')}</span>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSigninModalOpen(true)}
+                    className="lg:max-w-auto max-w-[250px] group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:px-4 lg:px-6 rounded-full transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto"
+                  >
+                    <span className="relative z-10 text-theme-neutral-100">{t('connect')}</span>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-theme-primary-300 to-theme-secondary-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+                  </button>
+                )}
               </div>
             </form>
           </div>
@@ -1031,7 +1053,7 @@ export default function CreateCoinForm() {
         </div>
       </div>
       <ModalSignin isOpen={!isAuthenticated} onClose={() => setIsSigninModalOpen(false)} />
-      <PhantomWarningModal isOpen={phantomConnected} onClose={() => {}} />
+      <PhantomWarningModal isOpen={phantomConnected} onClose={() => { }} />
     </>
   );
 }
