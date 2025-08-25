@@ -58,7 +58,7 @@ const mobileStyles = {
     card: "sm:hidden dark:bg-theme-black-200/50 bg-white rounded-xl p-3 border border-solid border-y-theme-primary-100 border-x-theme-purple-200",
     header: "flex items-start justify-between gap-2 mb-2",
     nameContainer: "flex lg:flex-col gap-1 min-w-0",
-    label: "text-[10px] dark:text-gray-400 text-black",
+    label: "text-xs dark:text-white text-black",
     value: "text-xs font-medium dark:text-neutral-100 text-black",
     badge: "text-[10px] px-1.5 py-0.5 rounded-full",
     actionBar: "flex items-center gap-2 mt-2 pt-2 border-t border-gray-700",
@@ -283,12 +283,14 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         <div key={wallet.wallet_id} className={mobileStyles.card}>
             {/* Header with Name and Type */}
             <div className={mobileStyles.header}>
-                {wallet.wallet_type !== 'main' && (
+                {wallet.wallet_type !== 'main' ? (
                     <Checkbox
                         checked={selectedWallets.includes(wallet.wallet_id)}
                         onCheckedChange={(checked) => handleSelectWallet(wallet.wallet_id, checked as boolean)}
                         className="mt-0.5"
                     />
+                ) : (
+                    <div className="w-4 h-4" />
                 )}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -342,10 +344,10 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
 
             {/* Addresses */}
             <div className={mobileStyles.addressContainer}>
-                <div>
-                    <div className={mobileStyles.label}>{t('wallet.solanaAddress')}</div>
-                    <div className="flex items-center gap-2">
-                        <span className={`${mobileStyles.value} truncate flex-1`}>
+                <div className="flex items-center justify-between">
+                    <div className={mobileStyles.label}>{t('wallet.solanaAddress')} :</div>
+                    <div className="flex items-center gap-1">
+                        <span className={`${mobileStyles.value} truncate flex-1 !text-yellow-500 italic`}>
                             {truncateString(wallet.solana_address, 12)}
                         </span>
                         <Button
@@ -360,6 +362,14 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                 <Copy className={mobileStyles.icon} />
                             )}
                         </Button>
+                    </div>
+                </div>
+                <div className="flex items-center justify-between">
+                    <div className={mobileStyles.label}>{t('wallet.balance')} :</div>
+                    <div className="flex items-center gap-2">
+                        <span className={`${mobileStyles.value} truncate flex-1`}>
+                            SOL: <span className="text-purple-600">{wallet.solana_balance}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -668,7 +678,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                             </div>
                                         </TableCell>
                                         <TableCell className={`px-4 ${textContent}`}>
-                                        SOL: <span className="text-purple-600">{wallet.solana_balance}</span> - USDT: <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
+                                        SOL: <span className="text-purple-600">{wallet.solana_balance}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
                                         </TableCell>
                                         <TableCell className={`px-4 ${textContent}`}>
                                             {renderEditableCell(wallet, 'country')}

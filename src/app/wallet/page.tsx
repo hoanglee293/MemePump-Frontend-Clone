@@ -1027,7 +1027,7 @@ export default function WalletPage() {
 
     return (
         <>
-            <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col gap-4 sm:gap-12">
                 <div className={containerStyles}>
                     {/* Wallet Cards Section */}
                     <div className={walletGridStyles}>
@@ -1268,7 +1268,7 @@ export default function WalletPage() {
                         {/* Wallet Table */}
                         <div className="">
                             {isLoadingMyWallets ? (
-                                <div className="overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881]">
+                                <div className="overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881] mt-[50px]">
                                     <div className={tableContainerStyles}>
                                         <table className={tableStyles}>
                                             <thead className="dark:bg-gray-900">
