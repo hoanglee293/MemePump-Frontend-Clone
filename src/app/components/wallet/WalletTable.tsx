@@ -546,40 +546,11 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
     return (
         <>
             <Card className="border-none dark:shadow-blue-900/5">
-                <CardContent className="p-0 relative">
-                    {/* Bulk Delete Actions */}
-                    {selectedWallets.length > 0 && (
-                        <div className="flex items-center justify-between md:px-4 px-2 py-2 mb-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl">
-                            <div className="flex items-center gap-2">
-                                <span className="md:text-sm text-xs font-medium text-red-700 dark:text-red-300">
-                                    {t('wallet.selectedWallets', { count: selectedWallets.length })}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setSelectedWallets([])}
-                                    className="md:text-xs text-[10px] h-8 rounded-full hover:bg-gray-700"
-                                >
-                                    {t('wallet.clearSelection')}
-                                </Button>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => setIsBulkDelete(true)}
-                                    className="md:text-xs text-[10px] h-8 bg-red-500 hover:bg-red-600 rounded-full"
-                                >
-                                    {t('wallet.deleteSelected')}
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-
+                <CardContent className="p-0 relative gap-0">
                     {/* Desktop Table View */}
                     <div className="hidden sm:block overflow-hidden rounded-xl border-1 z-10 border-solid border-y-theme-primary-100 border-x-theme-purple-200">
                         <Table>
-                            <TableHeader className="border-b-1 border-b-solid border-b-neutral-400">
+                            <TableHeader className="border-b-1 border-b-solid border-b-neutral-400 relative">
                                 <TableRow className="bg-muted/50">
                                     <TableHead className={`${textTitle} w-[5%] px-4`}>
                                         {wallets?.length > 1 && (
@@ -597,6 +568,33 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
                                     <TableHead className={`${textTitle} w-[9%] px-4`}>{t('common.actions')}</TableHead>
                                 </TableRow>
+                                {selectedWallets.length > 0 && (
+                                <div className="flex items-center justify-between md:px-4 px-2 h-full mb-2 bg-red-900 rounded-t-xl absolute top-0 left-0 w-full z-20">
+                                    <div className="flex items-center gap-2">
+                                        <span className="md:text-sm text-xs font-medium text-red-700 dark:text-red-300">
+                                            {t('wallet.selectedWallets', { count: selectedWallets.length })}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setSelectedWallets([])}
+                                            className="md:text-xs text-[10px] h-7 rounded-full hover:bg-gray-700 cursor-pointer"
+                                        >
+                                            {t('wallet.clearSelection')}
+                                        </Button>
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            onClick={() => setIsBulkDelete(true)}
+                                            className="md:text-xs text-[10px] h-7 bg-red-500 hover:bg-red-600 rounded-full border-none cursor-pointer"
+                                        >
+                                            {t('wallet.deleteSelected')}
+                                        </Button>
+                                        </div>
+                                    </div>
+                                )}
                             </TableHeader>
                             <TableBody>
                                 {wallets?.map((wallet) => (
