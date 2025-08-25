@@ -63,7 +63,7 @@ interface MasterTrader {
     connect_status: string | null;
 }
 
-const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1.2px] relative xl:w-full w-[95%] rounded-xl"
+const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1.2px] relative xl:w-full w-[95%] rounded-xl h-9"
 
 // Add responsive styles
 const containerStyles = "lg:container-glow w-full px-4 sm:px-[40px] flex flex-col gap-4 sm:gap-6 lg:gap-12 pt-4 sm:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0"
