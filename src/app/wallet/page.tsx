@@ -1486,7 +1486,7 @@ export default function WalletPage() {
                             <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">{t('wallet.addNewWallet')}</h2>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.walletName')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.walletName')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <input
                                             type="text"
@@ -1499,7 +1499,7 @@ export default function WalletPage() {
 
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.nickname')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.nickname')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <input
                                             type="text"
@@ -1511,7 +1511,7 @@ export default function WalletPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.country')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.country')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <CustomSelect
                                             value={selectedNetwork}
@@ -1553,7 +1553,7 @@ export default function WalletPage() {
                             <h2 className="text-lg sm:text-xl font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg mb-4 text-fill-transparent bg-clip-text">{t('wallet.addWallets')}</h2>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.quantityWallet')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.quantityWallet')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <input
                                             type="number"
@@ -1566,7 +1566,7 @@ export default function WalletPage() {
 
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.walletPerixName')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.walletPerixName')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <input
                                             type="text"
@@ -1581,7 +1581,7 @@ export default function WalletPage() {
                                     </span>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.nickname')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.nickname')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <input
                                             type="text"
@@ -1594,7 +1594,7 @@ export default function WalletPage() {
                                 </div>
                                 {/* Network Selection */}
                                 <div className="flex flex-col gap-1">
-                                    <div className={modalLabelStyles}>{t('wallet.country')}</div>
+                                    <div className={modalLabelStyles}>{t('wallet.country')} <span className="text-red-500">*</span></div>
                                     <div className={wrapGradientStyle}>
                                         <CustomSelect
                                             value={selectedNetwork}
@@ -1607,7 +1607,7 @@ export default function WalletPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')} <span className="text-red-500">*</span></label>
                                     <div className={wrapGradientStyle}>
                                         <Select
                                             value={selectedMasterTrader}
@@ -1673,7 +1673,7 @@ export default function WalletPage() {
 
                                     {/* Private Key */}
                                     <div className="flex flex-col">
-                                        <div className={modalLabelStyles}>{t('wallet.solanaPrivateKey')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.solanaPrivateKey')} <span className="text-red-500">*</span></div>
                                         <div>
                                             <div className="relative w-full">
                                                 <textarea
@@ -1725,7 +1725,7 @@ export default function WalletPage() {
                                         </div>
                                         {/* Wallet Name */}
                                         <div className="flex flex-col gap-1">
-                                            <div className={modalLabelStyles}>{t('wallet.walletPerixName')}</div>
+                                            <div className={modalLabelStyles}>{t('wallet.walletPerixName')} <span className="text-red-500">*</span></div>
                                             <div className={wrapGradientStyle}>
                                                 <input
                                                     type="text"
@@ -1743,7 +1743,7 @@ export default function WalletPage() {
 
                                     {/* Wallet Nickname */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.walletNickname')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.walletNickname')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <input
                                                 type="text"
@@ -1757,7 +1757,7 @@ export default function WalletPage() {
 
                                     {/* Network Selection */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.country')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.country')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <CustomSelect
                                                 value={selectedNetwork}
@@ -1771,7 +1771,7 @@ export default function WalletPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
+                                        <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')} <span className="text-red-500">*</span></label>
                                         <div className={wrapGradientStyle}>
                                             <Select
                                                 value={selectedMasterTrader}
@@ -1973,7 +1973,7 @@ export default function WalletPage() {
 
                                     {/* Wallet Name */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.walletName')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.walletName')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <input
                                                 type="text"
@@ -1987,7 +1987,7 @@ export default function WalletPage() {
 
                                     {/* Private Key */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.solanaPrivateKey')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.solanaPrivateKey')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
@@ -2034,7 +2034,7 @@ export default function WalletPage() {
 
                                     {/* Wallet Nickname */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.walletNickname')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.walletNickname')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <input
                                                 type="text"
@@ -2048,7 +2048,7 @@ export default function WalletPage() {
 
                                     {/* Network Selection */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.country')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.country')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <CustomSelect
                                                 value={selectedNetwork}
@@ -2094,7 +2094,7 @@ export default function WalletPage() {
 
                                     {/* New Password */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.newPassword')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.newPassword')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
@@ -2124,7 +2124,7 @@ export default function WalletPage() {
 
                                     {/* Confirm Password */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.confirmPassword')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.confirmPassword')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
@@ -2192,7 +2192,7 @@ export default function WalletPage() {
 
                                     {/* Password Input */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.password')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.password')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
@@ -2273,7 +2273,7 @@ export default function WalletPage() {
                                     {/* Verification Code Inputs */}
                                     <div>
                                         <div className="flex flex-col gap-1">
-                                            <div className={modalLabelStyles}>{t('wallet.verificationCode')}</div>
+                                            <div className={modalLabelStyles}>{t('wallet.verificationCode')} <span className="text-red-500">*</span></div>
                                             <div className="flex justify-between gap-2">
                                                 {[0, 1, 2, 3].map((index) => (
                                                     <div key={index} className={wrapGradientStyle}>
@@ -2343,7 +2343,7 @@ export default function WalletPage() {
                                     </div>
                                     {/* New Password */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.newPassword')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.newPassword')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
@@ -2373,7 +2373,7 @@ export default function WalletPage() {
 
                                     {/* Confirm Password */}
                                     <div className="flex flex-col gap-1">
-                                        <div className={modalLabelStyles}>{t('wallet.confirmPassword')}</div>
+                                        <div className={modalLabelStyles}>{t('wallet.confirmPassword')} <span className="text-red-500">*</span></div>
                                         <div className={wrapGradientStyle}>
                                             <div className="relative w-full">
                                                 <input
