@@ -66,7 +66,7 @@ interface MasterTrader {
 const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1.2px] relative xl:w-full w-[95%] rounded-xl"
 
 // Add responsive styles
-const containerStyles = "lg:container-glow w-full px-4 sm:px-[40px] flex flex-col gap-4 sm:gap-6 pt-4 sm:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0"
+const containerStyles = "lg:container-glow w-full px-4 sm:px-[40px] flex flex-col gap-4 sm:gap-6 lg:gap-12 pt-4 sm:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0"
 const walletGridStyles = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full"
 const walletCardStyles = "px-4 sm:px-6 py-3 border border-solid border-theme-secondary-500 justify-evenly rounded-xl flex flex-col lg:gap-1 gap-2 items-center sm:gap-4 min-w-0 dark:bg-gradient-overlay bg-white z-10"
 const walletTitleStyles = "text-Colors-Neutral-100 text-sm sm:text-base font-semibold uppercase leading-tight"
@@ -1211,7 +1211,7 @@ export default function WalletPage() {
                         </button>
                     </div>}
 
-                    <div className="w-full flex flex-col xl:gap-4 gap-2">
+                    <div className="w-full flex flex-col">
                         {/* Wallet Management Section */}
                         <div className="self-stretch flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 w-full z-10">
                             <div className="flex justify-start items-center gap-2 sm:gap-2.5">
