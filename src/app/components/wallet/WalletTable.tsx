@@ -39,6 +39,8 @@ interface WalletData extends Wallet {
     wallet_nick_name: string;
     wallet_country: string;
     eth_address: string;
+    solana_balance: number;
+    solana_balance_usd: number;
 }
 
 interface WalletTableProps {
@@ -590,12 +592,13 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                         )}
                                     </TableHead>
                                     <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[12%] px-4`}>{t('wallet.nickname')}</TableHead>
+                                    <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
+                                    <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
+                                    <TableHead className={`${textTitle} w-[17%] px-4`}>{t('wallet.balance')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[9%] px-4`}>{t('common.actions')}</TableHead>
+                                    <TableHead className={`${textTitle} w-[8%] px-4`}>{t('common.actions')}</TableHead>
                                 </TableRow>
                                 {/* {selectedWallets.length > 0 && (
                                 <div className="flex items-center justify-between md:px-4 px-2 h-full mb-2 bg-red-900 rounded-t-xl absolute top-0 left-0 w-full z-20">
@@ -644,13 +647,11 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                         <TableCell className={`px-4 ${textContent}`}>
                                             {renderEditableCell(wallet, 'nickname')}
                                         </TableCell>
+                                      
                                         <TableCell className={`px-4 ${textContent}`}>
-                                            {renderEditableCell(wallet, 'country')}
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <div className="flex items-center gap-2">
-                                                <span className="truncate max-w-[180px]">
-                                                    {truncateString(wallet.solana_address, 12)}
+                                            <div className="flex items-center gap-1">
+                                                <span className="truncate max-w-[180px] text-yellow-500 italic">
+                                                    {truncateString(wallet.solana_address, 10)}
                                                 </span>
                                                 <Button
                                                     variant="ghost"
@@ -665,6 +666,12 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                                     )}
                                                 </Button>
                                             </div>
+                                        </TableCell>
+                                        <TableCell className={`px-4 ${textContent}`}>
+                                        SOL: <span className="text-purple-600">{wallet.solana_balance}</span> - USDT: <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
+                                        </TableCell>
+                                        <TableCell className={`px-4 ${textContent}`}>
+                                            {renderEditableCell(wallet, 'country')}
                                         </TableCell>
                                         <TableCell className={`px-4 ${textContent}`}>
                                             <Badge
