@@ -1,7 +1,7 @@
 "use client"
 import { TelegramWalletService } from "@/services/api";
 import { getInforWallet, getListBuyToken, getMyWallets, getPrivate } from "@/services/api/TelegramWalletService";
-import { formatNumberWithSuffix3, truncateString } from "@/utils/format";
+import { formatNumberWithSuffix3, maskNickname, truncateString } from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowDownToLine, ArrowUpFromLine, Badge, Copy, Edit, Eye, EyeOff, KeyIcon, PlusIcon, Check, Loader2, ChevronDown } from "lucide-react";
 import React, { useState, useRef, useEffect, useCallback } from "react";
@@ -1622,7 +1622,7 @@ export default function WalletPage() {
                                                 {masterTraders && masterTraders.length > 0 ? (
                                                     masterTraders.map((trader: MasterTrader) => (
                                                         <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
-                                                            {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                            {maskNickname(trader.nickname)} - <span className="text-xs text-yellow-500 italic">{truncateString(trader.solana_address, 10)}</span>
                                                         </SelectItem>
                                                     ))
                                                 ) : (
@@ -1785,7 +1785,7 @@ export default function WalletPage() {
                                                     {masterTraders && masterTraders.length > 0 ? (
                                                         masterTraders.map((trader: MasterTrader) => (
                                                             <SelectItem className="flex h-10" key={trader.id} value={trader.solana_address}>
-                                                                {trader.nickname} - <span className="text-xs text-yellow-500">{truncateString(trader.solana_address, 12)}</span>
+                                                                {maskNickname(trader.nickname)} - <span className="text-xs text-yellow-500 italic">{truncateString(trader.solana_address, 10)}</span>
                                                             </SelectItem>
                                                         ))
                                                     ) : (
