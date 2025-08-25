@@ -63,7 +63,7 @@ interface MasterTrader {
     connect_status: string | null;
 }
 
-const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1px] relative xl:w-full w-[95%] rounded-xl"
+const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end p-[1.2px] relative xl:w-full w-[95%] rounded-xl"
 
 // Add responsive styles
 const containerStyles = "lg:container-glow w-full px-4 sm:px-[40px] flex flex-col gap-4 sm:gap-6 pt-4 sm:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0"
@@ -259,12 +259,13 @@ const AssetsMobileSkeleton = () => (
 );
 
 // Add custom select component
-const CustomSelect = ({ value, onChange, options, placeholder, t }: {
+const CustomSelect = ({ value, onChange, options, placeholder, t, className }: {
     value: string;
     onChange: (value: string) => void;
     options: { id: number; name: string; code: string; translationKey: string; flag: string }[];
     placeholder?: string;
     t: (key: string) => string;
+    className?: string;
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
@@ -289,6 +290,7 @@ const CustomSelect = ({ value, onChange, options, placeholder, t }: {
             <div
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-full px-3 py-2 bg-white dark:bg-theme-black-200 border-none rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 cursor-pointer flex items-center justify-between transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 ${isOpen ? 'ring-2 ring-purple-500 ring-opacity-50 shadow-lg' : ''
+                    } ${className}
                     }`}
             >
                 <div className="flex items-center gap-2">
@@ -1600,6 +1602,7 @@ export default function WalletPage() {
                                             options={langConfig.listLangs}
                                             placeholder={t('wallet.country')}
                                             t={t}
+                                            className="h-9"
                                         />
                                     </div>
                                 </div>
@@ -1612,7 +1615,7 @@ export default function WalletPage() {
                                                 setSelectedMasterTrader(value);
                                             }}
                                         >
-                                            <SelectTrigger className="border-none w-full px-3 py-1.5 dark:bg-theme-black-200 bg-white placeholder:!text-xs rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 [&>span]:text-xs dark:[&>span]:text-gray-400">
+                                            <SelectTrigger className="border-none w-full px-3 py-1.5 dark:bg-theme-black-200 bg-white placeholder:!text-xs rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 [&>span]:text-xs dark:[&>span]:text-gray-400 h-9">
                                                 <SelectValue placeholder={t('wallet.connectMaster')} className="text-yellow-500" />
                                             </SelectTrigger>
                                             <SelectContent
@@ -1761,6 +1764,7 @@ export default function WalletPage() {
                                                 onChange={(value) => setSelectedNetwork(value)}
                                                 options={langConfig.listLangs}
                                                 placeholder={t('wallet.country')}
+                                                className="h-9"
                                                 t={t}
                                             />
                                         </div>
@@ -1775,7 +1779,7 @@ export default function WalletPage() {
                                                     setSelectedMasterTrader(value);
                                                 }}
                                             >
-                                                <SelectTrigger className="border-none w-full px-3 py-1.5 dark:bg-theme-black-200 bg-white placeholder:!text-xs rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 [&>span]:text-xs dark:[&>span]:text-gray-400">
+                                                <SelectTrigger className="border-none w-full px-3 py-1.5 dark:bg-theme-black-200 bg-white placeholder:!text-xs rounded-xl text-black dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500 [&>span]:text-xs dark:[&>span]:text-gray-400 h-9">
                                                     <SelectValue placeholder={t('wallet.connectMaster')} className="text-yellow-500" />
                                                 </SelectTrigger>
                                                 <SelectContent
