@@ -1030,186 +1030,186 @@ export default function WalletPage() {
             <div className="flex flex-col gap-4 sm:gap-12">
                 <div className={containerStyles}>
                     {/* Wallet Cards Section */}
-                    <div className={walletGridStyles}>
-                        {isLoadingWalletInfor || isLoadingListWallets ? (
-                            <>
-                                <WalletCardSkeleton />
-                                <WalletCardSkeleton />
-                                <WalletCardSkeleton />
-                                <UniversalAccountSkeleton />
-                            </>
-                        ) : (
-                            <>
-                                <div className={walletCardStyles}>
-                                    <div className="inline-flex justify-start items-center gap-2 w-full ">
-                                        <div className="w-6 h-6 sm:w-8 sm:h-8 relative overflow-hidden flex-shrink-0">
-                                            <img src="/solana.png" alt="Solana" className="w-full h-full object-cover" />
-                                        </div>
-                                        <div className="justify-start truncate">
-                                            <span className={walletTitleStyles}>{t('wallet.solana')}</span>
-                                            <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col justify-start items-center gap-2 w-full">
-                                        <div className="w-full h-8 lg:h-[36px] pl-3 sm:pl-4 pr-4 sm:pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-purple-300 flex justify-between items-center">
-                                            <div className={walletAddressStyles}>
-                                                {truncateString(walletInfor?.solana_address, 12)}
+                    <div className="flex flex-col gap-5">
+                        <div className={walletGridStyles}>
+                            {isLoadingWalletInfor || isLoadingListWallets ? (
+                                <>
+                                    <WalletCardSkeleton />
+                                    <WalletCardSkeleton />
+                                    <WalletCardSkeleton />
+                                    <UniversalAccountSkeleton />
+                                </>
+                            ) : (
+                                <>
+                                    <div className={walletCardStyles}>
+                                        <div className="inline-flex justify-start items-center gap-2 w-full ">
+                                            <div className="w-6 h-6 sm:w-8 sm:h-8 relative overflow-hidden flex-shrink-0">
+                                                <img src="/solana.png" alt="Solana" className="w-full h-full object-cover" />
                                             </div>
-                                            <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0">
-                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-Colors-Neutral-100" />
+                                            <div className="justify-start truncate">
+                                                <span className={walletTitleStyles}>{t('wallet.solana')}</span>
+                                                <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
                                             </div>
-                                            <button
-                                                onClick={(e) => handleCopyAddress(walletInfor?.solana_address || '', e)}
-                                                className="text-gray-400 hover:text-gray-200 transition-colors"
-                                            >
-                                                {copyStates[walletInfor?.solana_address || ''] ? (
-                                                    <Check className="w-4 h-4 text-green-500" />
-                                                ) : (
-                                                    <Copy className="w-4 h-4" />
-                                                )}
-                                            </button>
                                         </div>
-
-                                    </div>
-                                </div>
-
-                                {/* ETH Wallet Card */}
-                                <div className={`${walletCardStyles} dark:bg-gradient-blue-transparent !border-theme-primary-100 bg-white z-10`}>
-                                    <div className="inline-flex justify-start items-center gap-2 w-full">
-                                        <div className="w-8 h-8 bg-theme-primary-500 rounded-full flex justify-center items-center relative overflow-hidden flex-shrink-0">
-                                            <img src="/ethereum.png" alt="Ethereum" className="w-6 h-6 object-cover" />
-                                        </div>
-                                        <div className="justify-start truncate">
-                                            <span className={walletTitleStyles}>{t('wallet.eth')}</span>
-                                            <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col justify-start items-center gap-2 w-full">
-                                        <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-indigo-500 flex justify-between items-center">
-                                            <div className={walletAddressStyles}>
-                                                {truncateString(listWallets?.[0]?.eth_address, 17)}
-                                            </div>
-                                            <div className="w-3.5 h-3.5 flex-shrink-0">
-                                                <div className="w-3 h-3 bg-Colors-Neutral-100" />
-                                            </div>
-                                            <button
-                                                onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
-                                                className="text-gray-400 hover:text-gray-200 transition-colors"
-                                            >
-                                                {copyStates[listWallets?.[0]?.eth_address || ''] ? (
-                                                    <Check className="w-4 h-4 text-green-500" />
-                                                ) : (
-                                                    <Copy className="w-4 h-4" />
-                                                )}
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div className={`${walletCardStyles} dark:bg-gradient-yellow-transparent border-theme-yellow-300 bg-white z-10`}>
-                                    <div className="inline-flex justify-start items-center gap-2 w-full">
-                                        <div className="w-8 h-8 relative overflow-hidden flex-shrink-0">
-                                            <img src="/bnb.png" alt="BNB" className="w-full h-full object-cover" />
-                                        </div>
-                                        <div className="justify-start truncate">
-                                            <span className={walletTitleStyles}>{t('wallet.bnb')}</span>
-                                            <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col justify-start items-center gap-2 w-full">
-                                        <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-amber-400 flex justify-between items-center">
-                                            <div className={walletAddressStyles}>
-                                                {truncateString(listWallets?.[0]?.eth_address, 17)}
-                                            </div>
-                                            <div className="w-3.5 h-3.5 flex-shrink-0">
-                                                <div className="w-3 h-3 bg-Colors-Neutral-100" />
-                                            </div>
-                                            <button
-                                                onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
-                                                className="text-gray-400 hover:text-gray-200 transition-colors"
-                                            >
-                                                {copyStates[listWallets?.[0]?.eth_address || ''] ? (
-                                                    <Check className="w-4 h-4 text-green-500" />
-                                                ) : (
-                                                    <Copy className="w-4 h-4" />
-                                                )}
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div className={`${walletCardStyles} dark:bg-gradient-purple-transparent border-theme-primary-300 bg-white z-10`}>
-                                    <div className="inline-flex justify-start items-center gap-2.5 w-full">
-                                        <img src="/ethereum.png" alt="Ethereum" className="w-5 h-5 object-cover" />
-                                        <div className="justify-start text-Colors-Neutral-100 text-base font-semibold uppercase leading-normal truncate">
-                                            {t('wallet.universalAccount')}
-                                        </div>
-                                        <img src="/ethereum.png" alt="Ethereum" className="w-5 h-5 object-cover" />
-                                    </div>
-                                    <div className="flex justify-between lg:justify-start lg:items-end gap-4 w-full">
-                                        <div className="flex flex-col justify-start items-start gap-3 min-w-0">
-                                            <div className="w-full flex flex-col justify-center items-start">
-                                                <div className="text-right justify-start text-Colors-Neutral-100 text-xl font-bold leading-9 truncate">
-                                                    {walletInfor?.solana_balance} SOL
+                                        <div className="flex flex-col justify-start items-center gap-2 w-full">
+                                            <div className="w-full h-8 lg:h-[36px] pl-3 sm:pl-4 pr-4 sm:pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-purple-300 flex justify-between items-center">
+                                                <div className={walletAddressStyles}>
+                                                    {truncateString(walletInfor?.solana_address, 12)}
                                                 </div>
-                                                <div className="inline-flex justify-start items-center gap-1.5 flex-wrap">
-                                                    <div className="text-right justify-start text-theme-primary-300 text-[16px] font-medium leading-relaxed">
-                                                        ${formatNumberWithSuffix3(walletInfor?.solana_balance_usd)}
-                                                    </div>
-                                                    <div className="text-right justify-start text-theme-primary-300 text-[16px] font-medium leading-relaxed">
-                                                        (0.00%)
-                                                    </div>
-                                                    <div className="text-right justify-start text-Colors-Neutral-100 text-[16px] font-medium leading-relaxed">
-                                                        24H
-                                                    </div>
+                                                <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0">
+                                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-Colors-Neutral-100" />
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-end flex-1 items-center gap-3 w-full sm:w-auto">
-                                            <div className="flex flex-col justify-start items-center gap-1">
-
-
-                                                <button onClick={() => router.replace('/universal-account?type=deposit')} className="flex flex-col justify-start items-center gap-0.5 md:gap-1">
-                                                    <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 gradient-overlay border border-neutral-200 rounded-full flex justify-center items-center group  transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95">
-                                                        <ArrowDownToLine className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4" />
-                                                    </div>
-                                                    <div className="text-center text-Colors-Neutral-100 text-[9px] md:text-[10px] font-semibold">
-                                                        {t('wallet.receive')}
-                                                    </div>
-                                                </button>
-
-                                            </div>
-                                            <div className="flex flex-col justify-start items-center gap-1">
-                                                <button onClick={() => router.replace('/universal-account?type=withdraw')} className="flex flex-col justify-start items-center gap-0.5 md:gap-1">
-                                                    <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 gradient-overlay border border-neutral-200 rounded-full flex justify-center items-center transition-all hover:scale-105">
-                                                        <ArrowUpFromLine className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4" />
-                                                    </div>
-                                                    <div className="text-center text-Colors-Neutral-100 text-[9px] md:text-[10px] font-semibold">
-                                                        {t('wallet.send')}
-                                                    </div>
+                                                <button
+                                                    onClick={(e) => handleCopyAddress(walletInfor?.solana_address || '', e)}
+                                                    className="text-gray-400 hover:text-gray-200 transition-colors"
+                                                >
+                                                    {copyStates[walletInfor?.solana_address || ''] ? (
+                                                        <Check className="w-4 h-4 text-green-500" />
+                                                    ) : (
+                                                        <Copy className="w-4 h-4" />
+                                                    )}
                                                 </button>
                                             </div>
+
                                         </div>
                                     </div>
+
+                                    {/* ETH Wallet Card */}
+                                    <div className={`${walletCardStyles} dark:bg-gradient-blue-transparent !border-theme-primary-100 bg-white z-10`}>
+                                        <div className="inline-flex justify-start items-center gap-2 w-full">
+                                            <div className="w-8 h-8 bg-theme-primary-500 rounded-full flex justify-center items-center relative overflow-hidden flex-shrink-0">
+                                                <img src="/ethereum.png" alt="Ethereum" className="w-6 h-6 object-cover" />
+                                            </div>
+                                            <div className="justify-start truncate">
+                                                <span className={walletTitleStyles}>{t('wallet.eth')}</span>
+                                                <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col justify-start items-center gap-2 w-full">
+                                            <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-indigo-500 flex justify-between items-center">
+                                                <div className={walletAddressStyles}>
+                                                    {truncateString(listWallets?.[0]?.eth_address, 17)}
+                                                </div>
+                                                <div className="w-3.5 h-3.5 flex-shrink-0">
+                                                    <div className="w-3 h-3 bg-Colors-Neutral-100" />
+                                                </div>
+                                                <button
+                                                    onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
+                                                    className="text-gray-400 hover:text-gray-200 transition-colors"
+                                                >
+                                                    {copyStates[listWallets?.[0]?.eth_address || ''] ? (
+                                                        <Check className="w-4 h-4 text-green-500" />
+                                                    ) : (
+                                                        <Copy className="w-4 h-4" />
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div className={`${walletCardStyles} dark:bg-gradient-yellow-transparent border-theme-yellow-300 bg-white z-10`}>
+                                        <div className="inline-flex justify-start items-center gap-2 w-full">
+                                            <div className="w-8 h-8 relative overflow-hidden flex-shrink-0">
+                                                <img src="/bnb.png" alt="BNB" className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="justify-start truncate">
+                                                <span className={walletTitleStyles}>{t('wallet.bnb')}</span>
+                                                <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col justify-start items-center gap-2 w-full">
+                                            <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-amber-400 flex justify-between items-center">
+                                                <div className={walletAddressStyles}>
+                                                    {truncateString(listWallets?.[0]?.eth_address, 17)}
+                                                </div>
+                                                <div className="w-3.5 h-3.5 flex-shrink-0">
+                                                    <div className="w-3 h-3 bg-Colors-Neutral-100" />
+                                                </div>
+                                                <button
+                                                    onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
+                                                    className="text-gray-400 hover:text-gray-200 transition-colors"
+                                                >
+                                                    {copyStates[listWallets?.[0]?.eth_address || ''] ? (
+                                                        <Check className="w-4 h-4 text-green-500" />
+                                                    ) : (
+                                                        <Copy className="w-4 h-4" />
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div className={`${walletCardStyles} dark:bg-gradient-purple-transparent border-theme-primary-300 bg-white z-10`}>
+                                        <div className="inline-flex justify-start items-center gap-2.5 w-full">
+                                            <img src="/ethereum.png" alt="Ethereum" className="w-5 h-5 object-cover" />
+                                            <div className="justify-start text-Colors-Neutral-100 text-base font-semibold uppercase leading-normal truncate">
+                                                {t('wallet.universalAccount')}
+                                            </div>
+                                            <img src="/ethereum.png" alt="Ethereum" className="w-5 h-5 object-cover" />
+                                        </div>
+                                        <div className="flex justify-between lg:justify-start lg:items-end gap-4 w-full">
+                                            <div className="flex flex-col justify-start items-start gap-3 min-w-0">
+                                                <div className="w-full flex flex-col justify-center items-start">
+                                                    <div className="text-right justify-start text-Colors-Neutral-100 text-xl font-bold leading-9 truncate">
+                                                        {walletInfor?.solana_balance} SOL
+                                                    </div>
+                                                    <div className="inline-flex justify-start items-center gap-1.5 flex-wrap">
+                                                        <div className="text-right justify-start text-theme-primary-300 text-[16px] font-medium leading-relaxed">
+                                                            ${formatNumberWithSuffix3(walletInfor?.solana_balance_usd)}
+                                                        </div>
+                                                        <div className="text-right justify-start text-theme-primary-300 text-[16px] font-medium leading-relaxed">
+                                                            (0.00%)
+                                                        </div>
+                                                        <div className="text-right justify-start text-Colors-Neutral-100 text-[16px] font-medium leading-relaxed">
+                                                            24H
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end flex-1 items-center gap-3 w-full sm:w-auto">
+                                                <div className="flex flex-col justify-start items-center gap-1">
+
+
+                                                    <button onClick={() => router.replace('/universal-account?type=deposit')} className="flex flex-col justify-start items-center gap-0.5 md:gap-1">
+                                                        <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 gradient-overlay border border-neutral-200 rounded-full flex justify-center items-center group  transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95">
+                                                            <ArrowDownToLine className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4" />
+                                                        </div>
+                                                        <div className="text-center text-Colors-Neutral-100 text-[9px] md:text-[10px] font-semibold">
+                                                            {t('wallet.receive')}
+                                                        </div>
+                                                    </button>
+
+                                                </div>
+                                                <div className="flex flex-col justify-start items-center gap-1">
+                                                    <button onClick={() => router.replace('/universal-account?type=withdraw')} className="flex flex-col justify-start items-center gap-0.5 md:gap-1">
+                                                        <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 gradient-overlay border border-neutral-200 rounded-full flex justify-center items-center transition-all hover:scale-105">
+                                                            <ArrowUpFromLine className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4" />
+                                                        </div>
+                                                        <div className="text-center text-Colors-Neutral-100 text-[9px] md:text-[10px] font-semibold">
+                                                            {t('wallet.send')}
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        {walletInfor && <div className="flex justify-center items-center mx-auto mt-1">
+                            <button
+                                onClick={() => setShowPrivateKeys(true)}
+                                className="lg:max-w-auto group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 md:py-2 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-auto flex items-center justify-center gap-1"
+                            >
+                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">
+                                    <KeyIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-theme-neutral-100" />
                                 </div>
-                            </>
-                        )}
+                                <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                    {t('wallet.getPrivateKey')}
+                                </div>
+                            </button>
+                        </div>}
                     </div>
-
-
-                    {walletInfor && <div className="flex justify-center items-center mt-1">
-                        <button
-                            onClick={() => setShowPrivateKeys(true)}
-                            className="lg:max-w-auto group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 md:py-2 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-auto flex items-center justify-center gap-1"
-                        >
-                            <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">
-                                <KeyIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-theme-neutral-100" />
-                            </div>
-                            <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
-                                {t('wallet.getPrivateKey')}
-                            </div>
-                        </button>
-                    </div>}
 
                     <div className="w-full flex flex-col">
                         {/* Wallet Management Section */}
