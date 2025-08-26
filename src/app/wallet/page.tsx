@@ -1715,7 +1715,7 @@ export default function WalletPage() {
                                                         }
                                                     }}
                                                     placeholder={t('wallet.enterSolanaPrivateKey')}
-                                                    className={`${modalInputStyles} border-l-[#03bdff] border-r-[#555aff] !text-xs border-b-[#03bdff] border-t-[#555aff] border-2 rounded-md ${privateKeyError ? 'border-red-500' : ''}`}
+                                                    className={`${modalInputStyles} !pt-2 border-l-[#03bdff] border-r-[#555aff] !text-xs border-b-[#03bdff] border-t-[#555aff] border-2 rounded-md ${privateKeyError ? 'border-red-500' : ''}`}
                                                     rows={5}
                                                 />
                                             </div>
