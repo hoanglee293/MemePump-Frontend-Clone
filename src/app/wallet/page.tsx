@@ -1629,7 +1629,7 @@ export default function WalletPage() {
                                                         </SelectItem>
                                                     ))
                                                 ) : (
-                                                    <SelectItem value="" disabled>
+                                                    <SelectItem value="no-traders" disabled>
                                                         {isLoadingMasters ? 'Loading...' : 'No master traders available'}
                                                     </SelectItem>
                                                 )}
@@ -1793,7 +1793,7 @@ export default function WalletPage() {
                                                             </SelectItem>
                                                         ))
                                                     ) : (
-                                                        <SelectItem value="" disabled>
+                                                        <SelectItem value="no-traders-import" disabled>
                                                             {isLoadingMasters ? 'Loading...' : 'No master traders available'}
                                                         </SelectItem>
                                                     )}
