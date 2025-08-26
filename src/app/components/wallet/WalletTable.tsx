@@ -15,7 +15,7 @@ import { Badge } from "@/ui/badge";
 import { truncateString } from "@/utils/format";
 import { Wallet } from "../list-wallet";
 import { Input } from "@/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { TelegramWalletService } from '@/services/api';
@@ -83,6 +83,19 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
     const [loadingField, setLoadingField] = useState<'name' | 'nickname' | 'country' | null>(null);
     const [selectedWallets, setSelectedWallets] = useState<string[]>([]);
     const [isBulkDelete, setIsBulkDelete] = useState(false);
+    const [walletBalances, setWalletBalances] = useState<Record<string, { sol_balance: number; sol_balance_usd: number }>>({});
+    const [loadingBalances, setLoadingBalances] = useState<Record<string, boolean>>({});
+
+    // Load balances for all wallets when wallets change
+    useEffect(() => {
+        if (wallets && wallets.length > 0) {
+            wallets.forEach(wallet => {
+                if (!walletBalances[wallet.wallet_id] && !loadingBalances[wallet.wallet_id]) {
+                    getBalanceWallet(wallet);
+                }
+            });
+        }
+    }, [wallets]);
 
     const handleSelectWallet = (walletId: string, checked: boolean) => {
         if (checked) {
@@ -364,14 +377,25 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                         </Button>
                     </div>
                 </div>
-                {/* <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
                     <div className={mobileStyles.label}>{t('wallet.balance')} :</div>
                     <div className="flex items-center gap-2">
-                        <span className={`${mobileStyles.value} truncate flex-1`}>
-                            SOL: <span className="text-purple-600">{wallet.solana_balance.toFixed(4)}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
-                        </span>
+                        {loadingBalances[wallet.wallet_id] ? (
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <span className="text-xs">Loading...</span>
+                            </div>
+                        ) : (
+                            <span className={`${mobileStyles.value} truncate flex-1`}>
+                                SOL: <span className="text-purple-600">
+                                    {walletBalances[wallet.wallet_id]?.sol_balance?.toFixed(4) || '0.0000'}
+                                </span> ≈ <span className="text-theme-primary-400">
+                                    ${walletBalances[wallet.wallet_id]?.sol_balance_usd?.toFixed(2) || '0.00'}
+                                </span>
+                            </span>
+                        )}
                     </div>
-                </div> */}
+                </div>
             </div>
 
             {/* Actions */}
@@ -554,6 +578,34 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
             </div>
         );
     };
+    const getBalanceWallet = async (wallet: WalletData) => {
+        try {
+            setLoadingBalances(prev => ({ ...prev, [wallet.wallet_id]: true }));
+            const response = await TelegramWalletService.getWalletBalanceByAddress(wallet.solana_address);
+            if (response && response.sol_balance !== undefined) {
+                setWalletBalances(prev => ({ 
+                    ...prev, 
+                    [wallet.wallet_id]: {
+                        sol_balance: response.sol_balance || 0,
+                        sol_balance_usd: response.sol_balance_usd || 0
+                    }
+                }));
+            }
+            return response;
+        } catch (error) {
+            console.error('Error getting balance wallet:', error);
+            // Set default values on error
+            setWalletBalances(prev => ({ 
+                ...prev, 
+                [wallet.wallet_id]: {
+                    sol_balance: 0,
+                    sol_balance_usd: 0
+                }
+            }));
+        } finally {
+            setLoadingBalances(prev => ({ ...prev, [wallet.wallet_id]: false }));
+        }
+    }
 
     return (
         <>
@@ -604,7 +656,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
                                     <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
                                     <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
-                                    {/* <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead> */}
+                                    <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
@@ -677,9 +729,22 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                                 </Button>
                                             </div>
                                         </TableCell>
-                                        {/* <TableCell className={`px-4 ${textContent}`}>
-                                        SOL: <span className="text-purple-600">{wallet.solana_balance.toFixed(4)}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
-                                        </TableCell> */}
+                                        <TableCell className={`px-4 ${textContent}`}>
+                                            {loadingBalances[wallet.wallet_id] ? (
+                                                <div className="flex items-center gap-2">
+                                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                                    <span className="text-xs">Loading...</span>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    SOL: <span className="text-purple-600">
+                                                        {walletBalances[wallet.wallet_id]?.sol_balance?.toFixed(4) || '0.0000'}
+                                                    </span> ≈ <span className="text-theme-primary-400">
+                                                        ${walletBalances[wallet.wallet_id]?.sol_balance_usd?.toFixed(2) || '0.00'}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </TableCell>
                                         <TableCell className={`px-4 ${textContent}`}>
                                             {renderEditableCell(wallet, 'country')}
                                         </TableCell>
