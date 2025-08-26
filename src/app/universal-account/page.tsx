@@ -58,7 +58,7 @@ const UniversalAccountContent = () => {
 
     return (
         <div className="lg:container-glow px-[12px] sm:px-[16px] lg:px-[40px] flex flex-col pt-[12px] sm:pt-[16px] lg:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0">
-            <div className='container flex flex-col gap-4 sm:gap-6'>
+            <div className='md:container flex flex-col gap-4 sm:gap-6 md:mt-0 mt-5'>
                 {/* Toaster removed - using the one from ClientLayout */}
                 {walletInfor?.solana_address && (
                     <div className="flex items-center justify-center flex-col gap-3 sm:gap-4 lg:gap-6">

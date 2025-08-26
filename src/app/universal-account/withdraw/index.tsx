@@ -295,8 +295,8 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
                             {t(`listWalletss.walletType.${wallet.wallet_type}`)}
                           </Badge>
                         </div>
-                        <div className="text-xs text-yellow-500 italic">
-                          {truncateString(wallet.solana_address, 20)}
+                        <div className="text-xs text-yellow-500 italic ml-4">
+                          {truncateString(wallet.solana_address, 10)}
                         </div>
                       </div>
                     </div>
