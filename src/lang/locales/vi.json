@@ -192,7 +192,9 @@
     "tabs": {
       "trade": "GIAO DỊCH",
       "chat": "CHAT",
-      "member": "THÀNH VIÊN"
+      "member": "THÀNH VIÊN",
+      "chatAll": "CHAT TẤT CẢ",
+      "chatWithToken": "CHAT THEO TOKEN"
     },
     "unreadCount": "tin nhắn chưa đọc",
     "loading": "Đang tải...",
@@ -922,6 +924,7 @@
   "transactionHistory": {
     "allTransactions": "TẤT CẢ GIAO DỊCH",
     "myTransactions": "GIAO DỊCH CỦA TÔI",
+    "assets": "Tài sản",
     "time": "Thời gian",
     "type": "Loại",
     "price": "Giá",

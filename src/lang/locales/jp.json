@@ -191,7 +191,9 @@
     "tabs": {
       "trade": "取引",
       "chat": "チャット",
-      "member": "メンバー"
+      "member": "メンバー",
+      "chatAll": "チャット全員",
+      "chatWithToken": "トークンチャット"
     },
     "unreadCount": "未読メッセージ",
     "loading": "読み込み中...",
@@ -875,6 +877,7 @@
   "transactionHistory": {
     "allTransactions": "すべての取引",
     "myTransactions": "マイ取引",
+    "assets": "資産",
     "time": "時間",
     "type": "タイプ",
     "price": "価格",

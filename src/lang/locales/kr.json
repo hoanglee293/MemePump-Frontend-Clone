@@ -197,7 +197,9 @@
     "tabs": {
       "trade": "거래",
       "chat": "채팅",
-      "member": "회원"
+      "member": "회원",
+      "chatAll": "전체 채팅",
+      "chatWithToken": "코인종목채팅"
     },
     "unreadCount": "읽지 않은 메시지",
     "loading": "로딩 중...",
@@ -888,6 +890,7 @@
     "allTransactions": "모든 거래",
     "myTransactions": "내 거래",
     "time": "시간",
+    "assets": "나의 자산",
     "type": "유형",
     "price": "가격",
     "amount": "수량",

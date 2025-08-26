@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getMyConnects } from "@/services/api/MasterTradingService"
 import ChatTrading from "./chat"
+import ChatAll from "./chat-all"
 import { MasterTradeChatProps } from "./types"
 import { SearchBar } from "./components/SearchBar"
 import { ConnectionList } from "./components/ConnectionList"
@@ -15,7 +16,7 @@ import { useLang } from "@/lang"
 import { useTradingState } from './hooks/useTradingState'
 import { useConnectListStore } from "@/hooks/useConnectListStore"
 
-type TabType = "chat" | "trade";
+type TabType = "chat" | "trade" | "chatAll";
 
 export default function MasterTradeChat() {
     const { setConnectList, selectedConnections, setSelectedConnections } = useConnectListStore()
@@ -24,10 +25,10 @@ export default function MasterTradeChat() {
     const { token } = useAuth();
     const { lang } = useLang();
     const queryClient = useQueryClient();
-    const { 
-        activeTab, 
-        setActiveTab, 
-        unreadCount, 
+    const {
+        activeTab,
+        setActiveTab,
+        unreadCount,
         messages,
         setTokenAddress,
         initializeWebSocket,
@@ -68,7 +69,7 @@ export default function MasterTradeChat() {
     // Initialize websocket when token address changes
     useEffect(() => {
         if (!mounted) return;
-        
+
         if (tokenAddress && token) {
             setTokenAddress(tokenAddress);
             initializeWebSocket(token, lang);
@@ -112,7 +113,7 @@ export default function MasterTradeChat() {
 
     useEffect(() => {
         if (walletInfor?.role === "master") {
-            setActiveTab("trade")
+            setActiveTab("chat")
         } else {
             setActiveTab("chat")
         }
@@ -124,13 +125,13 @@ export default function MasterTradeChat() {
         setTimeout(() => setCopiedAddress(null), 2000)
     }, [])
 
-    const handleSelectItem = useCallback((id: string) => {        
-        
+    const handleSelectItem = useCallback((id: string) => {
+
         // Toggle selection logic
         const newConnections = selectedConnections.includes(id)
             ? selectedConnections.filter(item => item !== id)
             : [...selectedConnections, id];
-        
+
         console.log("New connections will be:", newConnections)
         setSelectedConnections(newConnections)
         setConnectList(newConnections)
@@ -140,7 +141,7 @@ export default function MasterTradeChat() {
         setActiveTab(tab);
     };
     console.log("selectedConnections", selectedConnections)
-    
+
     // Debug: Track selectedConnections changes
     useEffect(() => {
         console.log("selectedConnections changed:", selectedConnections)
@@ -188,7 +189,7 @@ export default function MasterTradeChat() {
             window.removeEventListener('focus', handleFocus)
         }
     }, [mounted, refetchMyConnects])
-    
+
     return (
         <div className="h-full flex flex-col w-full ">
             {/* {isLoading && (
@@ -199,14 +200,23 @@ export default function MasterTradeChat() {
             )} */}
             {/* Tabs */}
             <div className="flex-none flex h-[25px] bg-gray-300 my-2 mx-3 rounded-full relative dark:bg-theme-neutral-800">
-                {walletInfor?.role === "master" && (
+                {walletInfor?.role === "master" ? (
                     <button
-                        className={`flex-1 rounded-xl text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "trade" ? "linear-gradient-connect" : "text-neutral-400"
+                        className={`px-[14%] rounded-xl text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "trade" ? "linear-gradient-connect" : "text-neutral-400"
                             }`}
                         onClick={() => handleTabChange("trade")}
                         data-active-tab={activeTab}
                     >
                         {t("masterTrade.tabs.member")}
+                    </button>
+                ) : (
+                    <button
+                        className={`px-[14%] rounded-md text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "chatAll" ? "bg-theme-primary-500" : "text-neutral-400"
+                            }`}
+                        onClick={() => setActiveTab("chatAll")}
+                        data-active-tab={activeTab}
+                    >
+                        {t("masterTrade.tabs.chatAll")}
                     </button>
                 )}
                 <button
@@ -215,7 +225,7 @@ export default function MasterTradeChat() {
                     onClick={() => handleTabChange("chat")}
                     data-active-tab={activeTab}
                 >
-                    {t("masterTrade.tabs.chat")}
+                    {t("masterTrade.tabs.chatWithToken")}
                     {unreadCount > 0 && activeTab !== "chat" && (
                         <div className="absolute right-1 top-0">
                             <div className="bg-theme-primary-400 text-neutral-100 text-[10px] rounded-full p-[2px]">{unreadCount}</div>
@@ -253,7 +263,7 @@ export default function MasterTradeChat() {
                         />
                     </div>
                 </div>
-            ) : (
+            ) : activeTab === "chatAll" ? <ChatAll /> : (
                 <div className="flex-1 min-h-0 overflow-hidden">
                     <ChatTrading />
                 </div>

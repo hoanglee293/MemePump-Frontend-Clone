@@ -16,12 +16,12 @@ type Message = {
 interface TradingChatState {
   messages: Message[]
   unreadCount: number
-  activeTab: 'chat' | 'trade'
+  activeTab: 'chat' | 'trade' | 'chatAll'
   tokenAddress: string | null
   socket: Socket | null
   isConnected: boolean
   setTokenAddress: (address: string | null) => void
-  setActiveTab: (tab: 'chat' | 'trade') => void
+  setActiveTab: (tab: 'chat' | 'trade' | 'chatAll') => void
   setMessages: (messages: Message[]) => void
   addMessage: (message: Message) => void
   incrementUnreadCount: () => void

@@ -187,7 +187,9 @@
     "tabs": {
       "trade": "TRADE",
       "chat": "CHAT",
-      "member": "MEMBER"
+      "member": "MEMBER",
+      "chatAll": "CHAT ALL",
+      "chatWithToken": "CHAT WITH TOKEN"
     },
     "unreadCount": "unread messages",
     "loading": "Loading...",
@@ -388,6 +390,10 @@
     "eth": "ETH",
     "bnb": "BNB",
     "wallet": "Wallet",
+    "solBalance": "SOL Balance",
+    "usdtBalance": "USDT Balance",
+    "totalPortfolio": "Total Portfolio",
+    "tokens": "Tokens",
     "importWallets": "Import Wallets",
     "importWalletsNote": "Enter multiple private keys separated by dots (.) or new lines. Each key will be imported as a separate wallet.",
     "addWallets": "Add Wallets",
@@ -850,6 +856,7 @@
     "allTransactions": "ALL TRANSACTIONS",
     "myTransactions": "MY TRANSACTIONS",
     "holders": "Holders",
+    "assets": "Assets",
     "time": "Time",
     "type": "Type",
     "price": "Price",

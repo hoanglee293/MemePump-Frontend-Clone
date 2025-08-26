@@ -64,8 +64,12 @@ export default function TradingPanel({
     })
 
     // Check if user is logged in with Phantom wallet
-    const isPhantomUser = useMemo(() => {
-        return !!localStorage.getItem("phantomPublicKey")
+    const [isPhantomUser, setIsPhantomUser] = useState(false)
+    
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setIsPhantomUser(!!localStorage.getItem("phantomPublicKey"))
+        }
     }, [])
 
     const { data: tradeAmount, refetch: refetchTradeAmount } = useQuery({
@@ -76,7 +80,10 @@ export default function TradingPanel({
 
     const {data: balanceSolanaPhantom, refetch: refetchBalanceSolanaPhantom} = useQuery({
         queryKey: ["balanceSolanaPhantom", address],
-        queryFn: () => getTokenBalancePhantom(localStorage.getItem("phantomPublicKey") || "", "So11111111111111111111111111111111111111112"),
+        queryFn: () => {
+            const phantomPublicKey = typeof window !== 'undefined' ? localStorage.getItem("phantomPublicKey") : null
+            return getTokenBalancePhantom(phantomPublicKey || "", "So11111111111111111111111111111111111111112")
+        },
         enabled: isPhantomUser, // Only fetch if Phantom user
     })
 
@@ -99,7 +106,10 @@ export default function TradingPanel({
 
     const { data: tokenBalance, refetch: refetchTokenBalance } = useQuery({
         queryKey: ["tokenBalance", address],
-        queryFn: () => getTokenBalancePhantom(localStorage.getItem("phantomPublicKey") || "", address || ""),
+        queryFn: () => {
+            const phantomPublicKey = typeof window !== 'undefined' ? localStorage.getItem("phantomPublicKey") : null
+            return getTokenBalancePhantom(phantomPublicKey || "", address || "")
+        },
         enabled: isPhantomUser && !!address, // Only fetch if Phantom user and address exists
     })
     console.log(tokenBalance)
@@ -673,12 +683,6 @@ export default function TradingPanel({
                     {/* Percentage Controls */}
                     {(!isDirectAmountInput || mode !== "buy") && (
                         <div>
-                            <div className="flex justify-between mb-1">
-                                <span className={STYLE_TEXT_BASE}>{t('trading.panel.percentage')}</span>
-                                <span className={`${STYLE_TEXT_BASE} text-blue-600 dark:text-theme-primary-300`}>
-                                    {percentage.toFixed(2)}%
-                                </span>
-                            </div>
                             <input
                                 type="range"
                                 min="0"

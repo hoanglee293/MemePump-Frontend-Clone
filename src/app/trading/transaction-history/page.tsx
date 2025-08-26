@@ -1,7 +1,7 @@
 "use client"
 
 import { getHolders, getOrderHistories, getOrderMyHistories } from "@/services/api/OnChainService"
-import { getInforWallet } from "@/services/api/TelegramWalletService"
+import { getInforWallet, getListBuyToken } from "@/services/api/TelegramWalletService"
 import { formatNumberWithSuffix, truncateString } from "@/utils/format"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
@@ -9,6 +9,9 @@ import { useState, Suspense, useEffect, useMemo } from "react"
 import { io as socketIO } from "socket.io-client"
 import { useLang } from "@/lang/useLang"
 import { getTokenInforByAddress } from "@/services/api/SolonaTokenService"
+import { useAuth } from "@/hooks/useAuth"
+import { useRouter } from "next/navigation"
+import { ArrowLeftRight } from "lucide-react"
 
 type Transaction = {
   time: string
@@ -31,13 +34,16 @@ export default function TransactionHistory() {
 }
 
 function TransactionHistoryContent() {
+  const { isAuthenticated } = useAuth();
   const { t } = useLang();
-  const [activeTab, setActiveTab] = useState<"all" | "my" | "holder">("all")
+  const [activeTab, setActiveTab] = useState<"all" | "my" | "holder" | "asset">("all")
   const [socket, setSocket] = useState<any>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [realTimeTransactions, setRealTimeTransactions] = useState<any[]>([]);
   const [realTimeTransactionsMy, setRealTimeTransactionsMy] = useState<any[]>([]);
+  const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<string>("");
 
   const searchParams = useSearchParams();
   const address = searchParams?.get("address");
@@ -77,6 +83,16 @@ function TransactionHistoryContent() {
     queryFn: () => getOrderMyHistories(String(address), String(walletInfor?.solana_address)),
     enabled: !!walletInfor,
   });
+
+  const { data: tokenList, refetch: refetchTokenList, isLoading: isLoadingTokenList } = useQuery({
+    queryKey: ["token-buy-list"],
+    queryFn: getListBuyToken,
+    enabled: isAuthenticated,
+  });
+  // Filter tokens: SOL/USDT tokens are always shown, others need balance >= 0.005
+  const filteredTokens = (tokenList && 'tokens' in tokenList ? tokenList.tokens : []).filter((token: any) =>
+    token.token_balance_usd >= 0.005
+  );
 
   // WebSocket connection setup
   useEffect(() => {
@@ -250,6 +266,11 @@ function TransactionHistoryContent() {
     return price?.toFixed(6);
   };
 
+  const handleSwapToken = (tokenSymbol: string) => {
+    setIsSwapModalOpen(true)
+    setSelectedToken(tokenSymbol)
+  }
+
   const renderTransactionCard = (order: any, index: number) => {
     const { t } = useLang();
     return (
@@ -275,7 +296,7 @@ function TransactionHistoryContent() {
           </div>
           <div>
             <span className="text-gray-500 dark:text-neutral-400">{t("transactionHistory.total")}:</span>
-            <span className={`ml-1 ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>${(order.priceUsd * order.amount).toFixed(2)}</span>
+            <span className={`ml-1 ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>${(order.priceUsd * order.amount).toFixed(6)}</span>
           </div>
           <div>
             <span className="text-gray-500 dark:text-neutral-400">{t("transactionHistory.source")}:</span>
@@ -321,15 +342,15 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.time")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.total")}</th>
-                {/* <th className="xl:block hidden 2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th> */}
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.status")}</th>
-                <th className="2xl:px-4 px-2 py-1.5 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.address")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[14%]">{t("transactionHistory.time")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.total")}</th>
+                {/* <th className="xl:block hidden 2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium">{t("transactionHistory.source")}</th> */}
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.status")}</th>
+                <th className="2xl:px-4 px-2 py-1.5 2xl:py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.address")}</th>
               </tr>
             </thead>
             <tbody>
@@ -338,7 +359,7 @@ function TransactionHistoryContent() {
                   <td className="2xl:px-4 px-1 py-2 truncate 2xl:text-xs text-[10px] text-gray-600 dark:text-neutral-300">
                     {new Date(order.time).toLocaleString()}
                   </td>
-                  <td className={`2xl:px-4 px-1 2xl:text-[11px] text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-600 dark:text-green-500 uppercase" : "text-red-600 dark:text-red-500 uppercase"}`}>
+                  <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-600 dark:text-green-500 uppercase" : "text-red-600 dark:text-red-500 uppercase"}`}>
                     {order.type === "buy" ? t("transactionHistory.buy") : t("transactionHistory.sell")}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
@@ -348,11 +369,11 @@ function TransactionHistoryContent() {
                     {formatNumberWithSuffix(order.amount)}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
-                    ${(order.priceUsd * order.amount).toFixed(2)}
+                    ${(order.priceUsd * order.amount).toFixed(6)}
                   </td>
-                    {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
-                      {order.program}
-                    </td> */}
+                  {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
+                    {order.program}
+                  </td> */}
                   <td className="2xl:px-4 px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {truncateString(order.tx, 10)}<button onClick={() => {
                       navigator.clipboard.writeText(order.tx)
@@ -368,7 +389,7 @@ function TransactionHistoryContent() {
                       </svg>
                     </button>
                   </td>
-                  <td className="2xl:px-4 px-1 text-green-500 dark:text-green-400 2xl:text-[11px] text-[9px] py-2 font-medium truncate">
+                  <td className="2xl:px-4 px-1 text-green-500 dark:text-green-400 2xl:text-xs text-[9px] py-2 font-medium truncate">
                     {t("transactionHistory.completed")}
                   </td>
                   <td className="2xl:px-4 px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium flex items-center truncate">
@@ -410,10 +431,10 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.time")}</th>
+                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[15%]">{t("transactionHistory.time")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[7%]">{t("transactionHistory.type")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[11%]">{t("transactionHistory.price")}</th>
-                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.amount")}</th>
+                <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[9%]">{t("transactionHistory.amount")}</th>
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.total")}</th>
                 {/* <th className="xl:block hidden 2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[8%]">{t("transactionHistory.source")}</th> */}
                 <th className="2xl:px-4 px-2 py-2 text-left 2xl:text-xs text-[10px] text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.transactionHash")}</th>
@@ -437,7 +458,7 @@ function TransactionHistoryContent() {
                     {formatNumberWithSuffix(order.amount)}
                   </td>
                   <td className={`2xl:px-4 px-1 2xl:text-xs text-[10px] py-2 font-medium truncate ${order.type === "buy" ? "text-green-400 dark:text-green-300" : "text-pink-500 dark:text-pink-400"}`}>
-                    ${(order.priceUsd * order.amount).toFixed(2)}
+                    ${(order.priceUsd * order.amount).toFixed(6)}
                   </td>
                   {/* <td className="2xl:px-4 xl:block hidden px-1 text-gray-600 dark:text-neutral-300 2xl:text-xs text-[10px] py-2 font-medium truncate">
                     {order.program}
@@ -501,18 +522,18 @@ function TransactionHistoryContent() {
           <table className="w-full text-sm table-fixed">
             <thead className="sticky top-[-1px] z-10 bg-white dark:bg-[#0F0F0F]">
               <tr className="border-b border-gray-200 dark:border-neutral-800">
-                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.address")}</th>
-                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.amount")}</th>
-                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.quoteValue")}</th>
-                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.usdValue")}</th>
-                <th className="px-4 py-1.5 text-xs text-left text-gray-700 dark:text-neutral-200 font-medium w-[10%]">{t("transactionHistory.ownerPercentage")}</th>
+                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[13%]">{t("transactionHistory.address")}</th>
+                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.amount")}</th>
+                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[14%]">{t("transactionHistory.quoteValue")}</th>
+                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("transactionHistory.usdValue")}</th>
+                <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[14%]">{t("transactionHistory.ownerPercentage")}</th>
               </tr>
             </thead>
             <tbody>
               {holders?.accounts.map((holder: any, index: number) => {
                 return (
                   <tr key={index} className={`hover:bg-gray-100 dark:hover:bg-neutral-800/30 border-b border-gray-100 dark:border-neutral-800/50 ${index % 2 === 0 ? 'bg-gray-50 dark:bg-[#1A1A1A]' : 'bg-white dark:bg-[#0F0F0F]'}`}>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium flex items-center truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium flex items-center truncate">
                       <span className="text-[#FFB300] dark:text-[#FFB300]">{truncateString(holder.wallet, 9)}</span>
                       <button onClick={() => {
                         navigator.clipboard.writeText(holder.wallet)
@@ -528,16 +549,16 @@ function TransactionHistoryContent() {
                         </svg>
                       </button>
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
                       {formatNumberWithSuffix(holder.amount)}
                     </td>
-                    <td className="px-4 text-purple-500 text-[10px] py-1 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
                       {formatNumberWithSuffix(holder.value.quote)} SOL
                     </td>
-                    <td className="px-4 text-theme-primary-400 text-[10px] py-1 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
                       ${formatNumberWithSuffix(holder.value.usd)}
                     </td>
-                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-[10px] py-1 font-medium truncate">
+                    <td className="px-4 text-gray-600 dark:text-neutral-300 text-xs py-2 font-medium truncate">
                       {holder.percentage.toFixed(2)}%
                     </td>
                   </tr>
@@ -589,34 +610,216 @@ function TransactionHistoryContent() {
     );
   };
 
+  const renderAssetsTable = () => {
+    const { t } = useLang();
+    const router = useRouter();
+
+    return (
+      <>
+        {/* Desktop view */}
+        <div className="hidden md:block">
+          {!filteredTokens || filteredTokens.length === 0 ? (
+            <div className="flex justify-center items-center py-8 text-neutral-600 dark:text-gray-400">
+              {t("wallet.noTokens")}
+            </div>
+          ) : (
+            <div>
+              {/* Asset Preview Section */}
+              <div className="mb-1 p-1.5 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex flex-col sm:flex-row gap-4 justify-between">
+                  {/* SOL Balance */}
+                  <div className="flex-1 flex gap-2 items-center">
+                    <div className="2xl:text-sm text-xs text-black dark:text-white ">{t('wallet.solBalance')}</div>
+                    <div className="2xl:text-base text-xs font-bold text-blue-600 dark:text-blue-400">
+                      {(() => {
+                        const solToken = filteredTokens.find((token: any) => token.token_symbol === "SOL");
+                        return solToken ? solToken.token_balance.toFixed(4) : "0.0000";
+                      })()}
+                    </div>
+                    <div className="text-xs text-black dark:text-white">
+                      ≈ ${(() => {
+                        const solToken = filteredTokens.find((token: any) => token.token_symbol === "SOL");
+                        return solToken ? (solToken.token_balance * solToken.token_price_usd).toFixed(2) : "0.00";
+                      })()} USD
+                    </div>
+                  </div>
+
+                  {/* USDT Balance */}
+                  <div className="flex-1 flex gap-2 items-center">
+                    <div className="2xl:text-sm text-xs text-black dark:text-white ">{t('wallet.usdtBalance')}</div>
+                    <div className="2xl:text-base text-xs font-bold text-green-600 dark:text-green-400">
+                      {(() => {
+                        const usdtToken = filteredTokens.find((token: any) => token.token_symbol === "USDT");
+                        return usdtToken ? usdtToken.token_balance.toFixed(2) : "0.00";
+                      })()}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-white">
+                      ≈ ${(() => {
+                        const usdtToken = filteredTokens.find((token: any) => token.token_symbol === "USDT");
+                        return usdtToken ? (usdtToken.token_balance * usdtToken.token_price_usd).toFixed(2) : "0.00";
+                      })()} USD
+                    </div>
+                  </div>
+
+                  {/* Total Portfolio Value */}
+                  <div className="flex-1 flex gap-2 items-center">
+                    <div className="2xl:text-sm text-xs text-black dark:text-white ">{t('wallet.totalPortfolio')}</div>
+                    <div className="2xl:text-base text-xs font-bold text-purple-600 dark:text-purple-400">
+                      ${(() => {
+                        const totalValue = filteredTokens.reduce((sum: number, token: any) => {
+                          return sum + token.token_balance_usd;
+                        }, 0);
+                        return totalValue.toFixed(2);
+                      })()}
+                    </div>
+                    <div className="2xl:text-sm text-xs text-yellow-500 ml-1">
+                      {filteredTokens.length} {t('wallet.tokens')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <table className="w-full text-sm table-fixed">
+                <thead className="sticky top-[-1px] z-10 bg-white dark:bg-theme-primary-500/70">
+                  <tr className="border-b border-gray-200 dark:border-neutral-800">
+                    <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-auto">{t("wallet.token")}</th>
+                    <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[15%]">{t("wallet.balance")}</th>
+                    <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[15%]">{t("wallet.price")}</th>
+                    <th className="px-4 py-2 text-left text-gray-700 dark:text-neutral-200 font-medium w-[12%]">{t("wallet.value")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTokens.map((token: any, index: number) => (
+                    <tr key={index} className={`hover:bg-gray-100 dark:hover:bg-neutral-800/30 border-b border-gray-100 dark:border-neutral-800/50 cursor-pointer ${index % 2 === 0 ? 'bg-gray-50 dark:bg-[#1A1A1A]' : 'bg-white dark:bg-[#0F0F0F]'}`} >
+                      <td className="px-4 py-2 text-gray-600 dark:text-neutral-300 text-xs font-medium flex-1">
+                        <div className="flex items-center gap-2" >
+                          {token.token_logo_url && (
+                            <img
+                              src={token.token_logo_url}
+                              alt={token.token_name}
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
+                              onError={(e) => {
+                                e.currentTarget.src = '/placeholder.png';
+                              }}
+                            />
+                          )}
+                          <div>
+                            <div className="font-medium text-neutral-900 dark:text-theme-neutral-100 text-xs">{token.token_name}</div>
+                            <div className="text-[10px] sm:text-xs text-neutral-600 dark:text-gray-400">{token.token_symbol}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2 text-green-600 text-xs font-medium truncate">
+                        {token.token_balance.toFixed(4)}
+                      </td>
+                      <td className="px-4 py-2 text-purple-600 text-xs font-medium truncate">
+                        ${token.token_price_usd.toFixed(6)}
+                      </td>
+                      <td className="px-4 py-2 text-gray-600 dark:text-neutral-300 text-xs font-medium truncate">
+                        ${token.token_balance_usd.toFixed(5)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile view */}
+        <div className="md:hidden">
+          {!filteredTokens || filteredTokens.length === 0 ? (
+            <div className="flex justify-center items-center py-6 text-neutral-600 dark:text-gray-400 bg-gray-800/60 rounded-md">
+              {t("wallet.noTokens")}
+            </div>
+          ) : (
+            filteredTokens.map((token: any, index: number) => (
+              <div key={index} className={`p-3 border-b border-theme-neutral-800/40 dark:border-neutral-800/50 hover:bg-gray-50 dark:hover:bg-neutral-800/30 cursor-pointer ${index % 2 === 0 ? 'bg-gray-50 dark:bg-[#1A1A1A]' : 'bg-white dark:bg-[#0F0F0F]'}`} onClick={() => router.push(`/trading?address=${token.token_address}`)}>
+                {/* Token Info Header */}
+                <div className="flex items-start gap-2 mb-3">
+                  <div className="flex items-center gap-2 justify-between flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      {token.token_logo_url && (
+                        <img
+                          src={token.token_logo_url}
+                          alt={token.token_name}
+                          className="w-8 h-8 rounded-full"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.png';
+                          }}
+                        />
+                      )}
+                      <div className="min-w-0 flex gap-2">
+                        <div className="font-medium dark:text-theme-neutral-100 text-black text-sm truncate">{token.token_name}</div>
+                        <div className="text-xs dark:text-gray-400 text-black">{token.token_symbol}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Token Details Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <div className="text-xs dark:text-gray-400 text-black mb-1">{t("wallet.balance")}</div>
+                    <div className="text-sm sm:text-base font-medium dark:text-theme-neutral-100 text-black">
+                      {token.token_balance.toFixed(token.token_decimals)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs dark:text-gray-400 text-black mb-1">{t("wallet.price")}</div>
+                    <div className="text-sm sm:text-base font-medium dark:text-theme-neutral-100 text-black">
+                      ${token.token_price_usd.toFixed(4)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs dark:text-gray-400 text-black mb-1">{t("wallet.value")}</div>
+                    <div className="text-sm sm:text-base font-medium dark:text-theme-neutral-100 text-black">
+                      ${token.token_balance_usd.toFixed(5)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </>
+    );
+  };
+
   return (
-    <div className="shadow-inset dark:bg-[#0e0e0e] rounded-xl p-2 sm:p-2 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col h-full w-full">
-      <div className="flex border-gray-200 dark:border-neutral-800 h-[25px] bg-gray-100  rounded-full dark:bg-[#333]">
+    <div className="shadow-inset dark:bg-[#0e0e0e] rounded-md p-2 sm:p-2 lg:overflow-hidden bg-white dark:bg-neutral-1000 flex flex-col w-full h-full ">
+      <div className="flex border-gray-200 dark:border-neutral-800 2xl:h-[30px] h-[24px] bg-gray-100  rounded-full dark:bg-[#333] overflow-x-auto md:overflow-x-hidden mb-1">
         <button
-          className={`flex-1 rounded-full text-xs cursor-pointer font-medium uppercase text-center ${activeTab === "all" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`flex-1 rounded-sm text-[9px] 2xl:text-sm cursor-pointer font-medium uppercase text-center ${activeTab === "all" ? "text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("all")}
         >
           {t("transactionHistory.allTransactions")}
         </button>
         <button
-          className={`flex-1 rounded-full cursor-pointer text-xs font-medium uppercase text-center ${activeTab === "my" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`flex-1 rounded-sm cursor-pointer text-[9px] 2xl:text-sm font-medium uppercase text-center ${activeTab === "my" ? "text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("my")}
         >
           {t("transactionHistory.myTransactions")}
         </button>
         <button
-          className={`flex-1 rounded-full cursor-pointer text-xs font-medium uppercase text-center ${activeTab === "holder" ? "bg-blue-500 text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
+          className={`px-5 md:flex-1 rounded-sm cursor-pointer text-[9px] 2xl:text-sm font-medium uppercase text-center ${activeTab === "holder" ? "text-white dark:linear-gradient-connect" : "text-gray-500 dark:text-neutral-400"}`}
           onClick={() => setActiveTab("holder")}
         >
           {t("transactionHistory.holders")}
         </button>
+        <button
+          className={`px-5 md:flex-1 rounded-sm cursor-pointer text-[9px] 2xl:text-sm font-medium uppercase text-center ${activeTab === "asset" ? "text-white dark:linear-gradient-connect" : "text-red-500 dark:text-red-500"}`}
+          onClick={() => setActiveTab("asset")}
+        >
+          {t("transactionHistory.assets")}
+        </button>
       </div>
 
-      <div className="mt-2 sm:mt-3 bg-gray-50 dark:bg-[#0F0F0F] rounded-xl relative flex-1 flex flex-col min-h-0">
+      <div className="mt-0 2xl:mt-3 bg-gray-50 dark:bg-[#0F0F0F] rounded-sm relative flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-auto">
           {activeTab === "all" ? renderAllTransactionsTable() :
             activeTab === "my" ? renderMyTransactionsTable() :
-              renderHoldersTable()}
+              activeTab === "holder" ? renderHoldersTable() :
+                renderAssetsTable()}
         </div>
       </div>
     </div>

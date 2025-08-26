@@ -2,17 +2,14 @@
 
 import type React from "react"
 import { useState, useRef, useEffect, Suspense } from "react"
-import { Smile, Send, Image as ImageIcon, X } from "lucide-react"
+import { Smile, Send } from "lucide-react"
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react'
 import { useQuery } from "@tanstack/react-query"
-import { useSearchParams } from "next/navigation"
-import {
-  getTokenHistories,
-} from "@/services/api/ChatService";
-import { useLang } from "@/lang";
+import { getChatAllHistories } from "@/services/api/ChatService"
+import { useLang } from "@/lang"
 import { ChatService } from "@/services/api"
 import ChatMessage from "@/app/components/chat/ChatMessage"
-import { useTradingChatStore } from "@/store/tradingChatStore"
+import { useWsChatMessage } from "@/hooks/useWsChatMessage"
 
 type Message = {
   id: string
@@ -41,33 +38,42 @@ type ChatHistoryItem = {
   createdAt: string;
 }
 
+type WsMessage = {
+  _id: string;
+  ch_chat_id: number;
+  ch_content: string;
+  ch_status: string;
+  createdAt: string;
+  ch_wallet_address: string;
+  nick_name?: string;
+  ch_lang?: string;
+  country?: string;
+}
+
 // Create a client component for the main content
-const ChatTradingContent = () => {
+const ChatAllContent = () => {
   const { t, lang } = useLang();
   const [isMounted, setIsMounted] = useState(false);
   const [windowHeight, setWindowHeight] = useState(800);
-  const searchParams = useSearchParams();
-  const tokenAddress = searchParams?.get("address");
-  const { data: chatTokenHistories, refetch: refetchChatTokenHistories } =
-    useQuery({
-      queryKey: ["chatTokenHistories", tokenAddress, lang],
-      queryFn: () => getTokenHistories(tokenAddress || "", lang),
-      refetchOnMount: true,
-      enabled: !!tokenAddress,
-    });
-
-  const { messages, setMessages } = useTradingChatStore();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
-  const [showIconPicker, setShowIconPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
-  const iconPickerRef = useRef<HTMLDivElement>(null)
 
-  // Convert chatTokenHistories data to Message format
+  const { data: chatAllHistories, refetch: refetchChatAllHistories } = useQuery({
+    queryKey: ["chatAllHistories", lang],
+    queryFn: () => getChatAllHistories(lang),
+  });
+
+  const { message: wsMessage } = useWsChatMessage({
+    chatType: 'all'
+  });
+
+  // Convert chatAllHistories data to Message format
   useEffect(() => {
-    if (chatTokenHistories?.data) {
-      const convertedMessages: Message[] = chatTokenHistories.data.map((chat: ChatHistoryItem) => ({
+    if (chatAllHistories?.data) {
+      const convertedMessages: Message[] = chatAllHistories.data.map((chat: ChatHistoryItem) => ({
         id: chat._id,
         sender: {
           name: chat.nick_name || "Anonymous",
@@ -76,11 +82,30 @@ const ChatTradingContent = () => {
         },
         text: chat.ch_content,
         timestamp: new Date(chat.createdAt),
-        country: chat.country
+        country: chat.country || "en"
       }));
       setMessages(convertedMessages);
     }
-  }, [chatTokenHistories, setMessages]);
+  }, [chatAllHistories]);
+
+  // Handle new websocket messages
+  useEffect(() => {
+    if (wsMessage) {
+      const wsMsg = wsMessage as WsMessage;
+      const newMessage: Message = {
+        id: wsMsg._id,
+        sender: {
+          name: wsMsg.nick_name || "Anonymous",
+          avatar: "/token.png",
+          isCurrentUser: wsMsg.ch_wallet_address === "YOUR_WALLET_ADDRESS", // TODO: Replace with actual wallet address
+        },
+        text: wsMsg.ch_content,
+        timestamp: new Date(wsMsg.createdAt),
+        country: wsMsg.country || "en"
+      };
+      setMessages(prev => [...prev, newMessage]);
+    }
+  }, [wsMessage]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -108,9 +133,6 @@ const ChatTradingContent = () => {
       if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
         setShowEmojiPicker(false)
       }
-      if (iconPickerRef.current && !iconPickerRef.current.contains(event.target as Node)) {
-        setShowIconPicker(false)
-      }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
@@ -122,20 +144,12 @@ const ChatTradingContent = () => {
     setShowEmojiPicker(false)
   }
 
-  const onIconClick = (icon: string) => {
-    setNewMessage(prev => prev + icon)
-    setShowIconPicker(false)
-  }
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
     try {
-      await ChatService.sendTokenMessage(
-        newMessage,
-        tokenAddress || "",
-        lang
-      );
-      refetchChatTokenHistories(); // Refetch chat history after sending
+      await ChatService.sendAllMessage(newMessage, lang);
+      refetchChatAllHistories(); // Refetch chat history after sending
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -143,8 +157,8 @@ const ChatTradingContent = () => {
   };
 
   return (
-    <div className="flex flex-col h-full px-4 pt-3 rounded-md dark:bg-[#0e0e0e]">
-      <div className={`${height > 700 ? 'flex-1' : 'h-[300px]'} overflow-y-auto px-1 rounded-xl bg-theme-neutral-100 dark:bg-inherit`}>
+    <div className="flex flex-col h-full pt-3 dark:bg-[#0e0e0e] pb-1 px-2 rounded-md">
+      <div className={`${height > 700 ? 'flex-1' : 'h-[300px]'} overflow-y-auto px-1 rounded-md bg-theme-neutral-100 dark:bg-inherit`}>
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
@@ -152,7 +166,7 @@ const ChatTradingContent = () => {
       </div>
 
       {/* Message Input */}
-      <div className="p-1 border-t border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#0e0e0e] shadow-sm">
+      <div className="p-1 border-t border-gray-100 dark:border-neutral-800 bg-white dark:bg-theme-neutral-1000 shadow-sm">
         <div className="relative">
           {/* Emoji Picker */}
           {showEmojiPicker && (
@@ -172,7 +186,7 @@ const ChatTradingContent = () => {
             <div className="relative flex-1">
               <input
                 type="text"
-                placeholder={t('trading.control.searchBar.placeholder')}
+                placeholder={t('masterTrade.manage.chat.type_a_message')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => {
@@ -189,10 +203,7 @@ const ChatTradingContent = () => {
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
                 <button
-                  onClick={() => {
-                    setShowEmojiPicker(!showEmojiPicker)
-                    setShowIconPicker(false)
-                  }}
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                   className="text-gray-400 hover:text-theme-primary-500 dark:text-gray-400 
                                              dark:hover:text-theme-primary-300 transition-colors"
                 >
@@ -218,12 +229,12 @@ const ChatTradingContent = () => {
 }
 
 // Main component with Suspense
-const ChatTrading = () => {
+const ChatAll = () => {
   return (
     <Suspense fallback={<div></div>}>
-      <ChatTradingContent />
+      <ChatAllContent />
     </Suspense>
   );
 }
 
-export default ChatTrading
+export default ChatAll 
