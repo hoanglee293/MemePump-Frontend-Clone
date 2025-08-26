@@ -468,7 +468,7 @@
       "cancel": "Cancel",
       "delete": "Delete"
     },
-    "addNewWallet": "Add New Wallet",
+    "addNewWallet": "Add Wallet",
     "enterWalletName": "Enter Wallet Name",
     "enterNickname": "Enter Nickname",
     "nicknameValidationError": "Nickname can only contain letters without accents, numbers and underscores",

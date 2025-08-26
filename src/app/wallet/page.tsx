@@ -113,7 +113,7 @@ function useDebounce<T extends (...args: any[]) => any>(callback: T, delay: numb
 const modalContainerStyles = "fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4 sm:p-0"
 const modalContentStyles = "p-[1px] rounded-xl bg-gradient-to-t from-theme-purple-100 to-theme-gradient-linear-end w-full max-w-[400px] lg:max-w-max sm:w-auto"
 const modalInnerStyles = "p-4 xl:p-6 bg-white dark:bg-theme-black-200 rounded-xl shadow-[0px_0px_4px_0px_rgba(232,232,232,0.50)] outline outline-1 outline-offset-[-1px] outline-indigo-500 backdrop-blur-[5px]"
-const modalTitleStyles = "text-base xl:text-[18px] font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg uppercase leading-relaxed text-fill-transparent bg-clip-text"
+const modalTitleStyles = "text-base xl:text-[18px] font-semibold text-indigo-500 backdrop-blur-sm boxShadow linear-200-bg leading-relaxed text-fill-transparent bg-clip-text"
 const modalInputStyles = "w-full px-3 pb-1.5 h-9 pt-1 bg-white dark:bg-theme-black-200 rounded-xl text-sm sm:text-base placeholder:text-xs dark:text-theme-neutral-100 focus:outline-none focus:border-purple-500"
 const modalButtonStyles = "w-full sm:w-auto h-[30px] px-4 py-1.5 bg-gradient-to-l from-blue-950 to-purple-600 rounded-[30px] outline outline-1 outline-offset-[-1px] outline-indigo-500 backdrop-blur-sm flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
 const modalCancelButtonStyles = "w-full sm:w-auto h-[30px] px-4 py-1 rounded-[30px] outline outline-1 outline-offset-[-1px] outline-indigo-500 backdrop-blur-sm flex justify-center items-center gap-3"
@@ -1204,7 +1204,7 @@ export default function WalletPage() {
                                 <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">
                                     <KeyIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-theme-neutral-100" />
                                 </div>
-                                <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
                                     {t('wallet.getPrivateKey')}
                                 </div>
                             </button>
@@ -1227,7 +1227,7 @@ export default function WalletPage() {
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                     </div>
-                                    <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
                                         {t('wallet.addWallets')}
                                     </div>
                                 </button>
@@ -1238,7 +1238,7 @@ export default function WalletPage() {
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                     </div>
-                                    <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
                                         {t('wallet.importWallets')}
                                     </div>
                                 </button>
@@ -1249,7 +1249,7 @@ export default function WalletPage() {
                                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
                                         <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                     </div>
-                                    <div className="text-xs sm:text-sm font-medium capitalize leading-tight text-theme-neutral-100">
+                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
                                         {t('wallet.addWallet')}
                                     </div>
                                 </button>
