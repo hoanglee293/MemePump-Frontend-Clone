@@ -113,7 +113,7 @@ export default function MasterTradeChat() {
 
     useEffect(() => {
         if (walletInfor?.role === "master") {
-            setActiveTab("chat")
+            setActiveTab("trade")
         } else {
             setActiveTab("chat")
         }
