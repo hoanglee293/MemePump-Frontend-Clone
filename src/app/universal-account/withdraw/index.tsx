@@ -38,7 +38,7 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
       isSending,
       noWalletAddress: !walletInfor?.solana_address,
       amountTooSmall: numAmount < 0.001,
-      amountTooLarge: numAmount > 1,
+      
       exceedsBalance: numAmount > balance,
       hasError: !!error
     };
@@ -49,7 +49,7 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
       finalDisabled: isSending ||
         !walletInfor?.solana_address ||
         numAmount < 0.001 ||
-        numAmount > 1 ||
+        
         numAmount > balance ||
         !!error ||
         recipientWallet.length === 0
@@ -59,7 +59,7 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
       send: isSending ||
         !walletInfor?.solana_address ||
         numAmount < 0.001 ||
-        numAmount > 1 ||
+        
         numAmount > balance ||
         !!error,
       input: isSending,
@@ -75,12 +75,6 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
     if (/^\d*\.?\d*$/.test(value) || value === '') {
       // Kiểm tra nếu giá trị nhập vào lớn hơn 1
       const numValue = parseFloat(value);
-      if (numValue > 1) {
-        setAmount("1");
-        setError("Maximum withdrawal amount is 1 SOL");
-        return;
-      }
-
       setAmount(value);
 
       // Validate amount against balance
@@ -90,8 +84,6 @@ export default function WithdrawWallet({ walletInfor }: { walletInfor: any }) {
         setError(`${t('universal_account.amount_cannot_exceed_balance', { balance })}`);
       } else if (numValue < 0.001 && value !== "") {
         setError(`${t('universal_account.minimum_withdrawal_amount', { amount: 0.001 })}`);
-      } else if (numValue > 1) {
-        setError(`${t('universal_account.maximum_withdrawal_amount', { amount: 1 })}`);
       } else {
         setError("");
       }
