@@ -364,14 +364,14 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                         </Button>
                     </div>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                     <div className={mobileStyles.label}>{t('wallet.balance')} :</div>
                     <div className="flex items-center gap-2">
                         <span className={`${mobileStyles.value} truncate flex-1`}>
                             SOL: <span className="text-purple-600">{wallet.solana_balance.toFixed(4)}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
                         </span>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             {/* Actions */}
@@ -604,7 +604,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
                                     <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
                                     <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead>
+                                    {/* <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead> */}
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
                                     <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
@@ -677,9 +677,9 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                                 </Button>
                                             </div>
                                         </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
+                                        {/* <TableCell className={`px-4 ${textContent}`}>
                                         SOL: <span className="text-purple-600">{wallet.solana_balance.toFixed(4)}</span> ≈ <span className="text-theme-primary-400">${wallet.solana_balance_usd.toFixed(2)}</span>
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell className={`px-4 ${textContent}`}>
                                             {renderEditableCell(wallet, 'country')}
                                         </TableCell>
