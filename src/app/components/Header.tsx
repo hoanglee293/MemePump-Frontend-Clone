@@ -164,6 +164,13 @@ const Header = () => {
             isPhantomConnected: false,
         },
         {
+            name: t('trade'),
+            href: '/trading?address=6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN',
+            icon: LineChart,
+            logoPump: false,
+            isPhantomConnected: false,
+        },
+        {
             name: t('create coin'),
             href: '/create-coin',
             icon: Coins,

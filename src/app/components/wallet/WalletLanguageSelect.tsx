@@ -21,11 +21,11 @@ export function WalletLanguageSelect({ value, onChange, className }: WalletLangu
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className={`w-full dark:bg-neutral-900 dark:text-theme-neutral-100 text-theme-neutral-800 px-2 flex justify-start gap-2 ${className}`}>
                     {currentLang && <img src={currentLang.flag} alt={t(currentLang.translationKey)} className="w-4 h-3 rounded" />}
-                    <span className="text-xs">{currentLang && t(currentLang.translationKey)}</span>
+                    <span className="text-[10px]">{currentLang && t(currentLang.translationKey)}</span>
                     <ChevronDown className="h-4 w-4 ml-auto" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[180px]">
+            <DropdownMenuContent align="end" className="w-[130px]">
                 <div className="flex flex-col pr-2">
                     {langConfig.listLangs.map((language) => (
                         <DropdownMenuItem 

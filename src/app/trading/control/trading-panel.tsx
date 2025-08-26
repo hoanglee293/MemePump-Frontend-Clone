@@ -671,7 +671,7 @@ export default function TradingPanel({
                         {mode === "buy" ? (
                             <div className={STYLE_TEXT_BASE}>~ ${amountUSD}</div>
                         ) : (
-                            <div className={STYLE_TEXT_BASE}>&ensp;</div>
+                            <div className={STYLE_TEXT_BASE}>~ ${(tokenInfor?.price * Number(amount)).toFixed(4)}</div>
                         )}
                         <div className={STYLE_TEXT_BASE}>
                             {t('trading.panel.balance')}: {mode === "buy"

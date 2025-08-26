@@ -51,7 +51,7 @@ interface WalletTableProps {
 }
 
 const textTitle = 'text-neutral-800 dark:text-neutral-200 font-normal text-xs py-3'
-const textContent = 'text-neutral-900 dark:text-neutral-100 text-xs font-normal py-3'
+const textContent = 'text-neutral-900 dark:text-neutral-100 text-xs font-normal py-2 px-2'
 
 // Add new styles for mobile wallet cards only
 const mobileStyles = {
@@ -473,7 +473,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                     handleCancelEdit();
                                 }
                             }}
-                            className="h-7 w-[140px]"
+                            className="h-7 w-[113px]"
                         />
                         <Button
                             variant="ghost"
@@ -557,7 +557,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                 handleCancelEdit();
                             }
                         }}
-                        className="h-7 w-[140px]"
+                        className="h-7 w-[113px]"
                     />
                 </div>
             );
@@ -583,8 +583,8 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
             setLoadingBalances(prev => ({ ...prev, [wallet.wallet_id]: true }));
             const response = await TelegramWalletService.getWalletBalanceByAddress(wallet.solana_address);
             if (response && response.sol_balance !== undefined) {
-                setWalletBalances(prev => ({ 
-                    ...prev, 
+                setWalletBalances(prev => ({
+                    ...prev,
                     [wallet.wallet_id]: {
                         sol_balance: response.sol_balance || 0,
                         sol_balance_usd: response.sol_balance_usd || 0
@@ -595,8 +595,8 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         } catch (error) {
             console.error('Error getting balance wallet:', error);
             // Set default values on error
-            setWalletBalances(prev => ({ 
-                ...prev, 
+            setWalletBalances(prev => ({
+                ...prev,
                 [wallet.wallet_id]: {
                     sol_balance: 0,
                     sol_balance_usd: 0
@@ -611,7 +611,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
         <>
             <Card className="border-none dark:shadow-blue-900/5">
                 <CardContent className="p-0 relative gap-0">
-                {selectedWallets.length > 0 ? (
+                    {selectedWallets.length > 0 ? (
                         <div className="flex mt-2 items-center justify-between md:px-4 px-2 py-1 mb-2 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl">
                             <div className="flex items-center gap-2">
                                 <span className="md:text-sm text-xs font-medium text-red-700 dark:text-red-300">
@@ -638,163 +638,138 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                             </div>
                         </div>
                     ) : (
-                        <div className="h-[50px]" />
+                        <div className="h-[52px]" />
                     )}
                     {/* Desktop Table View */}
-                    <div className="hidden sm:block overflow-hidden rounded-xl border-1 z-10 border-solid border-y-theme-primary-100 border-x-theme-purple-200">
-                        <Table>
-                            <TableHeader className="border-b-1 border-b-solid border-b-neutral-400 relative">
-                                <TableRow className="bg-muted/50 h-14">
-                                    <TableHead className={`${textTitle} w-[5%] px-4`}>
-                                        {wallets?.length > 1 && (
-                                            <Checkbox
-                                                checked={isAllSelected()}
-                                                onCheckedChange={handleSelectAll}
-                                            />
-                                        )}
-                                    </TableHead>
-                                    <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
-                                    <TableHead className={`${textTitle} w-[8%] px-4`}>{t('common.actions')}</TableHead>
-                                </TableRow>
-                                {/* {selectedWallets.length > 0 && (
-                                <div className="flex items-center justify-between md:px-4 px-2 h-full mb-2 bg-red-900 rounded-t-xl absolute top-0 left-0 w-full z-20">
-                                    <div className="flex items-center gap-2">
-                                        <span className="md:text-sm text-xs font-medium text-red-700 dark:text-red-300">
-                                            {t('wallet.selectedWallets', { count: selectedWallets.length })}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setSelectedWallets([])}
-                                            className="md:text-xs text-[10px] h-7 rounded-full hover:bg-gray-700 cursor-pointer"
+                    <div className="hidden sm:block border-1 z-10 border-solid mb-8 rounded-xl overflow-hidden border-y-theme-primary-100 border-x-theme-purple-200">
+                        <Table className="w-full">
+                            <TableRow className="bg-muted/50 h-14">
+                                <TableHead className={`${textTitle} w-[5%] px-4`}>
+                                    {wallets?.length > 1 && (
+                                        <Checkbox
+                                            checked={isAllSelected()}
+                                            onCheckedChange={handleSelectAll}
+                                        />
+                                    )}
+                                </TableHead>
+                                <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
+                                <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
+                                <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
+                                <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead>
+                                <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.country')}</TableHead>
+                                <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.type')}</TableHead>
+                                <TableHead className={`${textTitle} w-[8%] px-4`}>{t('wallet.walletLevel')}</TableHead>
+                                <TableHead className={`${textTitle} w-[8%] px-4`}>{t('common.actions')}</TableHead>
+                            </TableRow>
+                        </Table>
+                        <div className="max-h-[70vh] overflow-y-auto">
+                            <Table className="w-full">
+                                <TableBody>
+                                    {wallets?.map((wallet) => (
+                                        <TableRow
+                                            key={wallet.wallet_id}
+                                            className="dark:hover:bg-neutral-800/30 hover:bg-theme-green-300 transition-colors h-14 border-b-1 border-b-solid border-b-transparent"
                                         >
-                                            {t('wallet.clearSelection')}
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => setIsBulkDelete(true)}
-                                            className="md:text-xs text-[10px] h-7 bg-red-500 hover:bg-red-600 rounded-full border-none cursor-pointer"
-                                        >
-                                            {t('wallet.deleteSelected')}
-                                        </Button>
-                                        </div>
-                                    </div>
-                                )} */}
-                            </TableHeader>
-                            <TableBody>
-                                {wallets?.map((wallet) => (
-                                    <TableRow
-                                        key={wallet.wallet_id}
-                                        className="dark:hover:bg-neutral-800/30 hover:bg-theme-green-300 transition-colors h-14 border-b-1 border-b-solid border-b-transparent"
-                                    >
-                                        <TableCell className={`px-4 ${textContent} `}>
-                                            {wallet.wallet_type !== 'main' && (
-                                                <Checkbox
-                                                    checked={selectedWallets.includes(wallet.wallet_id)} onClick={() => handleSelectWallet(wallet.wallet_id, !selectedWallets.includes(wallet.wallet_id))}
-                                                />
-                                            )}
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            {renderEditableCell(wallet, 'name')}
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            {renderEditableCell(wallet, 'nickname')}
-                                        </TableCell>
-                                      
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <div className="flex items-center gap-1">
-                                                <span className="truncate max-w-[180px] text-yellow-500 italic">
-                                                    {truncateString(wallet.solana_address, 10)}
-                                                </span>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-6 w-6 p-0 hover:bg-neutral-700/50 flex-shrink-0"
-                                                    onClick={(e) => handleCopyAddress(wallet.solana_address, e)}
-                                                >
-                                                    {copiedAddress === wallet.solana_address ? (
-                                                        <Check className="h-3 w-3 text-green-500" />
-                                                    ) : (
-                                                        <Copy className="h-3 w-3" />
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            {loadingBalances[wallet.wallet_id] ? (
-                                                <div className="flex items-center gap-2">
-                                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                                    <span className="text-xs">Loading...</span>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    SOL: <span className="text-purple-600">
-                                                        {walletBalances[wallet.wallet_id]?.sol_balance?.toFixed(4) || '0.0000'}
-                                                    </span> ≈ <span className="text-theme-primary-400">
-                                                        ${walletBalances[wallet.wallet_id]?.sol_balance_usd?.toFixed(2) || '0.00'}
+                                            <TableCell className={`px-4 ${textContent} `}>
+                                                {wallet.wallet_type !== 'main' && (
+                                                    <Checkbox
+                                                        checked={selectedWallets.includes(wallet.wallet_id)} onClick={() => handleSelectWallet(wallet.wallet_id, !selectedWallets.includes(wallet.wallet_id))}
+                                                    />
+                                                )}
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                {renderEditableCell(wallet, 'name')}
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                {renderEditableCell(wallet, 'nickname')}
+                                            </TableCell>
+
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                <div className="flex items-center gap-1">
+                                                    <span className="truncate max-w-[180px] text-yellow-500 italic">
+                                                        {truncateString(wallet.solana_address, 10)}
                                                     </span>
-                                                </>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            {renderEditableCell(wallet, 'country')}
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <Badge
-                                                className={`${wallet.wallet_type === "main"
-                                                    ? "bg-green-50 dark:bg-green-900 border-green-600 text-green-300"
-                                                    : wallet.wallet_type === "import"
-                                                        ? " dark:bg-blue-900 border-blue-600 text-blue-300"
-                                                        : "dark:bg-gray-700 border-gray-600 dark:text-theme-neutral-100 text-theme-neutral-900"
-                                                    } px-2 py-1 whitespace-nowrap`}
-                                            >
-                                                {t(`listWalletss.walletType.${wallet.wallet_type}`)}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <Badge
-                                                className={`${wallet.wallet_auth === "master"
-                                                    ? "dark:bg-yellow-800 border-yellow-600 text-yellow-300"
-                                                    : "dark:bg-gray-700 border-[#15DFFD] text-[#15DFFD]"
-                                                    } px-2 py-1 whitespace-nowrap`}
-                                            >
-                                                {t(`listWalletss.walletType.${wallet.wallet_auth}`)}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className={`px-4 ${textContent}`}>
-                                            <div className="flex items-center gap-1 cursor-pointer p-1 rounded-md">
-                                                <div
-                                                    className={`w-2.5 h-2.5 rounded-full ${walletInfor?.solana_address === wallet.solana_address
-                                                        ? 'bg-theme-green-200 cursor-default'
-                                                        : 'bg-neutral-200 hover:bg-theme-green-200 cursor-pointer'
-                                                        }`}
-                                                    onClick={() => walletInfor?.solana_address !== wallet.solana_address && handleChangeWallet(wallet)}
-                                                />
-                                                {wallet.wallet_type !== 'main' && walletInfor?.solana_address !== wallet.solana_address && (
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 p-0 hover:bg-red-700/50"
-                                                        onClick={(e) => handleDeleteClick(wallet, e)}
+                                                        className="h-6 w-6 p-0 hover:bg-neutral-700/50 flex-shrink-0"
+                                                        onClick={(e) => handleCopyAddress(wallet.solana_address, e)}
                                                     >
-                                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                                        {copiedAddress === wallet.solana_address ? (
+                                                            <Check className="h-3 w-3 text-green-500" />
+                                                        ) : (
+                                                            <Copy className="h-3 w-3" />
+                                                        )}
                                                     </Button>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                {loadingBalances[wallet.wallet_id] ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                                        <span className="text-xs">Loading...</span>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        SOL: <span className="text-purple-600">
+                                                            {walletBalances[wallet.wallet_id]?.sol_balance?.toFixed(4) || '0.0000'}
+                                                        </span> ≈ <span className="text-theme-primary-400">
+                                                            ${walletBalances[wallet.wallet_id]?.sol_balance_usd?.toFixed(2) || '0.00'}
+                                                        </span>
+                                                    </>
                                                 )}
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                {renderEditableCell(wallet, 'country')}
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                <Badge
+                                                    className={`${wallet.wallet_type === "main"
+                                                        ? "bg-green-50 dark:bg-green-900 border-green-600 text-green-300"
+                                                        : wallet.wallet_type === "import"
+                                                            ? " dark:bg-blue-900 border-blue-600 text-blue-300"
+                                                            : "dark:bg-gray-700 border-gray-600 dark:text-theme-neutral-100 text-theme-neutral-900"
+                                                        } px-2 py-1 whitespace-nowrap`}
+                                                >
+                                                    {t(`listWalletss.walletType.${wallet.wallet_type}`)}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                <Badge
+                                                    className={`${wallet.wallet_auth === "master"
+                                                        ? "dark:bg-yellow-800 border-yellow-600 text-yellow-300"
+                                                        : "dark:bg-gray-700 border-[#15DFFD] text-[#15DFFD]"
+                                                        } px-2 py-1 whitespace-nowrap`}
+                                                >
+                                                    {t(`listWalletss.walletType.${wallet.wallet_auth}`)}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className={`px-4 ${textContent}`}>
+                                                <div className="flex items-center gap-1 cursor-pointer p-1 rounded-md">
+                                                    <div
+                                                        className={`w-2.5 h-2.5 rounded-full ${walletInfor?.solana_address === wallet.solana_address
+                                                            ? 'bg-theme-green-200 cursor-default'
+                                                            : 'bg-neutral-200 hover:bg-theme-green-200 cursor-pointer'
+                                                            }`}
+                                                        onClick={() => walletInfor?.solana_address !== wallet.solana_address && handleChangeWallet(wallet)}
+                                                    />
+                                                    {wallet.wallet_type !== 'main' && walletInfor?.solana_address !== wallet.solana_address && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-6 w-6 p-0 hover:bg-red-700/50"
+                                                            onClick={(e) => handleDeleteClick(wallet, e)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4 text-red-500" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
                     {/* Mobile Card View */}
                     <div className="sm:hidden space-y-3 p-2">

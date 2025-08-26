@@ -67,15 +67,15 @@ const wrapGradientStyle = "bg-gradient-to-t from-theme-purple-100 to-theme-gradi
 
 // Add responsive styles
 const containerStyles = "lg:container-glow w-full px-4 sm:px-[40px] flex flex-col gap-4 sm:gap-6 lg:gap-12 pt-4 sm:pt-[30px] relative mx-auto z-10 pb-6 lg:pb-0"
-const walletGridStyles = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full"
+const walletGridStyles = "grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-6 w-full "
 const walletCardStyles = "px-4 sm:px-6 py-3 border border-solid border-theme-secondary-500 justify-evenly rounded-xl flex flex-col lg:gap-1 gap-2 items-center sm:gap-4 min-w-0 dark:bg-gradient-overlay bg-white z-10"
 const walletTitleStyles = "text-Colors-Neutral-100 text-sm sm:text-base font-semibold uppercase leading-tight"
 const walletAddressStyles = "text-Colors-Neutral-200 text-xs sm:text-sm font-normal leading-tight truncate"
 const sectionTitleStyles = "text-Colors-Neutral-100 text-base sm:text-lg font-bold leading-relaxed"
 const tableContainerStyles = "overflow-x-auto -mx-4 sm:mx-0"
-const tableStyles = "min-w-[800px] w-full"
-const tableHeaderStyles = "px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-neutral-800 dark:text-gray-300"
-const tableCellStyles = "px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-neutral-900 dark:text-gray-300"
+const tableStyles = "w-full"
+const tableHeaderStyles = "px-2 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-neutral-800 dark:text-gray-300"
+const tableCellStyles = "px-2 py-2 sm:py-2 text-xs text-neutral-900 dark:text-gray-300"
 
 // Add new styles for mobile assets
 const assetCardStyles = "dark:bg-theme-black-200/50 bg-white rounded-xl p-4 border border-solid border-y-[#15DFFD] border-x-[#720881]"
@@ -480,7 +480,7 @@ export default function WalletPage() {
         if (!tokenList || !tokenList.tokens || !Array.isArray(tokenList.tokens)) {
             return [];
         }
-        return tokenList.tokens.filter((token: Token) => token && typeof token.token_balance_usd === 'number' && token.token_balance_usd >= 0.05);
+        return tokenList.tokens.filter((token: Token) => token && typeof token.token_balance_usd === 'number');
     }, [tokenList]);
 
     const { data: walletInfor = null, refetch, isLoading: isLoadingWalletInfor } = useQuery({
@@ -1073,70 +1073,63 @@ export default function WalletPage() {
 
                                         </div>
                                     </div>
-
-                                    {/* ETH Wallet Card */}
-                                    <div className={`${walletCardStyles} dark:bg-gradient-blue-transparent !border-theme-primary-100 bg-white z-10`}>
-                                        <div className="inline-flex justify-start items-center gap-2 w-full">
-                                            <div className="w-8 h-8 bg-theme-primary-500 rounded-full flex justify-center items-center relative overflow-hidden flex-shrink-0">
-                                                <img src="/ethereum.png" alt="Ethereum" className="w-6 h-6 object-cover" />
-                                            </div>
-                                            <div className="justify-start truncate">
-                                                <span className={walletTitleStyles}>{t('wallet.eth')}</span>
-                                                <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col justify-start items-center gap-2 w-full">
-                                            <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-indigo-500 flex justify-between items-center">
-                                                <div className={walletAddressStyles}>
-                                                    {truncateString(listWallets?.[0]?.eth_address, 17)}
+                                    <div className="flex flex-col justify-between gap-2 w-full col-span-2">
+                                        {walletInfor && <div className="flex justify-center items-center mx-auto mt-1">
+                                            <button
+                                                onClick={() => setShowPrivateKeys(true)}
+                                                className="lg:max-w-auto group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 md:py-2 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-auto flex items-center justify-center gap-1"
+                                            >
+                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">
+                                                    <KeyIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-theme-neutral-100" />
                                                 </div>
-                                                <div className="w-3.5 h-3.5 flex-shrink-0">
-                                                    <div className="w-3 h-3 bg-Colors-Neutral-100" />
+                                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
+                                                    {t('wallet.getPrivateKey')}
                                                 </div>
-                                                <button
-                                                    onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
-                                                    className="text-gray-400 hover:text-gray-200 transition-colors"
-                                                >
-                                                    {copyStates[listWallets?.[0]?.eth_address || ''] ? (
-                                                        <Check className="w-4 h-4 text-green-500" />
-                                                    ) : (
-                                                        <Copy className="w-4 h-4" />
-                                                    )}
-                                                </button>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div className={`${walletCardStyles} dark:bg-gradient-yellow-transparent border-theme-yellow-300 bg-white z-10`}>
-                                        <div className="inline-flex justify-start items-center gap-2 w-full">
-                                            <div className="w-8 h-8 relative overflow-hidden flex-shrink-0">
-                                                <img src="/bnb.png" alt="BNB" className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="justify-start truncate">
-                                                <span className={walletTitleStyles}>{t('wallet.bnb')}</span>
-                                                <span className={walletTitleStyles}> {t('wallet.wallet')}</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col justify-start items-center gap-2 w-full">
-                                            <div className="w-full h-8 lg:h-[36px] pl-4 pr-6 relative rounded-xl outline outline-1 outline-offset-[-1px] outline-amber-400 flex justify-between items-center">
-                                                <div className={walletAddressStyles}>
-                                                    {truncateString(listWallets?.[0]?.eth_address, 17)}
+                                            </button>
+                                        </div>}
+                                        <div className="grid grid-cols-2 md:grid-cols-4 w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10 ">
+                                            <button
+                                                onClick={() => setShowAddWallets(true)}
+                                                className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                            >
+                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
+                                                    <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                                 </div>
-                                                <div className="w-3.5 h-3.5 flex-shrink-0">
-                                                    <div className="w-3 h-3 bg-Colors-Neutral-100" />
+                                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
+                                                    {t('wallet.addWallets')}
                                                 </div>
-                                                <button
-                                                    onClick={(e) => handleCopyAddress(listWallets?.[0]?.eth_address || '', e)}
-                                                    className="text-gray-400 hover:text-gray-200 transition-colors"
-                                                >
-                                                    {copyStates[listWallets?.[0]?.eth_address || ''] ? (
-                                                        <Check className="w-4 h-4 text-green-500" />
-                                                    ) : (
-                                                        <Copy className="w-4 h-4" />
-                                                    )}
-                                                </button>
-                                            </div>
-
+                                            </button>
+                                            <button
+                                                onClick={() => setShowImportWallets(true)}
+                                                className="lg:max-w-auto group relative bg-transparent border py-1.5 px-4 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
+                                            >
+                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
+                                                    <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                </div>
+                                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
+                                                    {t('wallet.importWallets')}
+                                                </div>
+                                            </button>
+                                            <button
+                                                onClick={() => setShowAddWallet(true)}
+                                                className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
+                                            >
+                                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
+                                                    <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                                </div>
+                                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
+                                                    {t('wallet.addWallet')}
+                                                </div>
+                                            </button>
+                                            <button
+                                                onClick={() => setShowImportWallet(true)}
+                                                className="lg:max-w-auto group relative bg-transparent border py-1.5  px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
+                                            >
+                                                <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                <div className="text-xs sm:text-sm font-medium leading-tight text-indigo-500 dark:text-white">
+                                                    {t('wallet.importWallet')}
+                                                </div>
+                                            </button>
                                         </div>
                                     </div>
                                     <div className={`${walletCardStyles} dark:bg-gradient-purple-transparent border-theme-primary-300 bg-white z-10`}>
@@ -1196,283 +1189,214 @@ export default function WalletPage() {
                                 </>
                             )}
                         </div>
-                        {walletInfor && <div className="flex justify-center items-center mx-auto mt-1">
-                            <button
-                                onClick={() => setShowPrivateKeys(true)}
-                                className="lg:max-w-auto group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 md:py-2 px-3 md:px-4 lg:px-5 rounded-full text-[11px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-auto flex items-center justify-center gap-1"
-                            >
-                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden">
-                                    <KeyIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-theme-neutral-100" />
-                                </div>
-                                <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
-                                    {t('wallet.getPrivateKey')}
-                                </div>
-                            </button>
-                        </div>}
                     </div>
 
-                    <div className="w-full flex flex-col">
-                        {/* Wallet Management Section */}
-                        <div className="self-stretch flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 w-full z-10">
-                            <div className="flex justify-start items-center gap-2 sm:gap-2.5">
-                                <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
-                                <div className={sectionTitleStyles}>{t('wallet.solanaWallet')}</div>
-                                <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-4 w-full md:w-auto justify-start items-center gap-3 sm:gap-6 z-10">
-                                <button
-                                    onClick={() => setShowAddWallets(true)}
-                                    className="lg:max-w-auto group relative bg-gradient-to-t from-[#377bf8] to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
-                                >
-                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
-                                        <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                    </div>
-                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
-                                        {t('wallet.addWallets')}
-                                    </div>
-                                </button>
-                                <button
-                                    onClick={() => setShowImportWallets(true)}
-                                    className="lg:max-w-auto group relative bg-transparent border py-1.5 px-4 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
-                                >
-                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
-                                        <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                    </div>
-                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
-                                        {t('wallet.importWallets')}
-                                    </div>
-                                </button>
-                                <button
-                                    onClick={() => setShowAddWallet(true)}
-                                    className="lg:max-w-auto  group relative bg-gradient-to-t from-theme-primary-500 to-theme-secondary-400 py-1.5 px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1"
-                                >
-                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 relative overflow-hidden text-theme-neutral-100">
-                                        <PlusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                    </div>
-                                    <div className="text-xs sm:text-sm font-medium leading-tight text-theme-neutral-100">
-                                        {t('wallet.addWallet')}
-                                    </div>
-                                </button>
-                                <button
-                                    onClick={() => setShowImportWallet(true)}
-                                    className="lg:max-w-auto group relative bg-transparent border py-1.5  px-3 md:pl-3 pr-4 rounded-full text-[10px] md:text-xs transition-all duration-500 hover:from-theme-blue-100 hover:bg-gradient-to-t hover:border-transparent hover:to-theme-blue-200 hover:scale-105 hover:shadow-lg hover:shadow-theme-primary-500/30 active:scale-95 w-full md:w-auto flex items-center justify-center gap-1 lg:bg-white dark:lg:bg-transparent  lg:border-transparent dark:lg:border-theme-neutral-100"
-                                >
-                                    <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                    <div className="text-xs sm:text-sm font-medium leading-tight text-indigo-500 dark:text-white">
-                                        {t('wallet.importWallet')}
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
 
-                        {/* Wallet Table */}
-                        <div className="">
-                            {isLoadingMyWallets ? (
-                                <div className="overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881] mt-[50px]">
-                                    <div className={tableContainerStyles}>
-                                        <table className={tableStyles}>
-                                            <thead className="dark:bg-gray-900">
-                                                <tr>
-                                                    <th className={tableHeaderStyles}>{t('wallet.walletName')}</th>
-                                                    <th className={tableHeaderStyles}>{t('wallet.nickname')}</th>
-                                                    <th className={tableHeaderStyles}>{t('wallet.network')}</th>
-                                                    <th className={tableHeaderStyles}>{t('wallet.address')}</th>
-                                                    <th className={tableHeaderStyles}>{t('wallet.actions')}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {Array(3).fill(0).map((_, index) => (
-                                                    <tr key={index} className="border-t border-gray-700">
-                                                        <td className={tableCellStyles}>
-                                                            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-24" />
-                                                        </td>
-                                                        <td className={tableCellStyles}>
-                                                            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-20" />
-                                                        </td>
-                                                        <td className={tableCellStyles}>
-                                                            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
-                                                        </td>
-                                                        <td className={tableCellStyles}>
-                                                            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-32" />
-                                                        </td>
-                                                        <td className={tableCellStyles}>
-                                                            <div className="flex gap-2">
-                                                                <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
-                                                                <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
-                                                            </div>
-                                                        </td>
+                    <div className="flex xl:flex-row flex-col gap-5">
+                        <div className="w-full flex flex-1 flex-col">
+                            {/* Wallet Management Section */}
+                            <div className="self-stretch flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 w-full z-10">
+                                <div className="flex justify-center items-center gap-2 sm:gap-2.5 w-full">
+                                    <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
+                                    <div className={sectionTitleStyles}>{t('wallet.solanaWallet')}</div>
+                                    <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
+                                </div>
+                            </div>
+
+                            {/* Wallet Table */}
+                            <div className="">
+                                {isLoadingMyWallets ? (
+                                    <div className="overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881] mt-[50px]">
+                                        <div className={tableContainerStyles}>
+                                            <table className={tableStyles}>
+                                                <thead className="dark:bg-gray-900">
+                                                    <tr>
+                                                        <th className={tableHeaderStyles}>{t('wallet.walletName')}</th>
+                                                        <th className={tableHeaderStyles}>{t('wallet.nickname')}</th>
+                                                        <th className={tableHeaderStyles}>{t('wallet.network')}</th>
+                                                        <th className={tableHeaderStyles}>{t('wallet.address')}</th>
+                                                        <th className={tableHeaderStyles}>{t('wallet.actions')}</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            ) : (
-                                <WalletTable
-                                    wallets={myWallets}
-                                    onCopyAddress={handleCopyAddress}
-                                    onUpdateWallet={refetchInforWallets}
-                                    refetchWallets={refetchInforWallets}
-                                />
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="w-full flex flex-col xl:gap-4 gap-2">
-                        {/* Assets Section */}
-                        <div className="flex justify-start items-center gap-2 sm:gap-2.5 mt-2">
-                            <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
-                            <div className={sectionTitleStyles}>{t('wallet.assets')}</div>
-                            <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
-                        </div>
-
-                        {/* Assets Display - Table for desktop, Cards for mobile */}
-                        <div className="">
-                            {isLoadingTokenList ? (
-                                <>
-                                    <AssetsTableSkeleton />
-                                    <AssetsMobileSkeleton />
-                                </>
-                            ) : (
-                                <>
-                                    {/* Desktop Table View */}
-                                    <div className="hidden sm:block overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881]">
-                                        {!filteredTokens || filteredTokens.length === 0 ? (
-                                            <div className="flex justify-center items-center py-8 text-neutral-600 dark:text-gray-400">
-                                                {t('wallet.noTokens')}
-                                            </div>
-                                        ) : (
-                                            <div className={tableContainerStyles}>
-                                                <table className={tableStyles}>
-                                                    <thead className="dark:bg-gray-900">
-                                                        <tr>
-                                                            <th className={tableHeaderStyles}>{t('wallet.token')} ▼</th>
-                                                            <th className={tableHeaderStyles}>{t('wallet.balance')}</th>
-                                                            <th className={tableHeaderStyles}>{t('wallet.price')}</th>
-                                                            <th className={tableHeaderStyles}>{t('wallet.value')}</th>
-                                                            <th className={tableHeaderStyles}>{t('wallet.address')}</th>
+                                                </thead>
+                                                <tbody>
+                                                    {Array(3).fill(0).map((_, index) => (
+                                                        <tr key={index} className="border-t border-gray-700">
+                                                            <td className={tableCellStyles}>
+                                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-24" />
+                                                            </td>
+                                                            <td className={tableCellStyles}>
+                                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-20" />
+                                                            </td>
+                                                            <td className={tableCellStyles}>
+                                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
+                                                            </td>
+                                                            <td className={tableCellStyles}>
+                                                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-32" />
+                                                            </td>
+                                                            <td className={tableCellStyles}>
+                                                                <div className="flex gap-2">
+                                                                    <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
+                                                                    <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
+                                                                </div>
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {filteredTokens.map((token: Token, index: number) => (
-                                                            <tr key={index} className="border-t border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => router.push(`/trading?address=${token.token_address}`)}>
-                                                                <td className={tableCellStyles}>
-                                                                    <div className="flex items-center gap-2">
-                                                                        {token.token_logo_url && (
-                                                                            <img
-                                                                                src={token.token_logo_url}
-                                                                                alt={token.token_name}
-                                                                                className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
-                                                                                onError={(e) => {
-                                                                                    e.currentTarget.src = '/placeholder.png';
-                                                                                }}
-                                                                            />
-                                                                        )}
-                                                                        <div>
-                                                                            <div className="font-medium text-neutral-900 dark:text-theme-neutral-100 text-xs sm:text-sm">{token.token_name}</div>
-                                                                            <div className="text-[10px] sm:text-xs text-neutral-600 dark:text-gray-400">{token.token_symbol}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td className={tableCellStyles}>
-                                                                    {token.token_balance.toFixed(token.token_decimals)}
-                                                                </td>
-                                                                <td className={tableCellStyles}>
-                                                                    ${token.token_price_usd.toFixed(6)}
-                                                                </td>
-                                                                <td className={tableCellStyles}>
-                                                                    ${token.token_balance_usd.toFixed(6)}
-                                                                </td>
-                                                                <td className={tableCellStyles}>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <span className="truncate max-w-[100px] sm:max-w-[120px]">{truncateString(token.token_address, 12)}</span>
-                                                                        <button
-                                                                            onClick={(e) => handleCopyAddress(token.token_address, e)}
-                                                                            className="text-neutral-600 hover:text-neutral-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                                                                        >
-                                                                            {copyStates[token.token_address] ? (
-                                                                                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500" />
-                                                                            ) : (
-                                                                                <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                                                            )}
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
+                                ) : (
+                                    <WalletTable
+                                        wallets={myWallets}
+                                        onCopyAddress={handleCopyAddress}
+                                        onUpdateWallet={refetchInforWallets}
+                                        refetchWallets={refetchInforWallets}
+                                    />
+                                )}
+                            </div>
+                        </div>
 
-                                    {/* Mobile Card View */}
-                                    <div className="sm:hidden space-y-3">
-                                        {!filteredTokens || filteredTokens.length === 0 ? (
-                                            <div className="flex justify-center items-center py-6 text-neutral-600 dark:text-gray-400 bg-gray-800/60 rounded-xl">
-                                                {t('wallet.noTokens')}
-                                            </div>
-                                        ) : (
-                                            filteredTokens.map((token: Token, index: number) => (
-                                                <div key={index} className={assetCardStyles}>
-                                                    {/* Token Info Header */}
-                                                    <div className={`w-fit ${assetHeaderStyles} flex-col `}>
-                                                        <div className={assetTokenStyles}>
-                                                            {token.token_logo_url && (
-                                                                <img
-                                                                    src={token.token_logo_url}
-                                                                    alt={token.token_name}
-                                                                    className="w-8 h-8 rounded-full"
-                                                                    onError={(e) => {
-                                                                        e.currentTarget.src = '/placeholder.png';
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            <div className="min-w-0 flex gap-2">
-                                                                <div className="font-medium dark:text-theme-neutral-100 text-black text-sm truncate">{token.token_name}</div>
-                                                                <div className="text-xs dark:text-gray-400 text-black">{token.token_symbol}</div>
+                        <div className="w-full flex flex-col xl:gap-4 gap-2 max-w-[37%]">
+                            {/* Assets Section */}
+                            <div className="flex justify-center items-center gap-2 sm:gap-2.5 mb-8">
+                                <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
+                                <div className={sectionTitleStyles}>{t('wallet.assets')}</div>
+                                <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
+                            </div>
+
+                            {/* Assets Display - Table for desktop, Cards for mobile */}
+                            <div className="">
+                                {isLoadingTokenList ? (
+                                    <>
+                                        <AssetsTableSkeleton />
+                                        <AssetsMobileSkeleton />
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Desktop Table View */}
+                                        <div className="hidden sm:block overflow-hidden rounded-xl border-1 z-10 border-solid border-y-[#15DFFD] border-x-[#720881]">
+                                            {!filteredTokens || filteredTokens.length === 0 ? (
+                                                <div className="flex justify-center items-center py-8 text-neutral-600 dark:text-gray-400">
+                                                    {t('wallet.noTokens')}
+                                                </div>
+                                            ) : (
+                                                <div className={tableContainerStyles}>
+                                                    <table className={tableStyles}>
+                                                        <thead className="dark:bg-gray-900">
+                                                            <tr>
+                                                                <th className={`${tableHeaderStyles} w-[7%]`}>{t('wallet.token')} ▼</th>
+                                                                <th className={`${tableHeaderStyles} w-[5%]`}>{t('wallet.balance')}</th>
+                                                                <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.price')}</th>
+                                                                <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.value')}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {filteredTokens.map((token: Token, index: number) => (
+                                                                <tr key={index} className="border-t border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => router.push(`/trading?address=${token.token_address}`)}>
+                                                                    <td className={tableCellStyles}>
+                                                                        <div className="flex items-center gap-2">
+                                                                            {token.token_logo_url && (
+                                                                                <img
+                                                                                    src={token.token_logo_url}
+                                                                                    alt={token.token_name}
+                                                                                    className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
+                                                                                    onError={(e) => {
+                                                                                        e.currentTarget.src = '/placeholder.png';
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                            <div>
+                                                                                <div className="font-medium text-neutral-900 dark:text-theme-neutral-100 text-xs">{token.token_name}</div>
+                                                                                <div className="text-[10px] sm:text-xs text-neutral-600 dark:text-gray-400">{token.token_symbol}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className={tableCellStyles}>
+                                                                        {token.token_balance.toFixed(6)}
+                                                                    </td>
+                                                                    <td className={tableCellStyles}>
+                                                                        ${token.token_price_usd.toFixed(4)}
+                                                                    </td>
+                                                                    <td className={tableCellStyles}>
+                                                                        ${token.token_balance_usd.toFixed(4)}
+                                                                    </td>
+
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Mobile Card View */}
+                                        <div className="sm:hidden space-y-3">
+                                            {!filteredTokens || filteredTokens.length === 0 ? (
+                                                <div className="flex justify-center items-center py-6 text-neutral-600 dark:text-gray-400 bg-gray-800/60 rounded-xl">
+                                                    {t('wallet.noTokens')}
+                                                </div>
+                                            ) : (
+                                                filteredTokens.map((token: Token, index: number) => (
+                                                    <div key={index} className={assetCardStyles}>
+                                                        {/* Token Info Header */}
+                                                        <div className={`w-fit ${assetHeaderStyles} flex-col `}>
+                                                            <div className={assetTokenStyles}>
+                                                                {token.token_logo_url && (
+                                                                    <img
+                                                                        src={token.token_logo_url}
+                                                                        alt={token.token_name}
+                                                                        className="w-8 h-8 rounded-full"
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.src = '/placeholder.png';
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                                <div className="min-w-0 flex gap-2">
+                                                                    <div className="font-medium dark:text-theme-neutral-100 text-black text-sm truncate">{token.token_name}</div>
+                                                                    <div className="text-xs dark:text-gray-400 text-black">{token.token_symbol}</div>
+                                                                </div>
+                                                            </div>
+                                                            {/* Token Address */}
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-xs dark:text-neutral-200 text-black truncate flex-1">
+                                                                    {truncateString(token.token_address, 12)}
+                                                                </span>
+                                                                <button
+                                                                    onClick={(e) => handleCopyAddress(token.token_address, e)}
+                                                                    className="text-gray-400 hover:text-gray-200 p-1 transition-colors"
+                                                                >
+                                                                    {copyStates[token.token_address] ? (
+                                                                        <Check className="w-4 h-4 text-green-500" />
+                                                                    ) : (
+                                                                        <Copy className="w-4 h-4" />
+                                                                    )}
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                        {/* Token Address */}
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="text-xs dark:text-neutral-200 text-black truncate flex-1">
-                                                                {truncateString(token.token_address, 12)}
-                                                            </span>
-                                                            <button
-                                                                onClick={(e) => handleCopyAddress(token.token_address, e)}
-                                                                className="text-gray-400 hover:text-gray-200 p-1 transition-colors"
-                                                            >
-                                                                {copyStates[token.token_address] ? (
-                                                                    <Check className="w-4 h-4 text-green-500" />
-                                                                ) : (
-                                                                    <Copy className="w-4 h-4" />
-                                                                )}
-                                                            </button>
-                                                        </div>
-                                                    </div>
 
-                                                    {/* Token Details */}
-                                                    <div className="flex justify-between gap-3 mt-1 lg:mt-3 lg:pt-3 pt-1 border-t border-gray-700">
-                                                        <div>
-                                                            <div className={assetLabelStyles}>{t('wallet.balance')}</div>
-                                                            <div className={assetAmountStyles}>{token.token_balance.toFixed(token.token_decimals)}</div>
+                                                        {/* Token Details */}
+                                                        <div className="flex justify-between gap-3 mt-1 lg:mt-3 lg:pt-3 pt-1 border-t border-gray-700">
+                                                            <div>
+                                                                <div className={assetLabelStyles}>{t('wallet.balance')}</div>
+                                                                <div className={assetAmountStyles}>{token.token_balance.toFixed(token.token_decimals)}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div className={assetLabelStyles}>{t('wallet.price')}</div>
+                                                                <div className={assetPriceStyles}>${token.token_price_usd.toFixed(6)}</div>
+                                                            </div>
+                                                            <div className={assetValueStyles}>
+                                                                <div className={assetLabelStyles}>{t('wallet.value')}</div>
+                                                                <div className={assetAmountStyles}>${token.token_balance_usd.toFixed(2)}</div>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <div className={assetLabelStyles}>{t('wallet.price')}</div>
-                                                            <div className={assetPriceStyles}>${token.token_price_usd.toFixed(6)}</div>
-                                                        </div>
-                                                        <div className={assetValueStyles}>
-                                                            <div className={assetLabelStyles}>{t('wallet.value')}</div>
-                                                            <div className={assetAmountStyles}>${token.token_balance_usd.toFixed(2)}</div>
-                                                        </div>
-                                                    </div>
 
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                </>
-                            )}
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1607,7 +1531,7 @@ export default function WalletPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')} <span className="text-red-500">*</span></label>
+                                    <label className="block text-sm font-medium dark:text-gray-200 text-black mb-1">{t('wallet.connectMaster')}</label>
                                     <div className={wrapGradientStyle}>
                                         <Select
                                             value={selectedMasterTrader}
