@@ -74,8 +74,9 @@ const walletAddressStyles = "text-Colors-Neutral-200 text-xs sm:text-sm font-nor
 const sectionTitleStyles = "text-Colors-Neutral-100 text-base sm:text-lg font-bold leading-relaxed"
 const tableContainerStyles = "overflow-x-auto -mx-4 sm:mx-0"
 const tableStyles = "w-full"
-const tableHeaderStyles = "px-2 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-neutral-800 dark:text-gray-300"
+const tableHeaderStyles = "px-2 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-neutral-800 dark:text-gray-300 sticky top-0 bg-white dark:bg-gray-900 z-10"
 const tableCellStyles = "px-2 py-2 sm:py-2 text-xs text-neutral-900 dark:text-gray-300"
+const tableBodyContainerStyles = "max-h-[567px] overflow-y-auto"
 
 // Add new styles for mobile assets
 const assetCardStyles = "dark:bg-theme-black-200/50 bg-white rounded-xl p-4 border border-solid border-y-[#15DFFD] border-x-[#720881]"
@@ -1256,7 +1257,7 @@ export default function WalletPage() {
                             </div>
                         </div>
 
-                        <div className="w-full flex flex-col xl:gap-4 gap-2 max-w-[37%]">
+                        <div className="w-full flex flex-col xl:gap-4 gap-2 md:max-w-[37%]">
                             {/* Assets Section */}
                             <div className="flex justify-center items-center gap-2 sm:gap-2.5 mb-8">
                                 <img src="/ethereum.png" alt="Ethereum" className="w-3 h-3 sm:w-4 sm:h-4 object-cover" />
@@ -1281,50 +1282,56 @@ export default function WalletPage() {
                                                 </div>
                                             ) : (
                                                 <div className={tableContainerStyles}>
-                                                    <table className={tableStyles}>
-                                                        <thead className="dark:bg-gray-900">
-                                                            <tr>
-                                                                <th className={`${tableHeaderStyles} w-[7%]`}>{t('wallet.token')} ▼</th>
-                                                                <th className={`${tableHeaderStyles} w-[5%]`}>{t('wallet.balance')}</th>
-                                                                <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.price')}</th>
-                                                                <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.value')}</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {filteredTokens.map((token: Token, index: number) => (
-                                                                <tr key={index} className="border-t border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => router.push(`/trading?address=${token.token_address}`)}>
-                                                                    <td className={tableCellStyles}>
-                                                                        <div className="flex items-center gap-2">
-                                                                            {token.token_logo_url && (
-                                                                                <img
-                                                                                    src={token.token_logo_url}
-                                                                                    alt={token.token_name}
-                                                                                    className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
-                                                                                    onError={(e) => {
-                                                                                        e.currentTarget.src = '/placeholder.png';
-                                                                                    }}
-                                                                                />
-                                                                            )}
-                                                                            <div>
-                                                                                <div className="font-medium text-neutral-900 dark:text-theme-neutral-100 text-xs">{token.token_name}</div>
-                                                                                <div className="text-[10px] sm:text-xs text-neutral-600 dark:text-gray-400">{token.token_symbol}</div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className={tableCellStyles}>
-                                                                        {token.token_balance.toFixed(6)}
-                                                                    </td>
-                                                                    <td className={tableCellStyles}>
-                                                                        ${token.token_price_usd.toFixed(4)}
-                                                                    </td>
-                                                                    <td className={tableCellStyles}>
-                                                                        ${token.token_balance_usd.toFixed(4)}
-                                                                    </td>
-
+                                                    <div className="relative">
+                                                        <table className={tableStyles}>
+                                                            <thead className="dark:bg-gray-900">
+                                                                <tr>
+                                                                    <th className={`${tableHeaderStyles} w-[7%]`}>{t('wallet.token')} ▼</th>
+                                                                    <th className={`${tableHeaderStyles} w-[5%]`}>{t('wallet.balance')}</th>
+                                                                    <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.price')}</th>
+                                                                    <th className={`${tableHeaderStyles} w-[3%]`}>{t('wallet.value')}</th>
                                                                 </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
+                                                            </thead>
+                                                        </table>
+                                                        <div className={tableBodyContainerStyles}>
+                                                            <table className={tableStyles}>
+                                                                <tbody>
+                                                                    {filteredTokens.map((token: Token, index: number) => (
+                                                                        <tr key={index} className="border-t border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => router.push(`/trading?address=${token.token_address}`)}>
+                                                                            <td className={tableCellStyles}>
+                                                                                <div className="flex items-center gap-2">
+                                                                                    {token.token_logo_url && (
+                                                                                        <img
+                                                                                            src={token.token_logo_url}
+                                                                                            alt={token.token_name}
+                                                                                            className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
+                                                                                            onError={(e) => {
+                                                                                                e.currentTarget.src = '/placeholder.png';
+                                                                                            }}
+                                                                                        />
+                                                                                    )}
+                                                                                    <div>
+                                                                                        <div className="font-medium text-neutral-900 dark:text-theme-neutral-100 text-xs">{token.token_name}</div>
+                                                                                        <div className="text-[10px] sm:text-xs text-neutral-600 dark:text-gray-400">{token.token_symbol}</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td className={tableCellStyles}>
+                                                                                {token.token_balance.toFixed(6)}
+                                                                            </td>
+                                                                            <td className={tableCellStyles}>
+                                                                                ${token.token_price_usd.toFixed(4)}
+                                                                            </td>
+                                                                            <td className={tableCellStyles}>
+                                                                                ${token.token_balance_usd.toFixed(4)}
+                                                                            </td>
+
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

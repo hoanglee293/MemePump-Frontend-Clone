@@ -50,7 +50,7 @@ interface WalletTableProps {
     refetchWallets?: () => void;
 }
 
-const textTitle = 'text-neutral-800 dark:text-neutral-200 font-normal text-xs py-3'
+const textTitle = 'text-neutral-800 dark:text-neutral-200 font-normal text-xs py-2'
 const textContent = 'text-neutral-900 dark:text-neutral-100 text-xs font-normal py-2 px-2'
 
 // Add new styles for mobile wallet cards only
@@ -642,9 +642,9 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                     )}
                     {/* Desktop Table View */}
                     <div className="hidden sm:block border-1 z-10 border-solid mb-8 rounded-xl overflow-hidden border-y-theme-primary-100 border-x-theme-purple-200">
-                        <Table className="w-full">
-                            <TableRow className="bg-muted/50 h-14">
-                                <TableHead className={`${textTitle} w-[5%] px-4`}>
+                        <Table className="w-full !bg-gray-700">
+                            <TableRow className="bg-muted/50 h-12">
+                                <TableHead className={`${textTitle} w-[2%] px-2`}>
                                     {wallets?.length > 1 && (
                                         <Checkbox
                                             checked={isAllSelected()}
@@ -652,7 +652,7 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                         />
                                     )}
                                 </TableHead>
-                                <TableHead className={`${textTitle} w-[15%] px-4`}>{t('wallet.walletName')}</TableHead>
+                                <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.walletName')}</TableHead>
                                 <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.nickname')}</TableHead>
                                 <TableHead className={`${textTitle} w-[10%] px-4`}>{t('wallet.solanaAddress')}</TableHead>
                                 <TableHead className={`${textTitle} w-[14%] px-4`}>{t('wallet.balance')}</TableHead>
@@ -662,8 +662,8 @@ export function WalletTable({ wallets, onCopyAddress, onUpdateWallet, refetchWal
                                 <TableHead className={`${textTitle} w-[8%] px-4`}>{t('common.actions')}</TableHead>
                             </TableRow>
                         </Table>
-                        <div className="max-h-[70vh] overflow-y-auto">
-                            <Table className="w-full">
+                        <div>
+                            <Table>
                                 <TableBody>
                                     {wallets?.map((wallet) => (
                                         <TableRow
